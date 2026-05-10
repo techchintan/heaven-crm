@@ -5,10 +5,7 @@ import {CalculateAndPublishAction} from "./calculatePlacementFields";
  * Resolve document actions for different document types
  * For placements, we add our custom Calculate & Publish action
  */
-export const resolveDocumentActions: DocumentActionsResolver = (
-  prev,
-  context
-) => {
+export const resolveDocumentActions: DocumentActionsResolver = (prev, context) => {
   // For placement documents, replace the default publish with our custom action
   if (context.schemaType === "placement") {
     return prev.map((originalAction) => {

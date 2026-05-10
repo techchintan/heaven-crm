@@ -70,7 +70,8 @@ export const candidate = defineType({
       title: "Notice Period (Days)",
       type: "number",
       description: "Notice period in days",
-      validation: (Rule) => Rule.min(0).max(180).error("Notice period must be between 0 and 180 days"),
+      validation: (Rule) =>
+        Rule.min(0).max(180).error("Notice period must be between 0 and 180 days"),
     }),
     defineField({
       name: "status",

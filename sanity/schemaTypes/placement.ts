@@ -80,10 +80,7 @@ export const placement = defineType({
       type: "number",
       fieldset: "financials",
       description: "Annual salary offered to the candidate in Indian Rupees",
-      validation: (Rule) =>
-        Rule.required()
-          .min(1)
-          .error("Base salary must be a positive number"),
+      validation: (Rule) => Rule.required().min(1).error("Base salary must be a positive number"),
     }),
     defineField({
       name: "feePercentage",
@@ -93,10 +90,7 @@ export const placement = defineType({
       description: "Recruitment fee percentage (typically 8.33%)",
       initialValue: 8.33,
       validation: (Rule) =>
-        Rule.required()
-          .min(0.01)
-          .max(100)
-          .error("Fee percentage must be between 0.01 and 100"),
+        Rule.required().min(0.01).max(100).error("Fee percentage must be between 0.01 and 100"),
     }),
     defineField({
       name: "gstPercentage",
@@ -173,7 +167,8 @@ export const placement = defineType({
       title: "Exit Date",
       type: "date",
       fieldset: "dates",
-      description: "Date when candidate left (if applicable). Triggers deduction if before probation end.",
+      description:
+        "Date when candidate left (if applicable). Triggers deduction if before probation end.",
       options: {
         dateFormat: "DD/MM/YYYY",
       },
@@ -287,9 +282,7 @@ export const placement = defineType({
       }
 
       // Format currency
-      const formattedAmount = totalInvoice
-        ? `₹${totalInvoice.toLocaleString("en-IN")}`
-        : "";
+      const formattedAmount = totalInvoice ? `₹${totalInvoice.toLocaleString("en-IN")}` : "";
 
       return {
         title: `${candidateName || "Unknown"} → ${clientName || "Unknown"}`,

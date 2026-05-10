@@ -77,10 +77,7 @@ export const client = defineType({
       title: "Contact Email",
       type: "string",
       description: "Primary contact's email address",
-      validation: (Rule) =>
-        Rule.required()
-          .email()
-          .error("A valid email is required"),
+      validation: (Rule) => Rule.required().email().error("A valid email is required"),
     }),
     defineField({
       name: "contactPhone",
@@ -118,8 +115,7 @@ export const client = defineType({
       type: "number",
       description: "Default recruitment fee percentage for this client",
       initialValue: 8.33,
-      validation: (Rule) =>
-        Rule.min(0).max(100).error("Fee percentage must be between 0 and 100"),
+      validation: (Rule) => Rule.min(0).max(100).error("Fee percentage must be between 0 and 100"),
     }),
     defineField({
       name: "paymentTerms",
@@ -127,7 +123,8 @@ export const client = defineType({
       type: "number",
       description: "Number of days for payment (e.g., 30, 45, 60)",
       initialValue: 30,
-      validation: (Rule) => Rule.min(0).max(180).error("Payment terms must be between 0 and 180 days"),
+      validation: (Rule) =>
+        Rule.min(0).max(180).error("Payment terms must be between 0 and 180 days"),
     }),
     defineField({
       name: "status",

@@ -19,10 +19,7 @@ export const teamMember = defineType({
       title: "Email",
       type: "string",
       description: "Work email address",
-      validation: (Rule) =>
-        Rule.required()
-          .email()
-          .error("A valid email is required"),
+      validation: (Rule) => Rule.required().email().error("A valid email is required"),
     }),
     defineField({
       name: "role",

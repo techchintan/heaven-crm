@@ -1,9 +1,5 @@
 import {useEffect, useState, useCallback} from "react";
-import {
-  DocumentActionComponent,
-  DocumentActionProps,
-  useDocumentOperation,
-} from "sanity";
+import {DocumentActionComponent, DocumentActionProps, useDocumentOperation} from "sanity";
 
 /**
  * Calculate all derived fields for a placement document
@@ -32,11 +28,7 @@ function calculatePlacementValues(draft: Record<string, unknown>) {
     probationEndDate = probationEnd.toISOString().split("T")[0];
 
     // Invoice date: 1st of the month following placement
-    const invoiceDateObj = new Date(
-      placementDate.getFullYear(),
-      placementDate.getMonth() + 1,
-      1
-    );
+    const invoiceDateObj = new Date(placementDate.getFullYear(), placementDate.getMonth() + 1, 1);
     invoiceDate = invoiceDateObj.toISOString().split("T")[0];
 
     // Payment due date: invoice date + 30 days (default payment terms)
@@ -80,9 +72,7 @@ function calculatePlacementValues(draft: Record<string, unknown>) {
 /**
  * Custom Publish action that calculates fields before publishing
  */
-export const CalculateAndPublishAction: DocumentActionComponent = (
-  props: DocumentActionProps
-) => {
+export const CalculateAndPublishAction: DocumentActionComponent = (props: DocumentActionProps) => {
   const {draft, published, id, type, onComplete} = props;
   const {publish, patch} = useDocumentOperation(id, type);
   const [isCalculating, setIsCalculating] = useState(false);
@@ -157,9 +147,7 @@ export const CalculateAndPublishAction: DocumentActionComponent = (
  * This provides preview of calculated values before publishing
  */
 export function useCalculatedPreview(draft: Record<string, unknown> | null) {
-  const [preview, setPreview] = useState<ReturnType<
-    typeof calculatePlacementValues
-  > | null>(null);
+  const [preview, setPreview] = useState<ReturnType<typeof calculatePlacementValues> | null>(null);
 
   useEffect(() => {
     if (draft) {
