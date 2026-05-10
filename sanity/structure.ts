@@ -133,44 +133,54 @@ export const structure: StructureResolver = (S) =>
 
               // By Status
               S.listItem()
-                .title("Available")
+                .title("Available Candidates")
                 .child(
                   S.documentTypeList("candidate")
                     .title("Available Candidates")
-                    .filter('_type == "candidate" && status == "available"')
+                    .filter(
+                      '_type == "candidate" && status == "immediately_available" || status == "available_next_30_days"',
+                    )
                     .apiVersion(apiVersion)
                     .defaultOrdering([{field: "fullName", direction: "asc"}]),
                 ),
               S.listItem()
-                .title("Placed")
+                .title("On Notice Period Candidates")
                 .child(
                   S.documentTypeList("candidate")
-                    .title("Placed Candidates")
-                    .filter('_type == "candidate" && status == "placed"')
+                    .title("On Notice Period Candidates")
+                    .filter('_type == "candidate" && status == "on_notice_period"')
                     .apiVersion(apiVersion)
                     .defaultOrdering([{field: "fullName", direction: "asc"}]),
                 ),
               S.listItem()
-                .title("In Process")
+                .title("Not Available")
                 .child(
                   S.documentTypeList("candidate")
-                    .title("In Process")
-                    .filter('_type == "candidate" && status == "in_process"')
+                    .title("Not Available Candidates")
+                    .filter('_type == "candidate" && status == "not_available"')
                     .apiVersion(apiVersion)
                     .defaultOrdering([{field: "fullName", direction: "asc"}]),
                 ),
               S.listItem()
-                .title("On Hold")
+                .title("On Hold Candidates")
                 .child(
                   S.documentTypeList("candidate")
-                    .title("On Hold")
+                    .title("On Hold Candidates")
                     .filter('_type == "candidate" && status == "on_hold"')
+                    .apiVersion(apiVersion)
+                    .defaultOrdering([{field: "fullName", direction: "asc"}]),
+                ),
+              S.listItem()
+                .title("Placed Candidates (Joined)")
+                .child(
+                  S.documentTypeList("candidate")
+                    .title("Placed Candidates (Joined)")
+                    .filter('_type == "candidate" && status == "placed"')
                     .apiVersion(apiVersion)
                     .defaultOrdering([{field: "fullName", direction: "asc"}]),
                 ),
 
               S.divider(),
-
               // Recently Added
               S.listItem()
                 .title("Recently Added")

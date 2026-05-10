@@ -52,6 +52,24 @@ export const candidate = defineType({
       validation: (Rule) => Rule.min(0).max(50).error("Experience must be between 0 and 50 years"),
     }),
     defineField({
+      name: "currentCompany",
+      title: "Current Company",
+      type: "string",
+      description: "Current company",
+    }),
+    defineField({
+      name: "currentDesignation",
+      title: "Current Designation",
+      type: "string",
+      description: "Current designation",
+    }),
+    defineField({
+      name: "currentLocation",
+      title: "Current Location",
+      type: "string",
+      description: "Current location",
+    }),
+    defineField({
       name: "currentSalary",
       title: "Current Salary (INR)",
       type: "number",
@@ -80,15 +98,16 @@ export const candidate = defineType({
       description: "Current availability status",
       options: {
         list: [
-          {title: "Available", value: "available"},
-          {title: "Placed", value: "placed"},
-          {title: "In Process", value: "in_process"},
-          {title: "On Hold", value: "on_hold"},
+          {title: "Immediately Available", value: "immediately_available"},
+          {title: "Available for Next 30 Days", value: "available_next_30_days"},
+          {title: "On Notice Period", value: "on_notice_period"},
           {title: "Not Available", value: "not_available"},
+          {title: "On Hold", value: "on_hold"},
+          {title: "Placed", value: "placed"},
         ],
         layout: "radio",
       },
-      initialValue: "available",
+      initialValue: "immediately_available",
       validation: (Rule) => Rule.required().error("Status is required"),
     }),
     defineField({
@@ -111,19 +130,6 @@ export const candidate = defineType({
       },
     }),
     defineField({
-      name: "location",
-      title: "Location",
-      type: "string",
-      description: "Current city/location",
-    }),
-    defineField({
-      name: "notes",
-      title: "Internal Notes",
-      type: "text",
-      description: "Private notes for recruiters (not visible to candidate)",
-      rows: 4,
-    }),
-    defineField({
       name: "source",
       title: "Source",
       type: "string",
@@ -138,6 +144,13 @@ export const candidate = defineType({
           {title: "Other", value: "other"},
         ],
       },
+    }),
+    defineField({
+      name: "notes",
+      title: "Internal Notes",
+      type: "text",
+      description: "Private notes for recruiters (not visible to candidate)",
+      rows: 4,
     }),
     defineField({
       name: "createdAt",
@@ -155,18 +168,20 @@ export const candidate = defineType({
     },
     prepare({title, subtitle, status}) {
       const statusLabels: Record<string, string> = {
-        available: "Available",
-        placed: "Placed",
-        in_process: "In Process",
+        immediately_available: "Immediately Available",
+        available_next_30_days: "Available for Next 30 Days",
+        on_notice_period: "On Notice Period",
         on_hold: "On Hold",
         not_available: "Not Available",
+        placed: "Placed",
       };
       const statusEmoji: Record<string, string> = {
-        available: "🟢",
+        immediately_available: "🟢",
+        available_next_30_days: "🟡",
+        on_notice_period: "🟠",
+        on_hold: "⚪",
+        not_available: "⚫",
         placed: "✅",
-        in_process: "🟡",
-        on_hold: "🟠",
-        not_available: "🔴",
       };
       return {
         title: title || "Untitled",
