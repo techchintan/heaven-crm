@@ -2,14 +2,38 @@
 
 import { Search, Bell, RefreshCw } from "lucide-react";
 import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { cn } from "@/lib/utils";
 
 interface HeaderProps {
   title: string;
   subtitle?: string;
   onRefresh?: () => void;
+  className?: string;
 }
 
-export function Header({ title, subtitle, onRefresh }: HeaderProps) {
+/**
+ * Header Component
+ *
+ * Navigation header with title, search functionality, refresh button, and notifications.
+ * Combines shadcn Button and Input components for consistent styling.
+ *
+ * @param title - Main page title
+ * @param subtitle - Optional descriptive subtitle
+ * @param onRefresh - Optional async callback for refresh action
+ * @param className - Additional CSS classes
+ *
+ * @example
+ * ```tsx
+ * <Header
+ *   title="Placements"
+ *   subtitle="Manage all active placements"
+ *   onRefresh={async () => revalidatePath('/placements')}
+ * />
+ * ```
+ */
+export function Header({ title, subtitle, onRefresh, className }: HeaderProps) {
   const [isRefreshing, setIsRefreshing] = useState(false);
 
   const handleRefresh = async () => {
@@ -20,46 +44,50 @@ export function Header({ title, subtitle, onRefresh }: HeaderProps) {
   };
 
   return (
-    <header className="flex h-14 items-center justify-between border-b border-border bg-background px-6">
-      <div className="flex items-center gap-4">
-        <div>
-          <h1 className="text-lg font-semibold text-foreground">{title}</h1>
-          {subtitle && (
-            <p className="text-xs text-muted-foreground">{subtitle}</p>
-          )}
-        </div>
+    <header className={cn("flex h-16 items-center justify-between border-b border-border bg-background px-6", className)}>
+      <div className="flex flex-col">
+        <h1 className="text-xl font-semibold leading-tight text-foreground">{title}</h1>
+        {subtitle && (
+          <p className="text-sm text-muted-foreground">{subtitle}</p>
+        )}
       </div>
 
-      <div className="flex items-center gap-3">
-        {/* Search */}
-        <div className="relative">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-          <input
+      <div className="flex items-center gap-2">
+        {/* Search Input - Using shadcn Input */}
+        <div className="relative hidden md:flex">
+          <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+          <Input
             type="text"
             placeholder="Search..."
-            className="h-9 w-64 rounded-lg border border-border bg-input pl-9 pr-4 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+            className="w-64 pl-9"
           />
         </div>
 
-        {/* Refresh */}
+        {/* Refresh Button - Using shadcn Button */}
         {onRefresh && (
-          <button
+          <Button
+            variant="outline"
+            size="icon"
             onClick={handleRefresh}
-            className="flex h-9 w-9 items-center justify-center rounded-lg border border-border bg-card text-muted-foreground transition-colors hover:bg-card-hover hover:text-foreground"
+            disabled={isRefreshing}
+            title="Refresh data"
           >
-            <RefreshCw
-              className={`h-4 w-4 ${isRefreshing ? "animate-spin" : ""}`}
-            />
-          </button>
+            <RefreshCw className={cn("h-4 w-4", isRefreshing && "animate-spin")} />
+          </Button>
         )}
 
-        {/* Notifications */}
-        <button className="relative flex h-9 w-9 items-center justify-center rounded-lg border border-border bg-card text-muted-foreground transition-colors hover:bg-card-hover hover:text-foreground">
+        {/* Notifications Button - Using shadcn Button */}
+        <Button
+          variant="outline"
+          size="icon"
+          className="relative"
+          title="View notifications"
+        >
           <Bell className="h-4 w-4" />
-          <span className="absolute -right-0.5 -top-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] font-medium text-primary-foreground">
+          <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-[10px] font-semibold text-primary-foreground">
             3
           </span>
-        </button>
+        </Button>
       </div>
     </header>
   );
