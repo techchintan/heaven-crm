@@ -36,7 +36,6 @@ export const placement = defineType({
     },
   ],
   fields: [
-    // === REFERENCES ===
     defineField({
       name: "candidate",
       title: "Candidate",
@@ -72,8 +71,52 @@ export const placement = defineType({
       description: "Position the candidate was hired for",
       validation: (Rule) => Rule.required().error("Job title is required"),
     }),
-
-    // === FINANCIALS (User Inputs) ===
+    defineField({
+      name: "engagementType",
+      title: "Engagement Type",
+      type: "string",
+      fieldset: "references",
+      description: "How the candidate is engaged with the client",
+      options: {
+        list: [
+          {title: "Permanent", value: "permanent"},
+          {title: "Contract", value: "contract"},
+          {title: "Contract-to-hire", value: "contract_to_hire"},
+          {title: "Temporary / Staffing", value: "temporary"},
+        ],
+        layout: "radio",
+      },
+      initialValue: "permanent",
+    }),
+    defineField({
+      name: "workArrangement",
+      title: "Work Arrangement",
+      type: "string",
+      fieldset: "references",
+      options: {
+        list: [
+          {title: "On-site", value: "onsite"},
+          {title: "Hybrid", value: "hybrid"},
+          {title: "Remote", value: "remote"},
+          {title: "Flexible", value: "flexible"},
+        ],
+        layout: "radio",
+      },
+    }),
+    defineField({
+      name: "workLocation",
+      title: "Work Location",
+      type: "string",
+      fieldset: "references",
+      description: 'City or region, or e.g. "Remote — India"',
+    }),
+    defineField({
+      name: "clientReference",
+      title: "Client PO / Job Reference",
+      type: "string",
+      fieldset: "references",
+      description: "Purchase order, job code, or internal client reference for billing",
+    }),
     defineField({
       name: "baseSalary",
       title: "Base Salary (INR per annum)",
@@ -101,8 +144,6 @@ export const placement = defineType({
       initialValue: 18,
       readOnly: true,
     }),
-
-    // === CALCULATED FIELDS ===
     defineField({
       name: "feeAmount",
       title: "Fee Amount (INR)",
@@ -127,8 +168,6 @@ export const placement = defineType({
       description: "Calculated: Fee Amount + GST Amount",
       readOnly: true,
     }),
-
-    // === DATES ===
     defineField({
       name: "placementDate",
       title: "Placement Date",
@@ -141,11 +180,41 @@ export const placement = defineType({
       validation: (Rule) => Rule.required().error("Placement date is required"),
     }),
     defineField({
+      name: "offerAcceptedDate",
+      title: "Offer Accepted Date",
+      type: "date",
+      fieldset: "dates",
+      description: "When the candidate accepted the offer (optional)",
+      options: {
+        dateFormat: "DD/MM/YYYY",
+      },
+      validation: (Rule) =>
+        Rule.custom((offerDate, context) => {
+          if (!offerDate) return true;
+          const parent = context.parent as {placementDate?: string};
+          const placementDate = parent?.placementDate;
+          if (!placementDate) return true;
+          return offerDate <= placementDate
+            ? true
+            : "Offer date should be on or before placement (joining) date";
+        }),
+    }),
+    defineField({
+      name: "probationPeriodDays",
+      title: "Probation Period (Days)",
+      type: "number",
+      fieldset: "dates",
+      description:
+        "Used when calculating probation end and early-exit rules. Leave empty to use 90 days.",
+      initialValue: 90,
+      validation: (Rule) => Rule.min(1).max(365).integer(),
+    }),
+    defineField({
       name: "probationEndDate",
       title: "Probation End Date",
       type: "date",
       fieldset: "dates",
-      description: "Auto-calculated: Placement Date + 90 days",
+      description: "Auto-calculated from placement date + probation period",
       options: {
         dateFormat: "DD/MM/YYYY",
       },
@@ -192,8 +261,6 @@ export const placement = defineType({
       },
       readOnly: true,
     }),
-
-    // === STATUS & PAYMENT ===
     defineField({
       name: "revenueStatus",
       title: "Revenue Status",
@@ -237,8 +304,6 @@ export const placement = defineType({
       description: "Actual amount received (may differ from invoice if deducted)",
       validation: (Rule) => Rule.min(0).error("Amount must be positive"),
     }),
-
-    // === META ===
     defineField({
       name: "notes",
       title: "Internal Notes",

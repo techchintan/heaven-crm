@@ -9,6 +9,22 @@ function calculatePlacementValues(draft: Record<string, unknown>) {
   const feePercentage = (draft.feePercentage as number) || 8.33;
   const gstPercentage = 18; // Fixed at 18%
 
+  const probationPeriodDaysRaw = draft.probationPeriodDays as number | undefined;
+  const probationPeriodDays =
+    typeof probationPeriodDaysRaw === "number" &&
+    !Number.isNaN(probationPeriodDaysRaw) &&
+    probationPeriodDaysRaw >= 1
+      ? Math.round(probationPeriodDaysRaw)
+      : 90;
+
+  const paymentTermsDaysRaw = draft.paymentTermsDays as number | undefined;
+  const paymentTermsDays =
+    typeof paymentTermsDaysRaw === "number" &&
+    !Number.isNaN(paymentTermsDaysRaw) &&
+    paymentTermsDaysRaw >= 0
+      ? Math.round(paymentTermsDaysRaw)
+      : 30;
+
   // Calculate fee and GST amounts
   const feeAmount = Math.round(baseSalary * (feePercentage / 100));
   const gstAmount = Math.round(feeAmount * (gstPercentage / 100));
@@ -22,18 +38,18 @@ function calculatePlacementValues(draft: Record<string, unknown>) {
   if (draft.placementDate) {
     const placementDate = new Date(draft.placementDate as string);
 
-    // Probation end date: placement date + 90 days
+    // Probation end date: placement date + probation period
     const probationEnd = new Date(placementDate);
-    probationEnd.setDate(probationEnd.getDate() + 90);
+    probationEnd.setDate(probationEnd.getDate() + probationPeriodDays);
     probationEndDate = probationEnd.toISOString().split("T")[0];
 
     // Invoice date: 1st of the month following placement
     const invoiceDateObj = new Date(placementDate.getFullYear(), placementDate.getMonth() + 1, 1);
     invoiceDate = invoiceDateObj.toISOString().split("T")[0];
 
-    // Payment due date: invoice date + 30 days (default payment terms)
+    // Payment due date: invoice date + payment terms (default 30 days)
     const paymentDueDateObj = new Date(invoiceDateObj);
-    paymentDueDateObj.setDate(paymentDueDateObj.getDate() + 30);
+    paymentDueDateObj.setDate(paymentDueDateObj.getDate() + paymentTermsDays);
     paymentDueDate = paymentDueDateObj.toISOString().split("T")[0];
   }
 
@@ -44,7 +60,7 @@ function calculatePlacementValues(draft: Record<string, unknown>) {
     const exitDate = new Date(draft.exitDate as string);
     const placementDate = new Date(draft.placementDate as string);
     const probationEnd = new Date(placementDate);
-    probationEnd.setDate(probationEnd.getDate() + 90);
+    probationEnd.setDate(probationEnd.getDate() + probationPeriodDays);
 
     // If exit date is before probation end, mark as deducted
     if (exitDate < probationEnd) {

@@ -3,12 +3,10 @@ import {DocumentsIcon, UsersIcon, CaseIcon, UserIcon, SearchIcon} from "@sanity/
 
 import {apiVersion} from "./env";
 
-// https://www.sanity.io/docs/structure-builder-cheat-sheet
 export const structure: StructureResolver = (S) =>
   S.list()
-    .title("Heavenpro CRM")
+    .title("CRM Dashboard")
     .items([
-      // === PLACEMENTS SECTION ===
       S.listItem()
         .title("Placements")
         .icon(DocumentsIcon)
@@ -16,7 +14,6 @@ export const structure: StructureResolver = (S) =>
           S.list()
             .title("Placements")
             .items([
-              // All placements
               S.listItem()
                 .title("All Placements")
                 .icon(DocumentsIcon)
@@ -25,10 +22,7 @@ export const structure: StructureResolver = (S) =>
                     .title("All Placements")
                     .defaultOrdering([{field: "placementDate", direction: "desc"}]),
                 ),
-
               S.divider(),
-
-              // By Status
               S.listItem()
                 .title("By Status")
                 .icon(SearchIcon)
@@ -74,8 +68,6 @@ export const structure: StructureResolver = (S) =>
                         ),
                     ]),
                 ),
-
-              // Recent (Last 30 days)
               S.listItem()
                 .title("Recent (Last 30 Days)")
                 .child(
@@ -90,8 +82,6 @@ export const structure: StructureResolver = (S) =>
                     .apiVersion(apiVersion)
                     .defaultOrdering([{field: "placementDate", direction: "desc"}]),
                 ),
-
-              // At Risk (Exit within probation period)
               S.listItem()
                 .title("At Risk (In Probation)")
                 .child(
@@ -108,10 +98,7 @@ export const structure: StructureResolver = (S) =>
                 ),
             ]),
         ),
-
       S.divider(),
-
-      // === CANDIDATES SECTION ===
       S.listItem()
         .title("Candidates")
         .icon(UsersIcon)
@@ -119,7 +106,6 @@ export const structure: StructureResolver = (S) =>
           S.list()
             .title("Candidates")
             .items([
-              // All candidates
               S.listItem()
                 .title("All Candidates")
                 .icon(UsersIcon)
@@ -128,10 +114,7 @@ export const structure: StructureResolver = (S) =>
                     .title("All Candidates")
                     .defaultOrdering([{field: "fullName", direction: "asc"}]),
                 ),
-
               S.divider(),
-
-              // By Status
               S.listItem()
                 .title("Available Candidates")
                 .child(
@@ -181,7 +164,6 @@ export const structure: StructureResolver = (S) =>
                 ),
 
               S.divider(),
-              // Recently Added
               S.listItem()
                 .title("Recently Added")
                 .child(
@@ -191,8 +173,6 @@ export const structure: StructureResolver = (S) =>
                 ),
             ]),
         ),
-
-      // === CLIENTS SECTION ===
       S.listItem()
         .title("Clients")
         .icon(CaseIcon)
@@ -200,7 +180,6 @@ export const structure: StructureResolver = (S) =>
           S.list()
             .title("Clients")
             .items([
-              // All clients
               S.listItem()
                 .title("All Clients")
                 .icon(CaseIcon)
@@ -209,10 +188,7 @@ export const structure: StructureResolver = (S) =>
                     .title("All Clients")
                     .defaultOrdering([{field: "companyName", direction: "asc"}]),
                 ),
-
               S.divider(),
-
-              // By Status
               S.listItem()
                 .title("Active Clients")
                 .child(
@@ -242,10 +218,7 @@ export const structure: StructureResolver = (S) =>
                 ),
             ]),
         ),
-
       S.divider(),
-
-      // === TEAM SECTION ===
       S.listItem()
         .title("Team Members")
         .icon(UserIcon)
