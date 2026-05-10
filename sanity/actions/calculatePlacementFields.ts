@@ -1,4 +1,4 @@
-import {useEffect, useState, useCallback} from "react";
+import {useMemo, useState, useCallback} from "react";
 import {DocumentActionComponent, DocumentActionProps, useDocumentOperation} from "sanity";
 
 /**
@@ -97,14 +97,9 @@ function calculatePlacementValues(draft: Record<string, unknown>) {
  * Custom Publish action that calculates fields before publishing
  */
 export const CalculateAndPublishAction: DocumentActionComponent = (props: DocumentActionProps) => {
-  const {draft, published, id, type, onComplete} = props;
+  const {draft, id, type, onComplete} = props;
   const {publish, patch} = useDocumentOperation(id, type);
   const [isCalculating, setIsCalculating] = useState(false);
-
-  // Only show for placement documents
-  if (type !== "placement") {
-    return null;
-  }
 
   const handlePublish = useCallback(async () => {
     if (!draft) {
@@ -155,13 +150,19 @@ export const CalculateAndPublishAction: DocumentActionComponent = (props: Docume
     }
   }, [draft, patch, publish, onComplete]);
 
+  if (type !== "placement") {
+    return null;
+  }
+
   // Check if there are changes to publish
   const hasChanges = Boolean(draft);
+
+  const publishBlocked = Boolean(publish.disabled);
 
   return {
     label: isCalculating ? "Calculating..." : "Calculate & Publish",
     tone: "positive",
-    disabled: !hasChanges || publish.disabled || isCalculating,
+    disabled: !hasChanges || isCalculating || publishBlocked,
     onHandle: handlePublish,
   };
 };
@@ -171,13 +172,5 @@ export const CalculateAndPublishAction: DocumentActionComponent = (props: Docume
  * This provides preview of calculated values before publishing
  */
 export function useCalculatedPreview(draft: Record<string, unknown> | null) {
-  const [preview, setPreview] = useState<ReturnType<typeof calculatePlacementValues> | null>(null);
-
-  useEffect(() => {
-    if (draft) {
-      setPreview(calculatePlacementValues(draft));
-    }
-  }, [draft]);
-
-  return preview;
+  return useMemo(() => (draft ? calculatePlacementValues(draft) : null), [draft]);
 }

@@ -15,6 +15,196 @@
 export declare const internalGroqTypeReferenceTo: unique symbol;
 
 // Source: schema.json
+export type CandidateReference = {
+  _ref: string;
+  _type: "reference";
+  _weak?: boolean;
+  [internalGroqTypeReferenceTo]?: "candidate";
+};
+
+export type ClientReference = {
+  _ref: string;
+  _type: "reference";
+  _weak?: boolean;
+  [internalGroqTypeReferenceTo]?: "client";
+};
+
+export type TeamMemberReference = {
+  _ref: string;
+  _type: "reference";
+  _weak?: boolean;
+  [internalGroqTypeReferenceTo]?: "teamMember";
+};
+
+export type Placement = {
+  _id: string;
+  _type: "placement";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  candidate: CandidateReference;
+  client: ClientReference;
+  recruiter: TeamMemberReference;
+  jobTitle: string;
+  engagementType?: "permanent" | "contract" | "contract_to_hire" | "temporary";
+  workArrangement?: "onsite" | "hybrid" | "remote" | "flexible";
+  workLocation?: string;
+  clientReference?: string;
+  baseSalary: number;
+  feeMode: "percentage" | "flat";
+  feePercentage?: number;
+  flatFeeAmount?: number;
+  gstPercentage?: number;
+  feeAmount?: number;
+  gstAmount?: number;
+  totalInvoiceValue?: number;
+  placementDate: string;
+  offerAcceptedDate?: string;
+  probationPeriodDays?: number;
+  probationEndDate?: string;
+  invoiceDate?: string;
+  exitDate?: string;
+  paymentDueDate?: string;
+  revenueStatus?: "pending" | "invoiced" | "paid" | "deducted" | "partially_paid";
+  invoiceNumber?: string;
+  paymentDate?: string;
+  amountReceived?: number;
+  notes?: string;
+  createdAt?: string;
+};
+
+export type Client = {
+  _id: string;
+  _type: "client";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  companyName: string;
+  legalName?: string;
+  industry?:
+    | "it_software"
+    | "banking_finance"
+    | "healthcare"
+    | "manufacturing"
+    | "ecommerce"
+    | "consulting"
+    | "education"
+    | "telecom"
+    | "retail"
+    | "other";
+  gstin?: string;
+  pan?: string;
+  contacts: Array<{
+    name: string;
+    designation?: string;
+    email: string;
+    phone?: string;
+    isActive?: boolean;
+    isPrimary?: boolean;
+    _type: "contact";
+    _key: string;
+  }>;
+  billingEmail?: string;
+  billingAddress?: string;
+  website?: string;
+  feeModel?: "percent_ctc" | "flat_per_hire";
+  agreementFeePercentage?: number;
+  paymentTerms?: number;
+  msaStartDate?: string;
+  msaEndDate?: string;
+  leadSource?: "inbound" | "referral" | "outbound" | "job_board" | "event" | "expansion" | "other";
+  status?: "active" | "inactive" | "prospect" | "on_hold";
+  notes?: string;
+  createdAt?: string;
+};
+
+export type SanityFileAssetReference = {
+  _ref: string;
+  _type: "reference";
+  _weak?: boolean;
+  [internalGroqTypeReferenceTo]?: "sanity.fileAsset";
+};
+
+export type Candidate = {
+  _id: string;
+  _type: "candidate";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  fullName: string;
+  email?: string;
+  phone?: string;
+  alternateEmail?: string;
+  alternatePhone?: string;
+  primarySkill: string;
+  skills?: Array<string>;
+  experience?: number;
+  currentCompany?: string;
+  currentDesignation?: string;
+  currentLocation?: string;
+  preferredLocations?: Array<string>;
+  willingToRelocate?: boolean;
+  remotePreference?: "onsite" | "hybrid" | "remote" | "flexible";
+  languages?: Array<string>;
+  highestEducation?: string;
+  currentSalary?: number;
+  expectedSalary?: number;
+  noticePeriod?: number;
+  status:
+    | "immediately_available"
+    | "available_next_30_days"
+    | "on_notice_period"
+    | "not_available"
+    | "on_hold"
+    | "placed";
+  linkedInUrl?: string;
+  resume?: {
+    asset?: SanityFileAssetReference;
+    media?: unknown;
+    _type: "file";
+  };
+  assignedRecruiter?: TeamMemberReference;
+  source?: "linkedin" | "naukri" | "referral" | "job_portal" | "direct" | "other";
+  lastContactedAt?: string;
+  nextFollowUpAt?: string;
+  notes?: string;
+  createdAt?: string;
+};
+
+export type TeamMember = {
+  _id: string;
+  _type: "teamMember";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  name: string;
+  email: string;
+  role: "trainee" | "recruiter" | "senior_recruiter" | "team_lead" | "manager" | "founder_ceo";
+  workStatus: "full_time" | "part_time" | "contract" | "intern";
+  specializations?: Array<string>;
+  phone?: string;
+  isActive?: boolean;
+  joinedAt: string;
+  leftAt?: string;
+  incentivePercentage?: number;
+  notes?: string;
+};
+
+export type MediaTag = {
+  _id: string;
+  _type: "media.tag";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  name?: Slug;
+};
+
+export type Slug = {
+  _type: "slug";
+  current: string;
+  source?: string;
+};
+
 export type SanityImagePaletteSwatch = {
   _type: "sanity.imagePaletteSwatch";
   background?: string;
@@ -128,13 +318,17 @@ export type Geopoint = {
   alt?: number;
 };
 
-export type Slug = {
-  _type: "slug";
-  current: string;
-  source?: string;
-};
-
 export type AllSanitySchemaTypes =
+  | CandidateReference
+  | ClientReference
+  | TeamMemberReference
+  | Placement
+  | Client
+  | SanityFileAssetReference
+  | Candidate
+  | TeamMember
+  | MediaTag
+  | Slug
   | SanityImagePaletteSwatch
   | SanityImagePalette
   | SanityImageDimensions
@@ -144,5 +338,17 @@ export type AllSanitySchemaTypes =
   | SanityFileAsset
   | SanityAssetSourceData
   | SanityImageAsset
-  | Geopoint
-  | Slug;
+  | Geopoint;
+
+// Source: sanity/lib/query.ts
+// Variable: settingsQuery
+// Query: *[_type == "settings" && language == $language][0] {  ...,}
+export type SettingsQueryResult = null;
+
+// Query TypeMap
+import "@sanity/client";
+declare module "@sanity/client" {
+  interface SanityQueries {
+    '*[_type == "settings" && language == $language][0] {\n  ...,\n}': SettingsQueryResult;
+  }
+}

@@ -1,4 +1,4 @@
-import {DocumentActionComponent, DocumentActionsResolver} from "sanity";
+import {DocumentActionsResolver} from "sanity";
 import {CalculateAndPublishAction} from "./calculatePlacementFields";
 
 /**
