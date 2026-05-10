@@ -1,0 +1,5 @@
+import {groq} from "next-sanity";
+
+export const settingsQuery = groq`*[_type == "settings" && language == $language][0] {
+  ...,
+}`;
