@@ -126,14 +126,63 @@ export const placement = defineType({
       validation: (Rule) => Rule.required().min(1).error("Base salary must be a positive number"),
     }),
     defineField({
+      name: "feeMode",
+      title: "Fee Type",
+      type: "string",
+      fieldset: "financials",
+      description: "Whether fee is a percentage of annual CTC or a fixed flat fee",
+      options: {
+        list: [
+          {title: "% of annual CTC", value: "percentage"},
+          {title: "Flat fee (fixed INR)", value: "flat"},
+        ],
+        layout: "radio",
+      },
+      initialValue: "percentage",
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
       name: "feePercentage",
       title: "Fee Percentage (%)",
       type: "number",
       fieldset: "financials",
-      description: "Recruitment fee percentage (typically 8.33%)",
+      description: "Recruitment fee as % of annual CTC (typically 8.33%)",
       initialValue: 8.33,
+      hidden: ({parent}) => (parent as {feeMode?: string}).feeMode === "flat",
       validation: (Rule) =>
-        Rule.required().min(0.01).max(100).error("Fee percentage must be between 0.01 and 100"),
+        Rule.custom((value, context) => {
+          const mode = (context.parent as {feeMode?: string}).feeMode ?? "percentage";
+          if (mode === "flat") return true;
+          if (value == null || Number.isNaN(Number(value))) {
+            return "Fee percentage is required";
+          }
+          const n = Number(value);
+          if (n < 0.01 || n > 100) {
+            return "Fee percentage must be between 0.01 and 100";
+          }
+          return true;
+        }),
+    }),
+    defineField({
+      name: "flatFeeAmount",
+      title: "Flat Fee (INR)",
+      type: "number",
+      fieldset: "financials",
+      description: "Fixed recruitment fee amount before GST",
+      hidden: ({parent}) => (parent as {feeMode?: string}).feeMode !== "flat",
+      validation: (Rule) =>
+        Rule.custom((value, context) => {
+          const mode = (context.parent as {feeMode?: string}).feeMode ?? "percentage";
+          if (mode !== "flat") return true;
+          if (value == null || Number.isNaN(Number(value))) {
+            return "Flat fee amount is required";
+          }
+          const n = Number(value);
+          if (n < 1) {
+            return "Flat fee must be at least ₹1";
+          }
+          return true;
+        }),
     }),
     defineField({
       name: "gstPercentage",
@@ -149,7 +198,8 @@ export const placement = defineType({
       title: "Fee Amount (INR)",
       type: "number",
       fieldset: "calculated",
-      description: "Calculated: Base Salary × (Fee % ÷ 100)",
+      description:
+        "Calculated: either Base Salary × (Fee % ÷ 100), or the flat fee amount, before GST",
       readOnly: true,
     }),
     defineField({

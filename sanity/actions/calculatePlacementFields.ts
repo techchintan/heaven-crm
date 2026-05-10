@@ -6,7 +6,9 @@ import {DocumentActionComponent, DocumentActionProps, useDocumentOperation} from
  */
 function calculatePlacementValues(draft: Record<string, unknown>) {
   const baseSalary = (draft.baseSalary as number) || 0;
-  const feePercentage = (draft.feePercentage as number) || 8.33;
+  const feeMode = (draft.feeMode as string) || "percentage";
+  const feePercentage = (draft.feePercentage as number) ?? 8.33;
+  const flatFeeRaw = draft.flatFeeAmount as number | undefined;
   const gstPercentage = 18; // Fixed at 18%
 
   const probationPeriodDaysRaw = draft.probationPeriodDays as number | undefined;
@@ -26,7 +28,13 @@ function calculatePlacementValues(draft: Record<string, unknown>) {
       : 30;
 
   // Calculate fee and GST amounts
-  const feeAmount = Math.round(baseSalary * (feePercentage / 100));
+  let feeAmount = 0;
+  if (feeMode === "flat") {
+    feeAmount =
+      typeof flatFeeRaw === "number" && !Number.isNaN(flatFeeRaw) ? Math.round(flatFeeRaw) : 0;
+  } else {
+    feeAmount = Math.round(baseSalary * (feePercentage / 100));
+  }
   const gstAmount = Math.round(feeAmount * (gstPercentage / 100));
   const totalInvoiceValue = feeAmount + gstAmount;
 

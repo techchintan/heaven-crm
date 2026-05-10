@@ -165,9 +165,7 @@ export const client = defineType({
       options: {
         list: [
           {title: "% of annual CTC", value: "percent_ctc"},
-          {title: "% of fixed fee (lump sum)", value: "percent_fixed_fee"},
           {title: "Flat success fee per hire", value: "flat_per_hire"},
-          {title: "Mixed / custom", value: "mixed"},
         ],
         layout: "radio",
       },
