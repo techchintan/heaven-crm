@@ -15,6 +15,12 @@ export const client = defineType({
       validation: (Rule) => Rule.required().error("Company name is required"),
     }),
     defineField({
+      name: "legalName",
+      title: "Legal / Registered Name",
+      type: "string",
+      description: "If different from the display name (invoices, contracts)",
+    }),
+    defineField({
       name: "industry",
       title: "Industry",
       type: "string",
@@ -60,30 +66,72 @@ export const client = defineType({
         }),
     }),
     defineField({
-      name: "primaryContact",
-      title: "Primary Contact Person",
-      type: "string",
-      description: "Main point of contact",
-      validation: (Rule) => Rule.required().error("Primary contact is required"),
-    }),
-    defineField({
-      name: "contactDesignation",
-      title: "Contact Designation",
-      type: "string",
-      description: "Job title of primary contact",
-    }),
-    defineField({
-      name: "contactEmail",
-      title: "Contact Email",
-      type: "string",
-      description: "Primary contact's email address",
-      validation: (Rule) => Rule.required().email().error("A valid email is required"),
-    }),
-    defineField({
-      name: "contactPhone",
-      title: "Contact Phone",
-      type: "string",
-      description: "Primary contact's phone number",
+      name: "contacts",
+      title: "Client Contacts (POCs)",
+      type: "array",
+      description: "One client can have multiple points of contact",
+      of: [
+        defineField({
+          name: "contact",
+          title: "Contact",
+          type: "object",
+          fields: [
+            defineField({
+              name: "name",
+              title: "Name",
+              type: "string",
+              validation: (Rule) => Rule.required().error("Contact name is required"),
+            }),
+            defineField({
+              name: "designation",
+              title: "Designation",
+              type: "string",
+            }),
+            defineField({
+              name: "email",
+              title: "Email",
+              type: "string",
+              validation: (Rule) => Rule.required().email().error("A valid email is required"),
+            }),
+            defineField({
+              name: "phone",
+              title: "Phone",
+              type: "string",
+            }),
+            defineField({
+              name: "isActive",
+              title: "Active",
+              type: "boolean",
+              description: "Use this to mark only current POCs as active",
+              initialValue: true,
+            }),
+            defineField({
+              name: "isPrimary",
+              title: "Primary Contact",
+              type: "boolean",
+              description: "Mark the main POC for day-to-day communication",
+              initialValue: false,
+            }),
+          ],
+          preview: {
+            select: {
+              title: "name",
+              designation: "designation",
+              email: "email",
+              isActive: "isActive",
+            },
+            prepare({title, designation, email, isActive}) {
+              const status = isActive === false ? "Inactive" : "Active";
+              return {
+                title: title || "Unnamed contact",
+                subtitle: `${designation || "No designation"} | ${email || "No email"} | ${status}`,
+              };
+            },
+          },
+        }),
+      ],
+      validation: (Rule) =>
+        Rule.required().min(1).error("Add at least one contact person for this client"),
     }),
     defineField({
       name: "billingEmail",
@@ -110,6 +158,21 @@ export const client = defineType({
         }).error("Please enter a valid URL"),
     }),
     defineField({
+      name: "feeModel",
+      title: "Fee Model",
+      type: "string",
+      description: "How you typically charge this client",
+      options: {
+        list: [
+          {title: "% of annual CTC", value: "percent_ctc"},
+          {title: "% of fixed fee (lump sum)", value: "percent_fixed_fee"},
+          {title: "Flat success fee per hire", value: "flat_per_hire"},
+          {title: "Mixed / custom", value: "mixed"},
+        ],
+        layout: "radio",
+      },
+    }),
+    defineField({
       name: "agreementFeePercentage",
       title: "Default Fee Percentage",
       type: "number",
@@ -125,6 +188,45 @@ export const client = defineType({
       initialValue: 30,
       validation: (Rule) =>
         Rule.min(0).max(180).error("Payment terms must be between 0 and 180 days"),
+    }),
+    defineField({
+      name: "msaStartDate",
+      title: "MSA / Framework Start",
+      type: "date",
+      description: "Master agreement or commercial framework start",
+      options: {dateFormat: "DD/MM/YYYY"},
+    }),
+    defineField({
+      name: "msaEndDate",
+      title: "MSA / Framework End",
+      type: "date",
+      description: "Renew or renegotiate before this date",
+      options: {dateFormat: "DD/MM/YYYY"},
+      validation: (Rule) =>
+        Rule.custom((end, context) => {
+          if (!end) return true;
+          const start = context.document?.msaStartDate as string | undefined;
+          if (start && end < start) {
+            return "End date cannot be before start date";
+          }
+          return true;
+        }),
+    }),
+    defineField({
+      name: "leadSource",
+      title: "Lead Source",
+      type: "string",
+      options: {
+        list: [
+          {title: "Inbound / Website", value: "inbound"},
+          {title: "Referral", value: "referral"},
+          {title: "Outbound / BD", value: "outbound"},
+          {title: "Job board / Marketplace", value: "job_board"},
+          {title: "Event", value: "event"},
+          {title: "Existing client expansion", value: "expansion"},
+          {title: "Other", value: "other"},
+        ],
+      },
     }),
     defineField({
       name: "status",

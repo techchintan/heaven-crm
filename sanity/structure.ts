@@ -1,6 +1,8 @@
 import type {StructureResolver} from "sanity/structure";
 import {DocumentsIcon, UsersIcon, CaseIcon, UserIcon, SearchIcon} from "@sanity/icons";
 
+import {apiVersion} from "./env";
+
 // https://www.sanity.io/docs/structure-builder-cheat-sheet
 export const structure: StructureResolver = (S) =>
   S.list()
@@ -40,6 +42,7 @@ export const structure: StructureResolver = (S) =>
                           S.documentTypeList("placement")
                             .title("Pending Placements")
                             .filter('_type == "placement" && revenueStatus == "pending"')
+                            .apiVersion(apiVersion)
                             .defaultOrdering([{field: "placementDate", direction: "desc"}]),
                         ),
                       S.listItem()
@@ -48,6 +51,7 @@ export const structure: StructureResolver = (S) =>
                           S.documentTypeList("placement")
                             .title("Invoiced Placements")
                             .filter('_type == "placement" && revenueStatus == "invoiced"')
+                            .apiVersion(apiVersion)
                             .defaultOrdering([{field: "placementDate", direction: "desc"}]),
                         ),
                       S.listItem()
@@ -56,6 +60,7 @@ export const structure: StructureResolver = (S) =>
                           S.documentTypeList("placement")
                             .title("Paid Placements")
                             .filter('_type == "placement" && revenueStatus == "paid"')
+                            .apiVersion(apiVersion)
                             .defaultOrdering([{field: "placementDate", direction: "desc"}]),
                         ),
                       S.listItem()
@@ -64,6 +69,7 @@ export const structure: StructureResolver = (S) =>
                           S.documentTypeList("placement")
                             .title("Deducted Placements")
                             .filter('_type == "placement" && revenueStatus == "deducted"')
+                            .apiVersion(apiVersion)
                             .defaultOrdering([{field: "placementDate", direction: "desc"}]),
                         ),
                     ]),
@@ -81,6 +87,7 @@ export const structure: StructureResolver = (S) =>
                         .toISOString()
                         .split("T")[0],
                     })
+                    .apiVersion(apiVersion)
                     .defaultOrdering([{field: "placementDate", direction: "desc"}]),
                 ),
 
@@ -96,6 +103,7 @@ export const structure: StructureResolver = (S) =>
                     .params({
                       today: new Date().toISOString().split("T")[0],
                     })
+                    .apiVersion(apiVersion)
                     .defaultOrdering([{field: "probationEndDate", direction: "asc"}]),
                 ),
             ]),
@@ -130,6 +138,7 @@ export const structure: StructureResolver = (S) =>
                   S.documentTypeList("candidate")
                     .title("Available Candidates")
                     .filter('_type == "candidate" && status == "available"')
+                    .apiVersion(apiVersion)
                     .defaultOrdering([{field: "fullName", direction: "asc"}]),
                 ),
               S.listItem()
@@ -138,6 +147,7 @@ export const structure: StructureResolver = (S) =>
                   S.documentTypeList("candidate")
                     .title("Placed Candidates")
                     .filter('_type == "candidate" && status == "placed"')
+                    .apiVersion(apiVersion)
                     .defaultOrdering([{field: "fullName", direction: "asc"}]),
                 ),
               S.listItem()
@@ -146,6 +156,7 @@ export const structure: StructureResolver = (S) =>
                   S.documentTypeList("candidate")
                     .title("In Process")
                     .filter('_type == "candidate" && status == "in_process"')
+                    .apiVersion(apiVersion)
                     .defaultOrdering([{field: "fullName", direction: "asc"}]),
                 ),
               S.listItem()
@@ -154,6 +165,7 @@ export const structure: StructureResolver = (S) =>
                   S.documentTypeList("candidate")
                     .title("On Hold")
                     .filter('_type == "candidate" && status == "on_hold"')
+                    .apiVersion(apiVersion)
                     .defaultOrdering([{field: "fullName", direction: "asc"}]),
                 ),
 
@@ -197,6 +209,7 @@ export const structure: StructureResolver = (S) =>
                   S.documentTypeList("client")
                     .title("Active Clients")
                     .filter('_type == "client" && status == "active"')
+                    .apiVersion(apiVersion)
                     .defaultOrdering([{field: "companyName", direction: "asc"}]),
                 ),
               S.listItem()
@@ -205,6 +218,7 @@ export const structure: StructureResolver = (S) =>
                   S.documentTypeList("client")
                     .title("Inactive Clients")
                     .filter('_type == "client" && status == "inactive"')
+                    .apiVersion(apiVersion)
                     .defaultOrdering([{field: "companyName", direction: "asc"}]),
                 ),
               S.listItem()
@@ -213,6 +227,7 @@ export const structure: StructureResolver = (S) =>
                   S.documentTypeList("client")
                     .title("Prospects")
                     .filter('_type == "client" && status == "prospect"')
+                    .apiVersion(apiVersion)
                     .defaultOrdering([{field: "companyName", direction: "asc"}]),
                 ),
             ]),
@@ -243,6 +258,7 @@ export const structure: StructureResolver = (S) =>
                   S.documentTypeList("teamMember")
                     .title("Active Team Members")
                     .filter('_type == "teamMember" && isActive == true')
+                    .apiVersion(apiVersion)
                     .defaultOrdering([{field: "name", direction: "asc"}]),
                 ),
               S.listItem()
@@ -251,6 +267,7 @@ export const structure: StructureResolver = (S) =>
                   S.documentTypeList("teamMember")
                     .title("Inactive Team Members")
                     .filter('_type == "teamMember" && isActive != true')
+                    .apiVersion(apiVersion)
                     .defaultOrdering([{field: "name", direction: "asc"}]),
                 ),
             ]),
