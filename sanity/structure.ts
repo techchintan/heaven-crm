@@ -138,7 +138,7 @@ export const structure: StructureResolver = (S) =>
                   S.documentTypeList("candidate")
                     .title("Available Candidates")
                     .filter(
-                      '_type == "candidate" && status == "immediately_available" || status == "available_next_30_days"',
+                      '_type == "candidate" && (status == "immediately_available" || status == "available_next_30_days")',
                     )
                     .apiVersion(apiVersion)
                     .defaultOrdering([{field: "fullName", direction: "asc"}]),

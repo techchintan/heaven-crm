@@ -28,6 +28,22 @@ export const candidate = defineType({
       description: "Contact number",
     }),
     defineField({
+      name: "alternateEmail",
+      title: "Alternate Email",
+      type: "string",
+      validation: (Rule) =>
+        Rule.custom((value) => {
+          if (!value || String(value).trim() === "") return true;
+          const ok = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(value).trim());
+          return ok || "Please enter a valid email";
+        }),
+    }),
+    defineField({
+      name: "alternatePhone",
+      title: "Alternate Phone",
+      type: "string",
+    }),
+    defineField({
       name: "primarySkill",
       title: "Primary Skill",
       type: "string",
@@ -68,6 +84,47 @@ export const candidate = defineType({
       title: "Current Location",
       type: "string",
       description: "Current location",
+    }),
+    defineField({
+      name: "preferredLocations",
+      title: "Preferred Work Locations",
+      type: "array",
+      of: [{type: "string"}],
+      description: "Cities or regions the candidate is open to",
+      options: {layout: "tags"},
+    }),
+    defineField({
+      name: "willingToRelocate",
+      title: "Willing to Relocate",
+      type: "boolean",
+      initialValue: false,
+    }),
+    defineField({
+      name: "remotePreference",
+      title: "Work Mode Preference",
+      type: "string",
+      options: {
+        list: [
+          {title: "On-site", value: "onsite"},
+          {title: "Hybrid", value: "hybrid"},
+          {title: "Remote", value: "remote"},
+          {title: "Flexible", value: "flexible"},
+        ],
+        layout: "radio",
+      },
+    }),
+    defineField({
+      name: "languages",
+      title: "Languages",
+      type: "array",
+      of: [{type: "string"}],
+      options: {layout: "tags"},
+    }),
+    defineField({
+      name: "highestEducation",
+      title: "Highest Education",
+      type: "string",
+      description: "e.g. B.Tech, MBA, 12th pass",
     }),
     defineField({
       name: "currentSalary",
@@ -130,6 +187,13 @@ export const candidate = defineType({
       },
     }),
     defineField({
+      name: "assignedRecruiter",
+      title: "Assigned Recruiter",
+      type: "reference",
+      to: [{type: "teamMember"}],
+      description: "Internal owner of this candidate record",
+    }),
+    defineField({
       name: "source",
       title: "Source",
       type: "string",
@@ -144,6 +208,17 @@ export const candidate = defineType({
           {title: "Other", value: "other"},
         ],
       },
+    }),
+    defineField({
+      name: "lastContactedAt",
+      title: "Last Contacted",
+      type: "datetime",
+      description: "Last call, email, or meeting with the candidate",
+    }),
+    defineField({
+      name: "nextFollowUpAt",
+      title: "Next Follow-up",
+      type: "datetime",
     }),
     defineField({
       name: "notes",
