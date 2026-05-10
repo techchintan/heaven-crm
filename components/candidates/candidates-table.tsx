@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { Search, Filter, ExternalLink, Mail, Phone, Linkedin } from "lucide-react";
+import { Search, Filter, ExternalLink, Mail, Phone, Link2 } from "lucide-react";
 import { format, parseISO } from "date-fns";
 import { StatusBadge } from "@/components/ui/status-badge";
 import type { Candidate } from "@/lib/sanity-queries";
@@ -182,7 +182,7 @@ export function CandidatesTable({ candidates }: CandidatesTableProps) {
                           rel="noopener noreferrer"
                           className="flex h-7 w-7 items-center justify-center rounded-md bg-muted text-muted-foreground transition-colors hover:bg-card-hover hover:text-foreground"
                         >
-                          <Linkedin className="h-3.5 w-3.5" />
+                          <Link2 className="h-3.5 w-3.5" />
                         </a>
                       )}
                     </div>
