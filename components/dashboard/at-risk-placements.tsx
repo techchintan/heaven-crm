@@ -1,8 +1,8 @@
 "use client";
 
-import { AlertTriangle, Clock } from "lucide-react";
-import type { Placement } from "@/lib/sanity-queries";
-import { format, differenceInDays, parseISO } from "date-fns";
+import {AlertTriangle, Clock} from "lucide-react";
+import type {Placement} from "@/lib/sanity-queries";
+import {differenceInDays, parseISO} from "date-fns";
 
 interface AtRiskPlacementsProps {
   placements: Placement[];
@@ -15,19 +15,19 @@ function formatCurrency(value: number): string {
   return `₹${value.toLocaleString("en-IN")}`;
 }
 
-export function AtRiskPlacements({ placements }: AtRiskPlacementsProps) {
+export function AtRiskPlacements({placements}: AtRiskPlacementsProps) {
   return (
-    <div className="rounded-xl border border-warning/30 bg-warning-muted p-5">
+    <div className="border-warning/30 bg-warning-muted rounded-xl border p-5">
       <div className="mb-4 flex items-center gap-2">
-        <AlertTriangle className="h-4 w-4 text-warning" />
-        <h3 className="text-sm font-medium text-foreground">At-Risk Probations</h3>
-        <span className="ml-auto rounded-full bg-warning/20 px-2 py-0.5 text-xs font-medium text-warning">
+        <AlertTriangle className="text-warning h-4 w-4" />
+        <h3 className="text-foreground text-sm font-medium">At-Risk Probations</h3>
+        <span className="bg-warning/20 text-warning ml-auto rounded-full px-2 py-0.5 text-xs font-medium">
           {placements.length} active
         </span>
       </div>
 
       {placements.length === 0 ? (
-        <p className="py-4 text-center text-sm text-muted-foreground">
+        <p className="text-muted-foreground py-4 text-center text-sm">
           No at-risk placements within 30 days
         </p>
       ) : (
@@ -40,21 +40,21 @@ export function AtRiskPlacements({ placements }: AtRiskPlacementsProps) {
             return (
               <div
                 key={placement._id}
-                className="flex items-center justify-between rounded-lg bg-background/50 p-3"
+                className="bg-background/50 flex items-center justify-between rounded-lg p-3"
               >
-                <div className="flex-1 min-w-0">
-                  <p className="truncate text-sm font-medium text-foreground">
+                <div className="min-w-0 flex-1">
+                  <p className="text-foreground truncate text-sm font-medium">
                     {placement.candidate?.fullName || "Unknown"}
                   </p>
-                  <p className="truncate text-xs text-muted-foreground">
+                  <p className="text-muted-foreground truncate text-xs">
                     {placement.client?.companyName || "Unknown"} - {placement.jobTitle}
                   </p>
                 </div>
                 <div className="ml-4 flex flex-col items-end">
-                  <span className="text-sm font-medium text-foreground">
+                  <span className="text-foreground text-sm font-medium">
                     {formatCurrency(placement.totalInvoiceValue || 0)}
                   </span>
-                  <div className="flex items-center gap-1 text-xs text-warning">
+                  <div className="text-warning flex items-center gap-1 text-xs">
                     <Clock className="h-3 w-3" />
                     <span>{daysLeft} days left</span>
                   </div>

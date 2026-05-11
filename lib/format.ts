@@ -5,7 +5,7 @@
  * throughout the application.
  */
 
-import { format, parse, isValid } from "date-fns";
+import {format, parse, isValid} from "date-fns";
 
 /**
  * Format currency value in Indian Rupees with proper notation
@@ -43,10 +43,7 @@ export function formatCurrency(value: number): string {
  * formatDate(new Date())           // Returns current date in DD/MM/YYYY
  * formatDate("25-01-2024", "dd-MM-yyyy") // Custom format
  */
-export function formatDate(
-  date: string | Date,
-  inputFormat?: string
-): string {
+export function formatDate(date: string | Date, inputFormat?: string): string {
   try {
     let dateObj: Date;
 
@@ -66,7 +63,7 @@ export function formatDate(
     }
 
     return format(dateObj, "dd/MM/yyyy");
-  } catch (error) {
+  } catch {
     return "Invalid date";
   }
 }
@@ -88,7 +85,7 @@ export function formatDateTime(date: string | Date): string {
     }
 
     return format(dateObj, "dd/MM/yyyy, h:mm a");
-  } catch (error) {
+  } catch {
     return "Invalid date";
   }
 }
@@ -123,7 +120,7 @@ export function formatRelativeDate(date: string | Date): string {
     if (days < 30) return `${Math.floor(days / 7)}w ago`;
 
     return format(dateObj, "dd/MM/yyyy");
-  } catch (error) {
+  } catch {
     return "Invalid date";
   }
 }
@@ -267,10 +264,7 @@ export function formatPhone(phone: string): string {
  * calculatePercentageChange(150, 100) // Returns 50
  * calculatePercentageChange(50, 100)  // Returns -50
  */
-export function calculatePercentageChange(
-  current: number,
-  previous: number
-): number {
+export function calculatePercentageChange(current: number, previous: number): number {
   if (previous === 0) return 0;
   return Math.round(((current - previous) / previous) * 100);
 }
@@ -284,16 +278,9 @@ export function calculatePercentageChange(
  * @example
  * calculateDaysBetween("2024-01-25", "2024-01-20") // Returns 5
  */
-export function calculateDaysBetween(
-  date1: string | Date,
-  date2?: string | Date
-): number {
+export function calculateDaysBetween(date1: string | Date, date2?: string | Date): number {
   const d1 = typeof date1 === "string" ? new Date(date1) : date1;
-  const d2 = date2
-    ? typeof date2 === "string"
-      ? new Date(date2)
-      : date2
-    : new Date();
+  const d2 = date2 ? (typeof date2 === "string" ? new Date(date2) : date2) : new Date();
 
   const diff = Math.abs(d2.getTime() - d1.getTime());
   return Math.ceil(diff / (1000 * 60 * 60 * 24));
@@ -321,10 +308,7 @@ export function isAtRiskProbation(probationEndDate: string | Date): boolean {
  * formatStatus("in_process") // Returns "In Process"
  */
 export function formatStatus(status: string): string {
-  return status
-    .split("_")
-    .map(capitalize)
-    .join(" ");
+  return status.split("_").map(capitalize).join(" ");
 }
 
 /**
@@ -363,15 +347,12 @@ export function calculateTotal(amount: number, gstRate: number = 18): number {
  * @example
  * formatRevenue(100000, true) // Returns "₹1.18L"
  */
-export function formatRevenue(
-  revenue: number,
-  includeGST: boolean = false
-): string {
+export function formatRevenue(revenue: number, includeGST: boolean = false): string {
   const amount = includeGST ? calculateTotal(revenue) : revenue;
   return formatCurrency(amount);
 }
 
-export default {
+const formatUtils = {
   formatCurrency,
   formatDate,
   formatDateTime,
@@ -392,3 +373,5 @@ export default {
   calculateTotal,
   formatRevenue,
 };
+
+export default formatUtils;

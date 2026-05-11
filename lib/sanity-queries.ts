@@ -1,4 +1,4 @@
-import { client } from "@/sanity/lib/client";
+import {client} from "@/sanity/lib/client";
 
 // Types
 export interface TeamMember {
@@ -219,19 +219,14 @@ export async function getDashboardStats(): Promise<DashboardStats> {
   ]);
 
   // Calculate totals
-  const totalRevenue = placements.reduce(
-    (sum, p) => sum + (p.totalInvoiceValue || 0),
-    0
-  );
+  const totalRevenue = placements.reduce((sum, p) => sum + (p.totalInvoiceValue || 0), 0);
   const paidRevenue = placements
     .filter((p) => p.revenueStatus === "paid")
     .reduce((sum, p) => sum + (p.amountReceived || p.totalInvoiceValue || 0), 0);
   const pendingRevenue = placements
     .filter((p) => p.revenueStatus === "pending" || p.revenueStatus === "invoiced")
     .reduce((sum, p) => sum + (p.totalInvoiceValue || 0), 0);
-  const deductedCount = placements.filter(
-    (p) => p.revenueStatus === "deducted"
-  ).length;
+  const deductedCount = placements.filter((p) => p.revenueStatus === "deducted").length;
 
   // At-risk placements (within probation period and not yet paid)
   const today = new Date();
@@ -243,7 +238,7 @@ export async function getDashboardStats(): Promise<DashboardStats> {
   });
 
   // Recruiter stats
-  const recruiterMap = new Map<string, { name: string; placements: number; revenue: number }>();
+  const recruiterMap = new Map<string, {name: string; placements: number; revenue: number}>();
   placements.forEach((p) => {
     if (!p.recruiter) return;
     const existing = recruiterMap.get(p.recruiter._id) || {
@@ -257,11 +252,11 @@ export async function getDashboardStats(): Promise<DashboardStats> {
   });
 
   // Monthly revenue (last 6 months)
-  const monthlyRevenue: { month: string; actual: number; projected: number }[] = [];
+  const monthlyRevenue: {month: string; actual: number; projected: number}[] = [];
   for (let i = 5; i >= 0; i--) {
     const date = new Date();
     date.setMonth(date.getMonth() - i);
-    const monthStr = date.toLocaleDateString("en-US", { month: "short", year: "2-digit" });
+    const monthStr = date.toLocaleDateString("en-US", {month: "short", year: "2-digit"});
     const monthStart = new Date(date.getFullYear(), date.getMonth(), 1);
     const monthEnd = new Date(date.getFullYear(), date.getMonth() + 1, 0);
 
@@ -273,12 +268,9 @@ export async function getDashboardStats(): Promise<DashboardStats> {
     const actual = monthPlacements
       .filter((p) => p.revenueStatus === "paid")
       .reduce((sum, p) => sum + (p.amountReceived || p.totalInvoiceValue || 0), 0);
-    const projected = monthPlacements.reduce(
-      (sum, p) => sum + (p.totalInvoiceValue || 0),
-      0
-    );
+    const projected = monthPlacements.reduce((sum, p) => sum + (p.totalInvoiceValue || 0), 0);
 
-    monthlyRevenue.push({ month: monthStr, actual, projected });
+    monthlyRevenue.push({month: monthStr, actual, projected});
   }
 
   return {
@@ -292,9 +284,7 @@ export async function getDashboardStats(): Promise<DashboardStats> {
     teamMembers: teamMembers.filter((t) => t.isActive).length,
     recentPlacements: placements.slice(0, 5),
     atRiskPlacements,
-    recruiterStats: Array.from(recruiterMap.values()).sort(
-      (a, b) => b.revenue - a.revenue
-    ),
+    recruiterStats: Array.from(recruiterMap.values()).sort((a, b) => b.revenue - a.revenue),
     monthlyRevenue,
   };
 }

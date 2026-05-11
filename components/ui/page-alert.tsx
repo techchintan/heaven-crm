@@ -1,6 +1,6 @@
-import { cn } from "@/lib/utils";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { AlertCircle, CheckCircle2, AlertTriangle, InfoIcon } from "lucide-react";
+import {cn} from "@/lib/utils";
+import {Alert, AlertDescription, AlertTitle} from "@/components/ui/alert";
+import {AlertCircle, CheckCircle2, AlertTriangle, InfoIcon} from "lucide-react";
 
 interface PageAlertProps {
   type: "success" | "error" | "warning" | "info";
@@ -64,13 +64,7 @@ const alertConfig = {
  * />
  * ```
  */
-export function PageAlert({
-  type,
-  title,
-  message,
-  className,
-  onDismiss,
-}: PageAlertProps) {
+export function PageAlert({type, title, message, className, onDismiss}: PageAlertProps) {
   const config = alertConfig[type];
   const Icon = config.icon;
 
@@ -78,14 +72,9 @@ export function PageAlert({
     <Alert className={cn(config.className, className)}>
       <Icon className="h-4 w-4" />
       <AlertTitle className={config.titleClassName}>{title}</AlertTitle>
-      <AlertDescription className={config.messageClassName}>
-        {message}
-      </AlertDescription>
+      <AlertDescription className={config.messageClassName}>{message}</AlertDescription>
       {onDismiss && (
-        <button
-          onClick={onDismiss}
-          className="ml-auto text-xs opacity-70 hover:opacity-100"
-        >
+        <button onClick={onDismiss} className="ml-auto text-xs opacity-70 hover:opacity-100">
           Dismiss
         </button>
       )}

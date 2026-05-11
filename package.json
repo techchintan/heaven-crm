@@ -14,8 +14,9 @@
     "lint": "eslint --fix",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
+    "ts:check": "tsc --noEmit",
     "typegen": "sanity schema extract --enforce-required-fields && sanity typegen generate",
-    "prebuild": "pnpm run typegen && pnpm run lint && pnpm run format"
+    "prebuild": "pnpm run typegen && pnpm run lint && pnpm run format && pnpm run ts:check"
   },
   "dependencies": {
     "@base-ui/react": "^1.4.1",

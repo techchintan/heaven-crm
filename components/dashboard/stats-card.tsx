@@ -1,6 +1,6 @@
-import { cn } from "@/lib/utils";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { LucideIcon } from "lucide-react";
+import {cn} from "@/lib/utils";
+import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card";
+import {LucideIcon} from "lucide-react";
 
 interface StatsCardProps {
   title: string;
@@ -70,10 +70,15 @@ export function StatsCard({
     <Card className={cn(variantStyles[variant], className)}>
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
         <div className="space-y-0.5">
-          <CardTitle className="text-sm font-medium text-muted-foreground">{title}</CardTitle>
+          <CardTitle className="text-muted-foreground text-sm font-medium">{title}</CardTitle>
         </div>
         {Icon && (
-          <div className={cn("flex h-8 w-8 items-center justify-center rounded-lg", iconVariantStyles[variant])}>
+          <div
+            className={cn(
+              "flex h-8 w-8 items-center justify-center rounded-lg",
+              iconVariantStyles[variant],
+            )}
+          >
             <Icon className="h-4 w-4" />
           </div>
         )}
@@ -81,21 +86,22 @@ export function StatsCard({
       <CardContent>
         <div className="flex items-end justify-between gap-2">
           <div className="flex-1">
-            <div className="text-2xl font-bold text-foreground">{value}</div>
-            {description && (
-              <p className="mt-1 text-xs text-muted-foreground">{description}</p>
-            )}
+            <div className="text-foreground text-2xl font-bold">{value}</div>
+            {description && <p className="text-muted-foreground mt-1 text-xs">{description}</p>}
           </div>
           {trend && (
             <div
               className={cn(
                 "inline-flex items-center gap-1 rounded-full px-2 py-1 text-xs font-medium",
                 trend.isPositive
-                  ? "bg-emerald-100 dark:bg-emerald-900 text-emerald-600 dark:text-emerald-400"
-                  : "bg-red-100 dark:bg-red-900 text-red-600 dark:text-red-400"
+                  ? "bg-emerald-100 text-emerald-600 dark:bg-emerald-900 dark:text-emerald-400"
+                  : "bg-red-100 text-red-600 dark:bg-red-900 dark:text-red-400",
               )}
             >
-              <span>{trend.isPositive ? "+" : ""}{trend.value}%</span>
+              <span>
+                {trend.isPositive ? "+" : ""}
+                {trend.value}%
+              </span>
             </div>
           )}
         </div>

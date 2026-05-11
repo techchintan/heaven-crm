@@ -1,5 +1,5 @@
-import { cn } from "@/lib/utils";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {cn} from "@/lib/utils";
+import {Card, CardContent, CardDescription, CardHeader, CardTitle} from "@/components/ui/card";
 
 interface DataCardProps {
   title: string;
@@ -46,18 +46,10 @@ export function DataCard({
     <Card className={className}>
       <CardHeader>
         <CardTitle className="text-lg">{title}</CardTitle>
-        {description && (
-          <CardDescription>{description}</CardDescription>
-        )}
+        {description && <CardDescription>{description}</CardDescription>}
       </CardHeader>
-      <CardContent className={cn(isLoading && "animate-pulse")}>
-        {children}
-      </CardContent>
-      {footer && (
-        <div className="border-t border-border px-6 py-4">
-          {footer}
-        </div>
-      )}
+      <CardContent className={cn(isLoading && "animate-pulse")}>{children}</CardContent>
+      {footer && <div className="border-border border-t px-6 py-4">{footer}</div>}
     </Card>
   );
 }

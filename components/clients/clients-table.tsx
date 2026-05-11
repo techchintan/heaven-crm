@@ -1,9 +1,9 @@
 "use client";
 
-import { useState, useMemo } from "react";
-import { Search, Filter, ExternalLink, Mail, Phone, Globe } from "lucide-react";
-import { StatusBadge } from "@/components/ui/status-badge";
-import type { Client } from "@/lib/sanity-queries";
+import {useState, useMemo} from "react";
+import {Search, Filter, ExternalLink, Mail, Phone, Globe} from "lucide-react";
+import {StatusBadge} from "@/components/ui/status-badge";
+import type {Client} from "@/lib/sanity-queries";
 
 interface ClientsTableProps {
   clients: Client[];
@@ -22,7 +22,7 @@ const industryLabels: Record<string, string> = {
   other: "Other",
 };
 
-export function ClientsTable({ clients }: ClientsTableProps) {
+export function ClientsTable({clients}: ClientsTableProps) {
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [industryFilter, setIndustryFilter] = useState<string>("all");
@@ -37,7 +37,7 @@ export function ClientsTable({ clients }: ClientsTableProps) {
         (c) =>
           c.companyName?.toLowerCase().includes(searchLower) ||
           c.primaryContact?.toLowerCase().includes(searchLower) ||
-          c.contactEmail?.toLowerCase().includes(searchLower)
+          c.contactEmail?.toLowerCase().includes(searchLower),
       );
     }
 
@@ -55,15 +55,15 @@ export function ClientsTable({ clients }: ClientsTableProps) {
   }, [clients, search, statusFilter, industryFilter]);
 
   const statusOptions = [
-    { value: "all", label: "All Status" },
-    { value: "active", label: "Active" },
-    { value: "inactive", label: "Inactive" },
-    { value: "prospect", label: "Prospect" },
-    { value: "on_hold", label: "On Hold" },
+    {value: "all", label: "All Status"},
+    {value: "active", label: "Active"},
+    {value: "inactive", label: "Inactive"},
+    {value: "prospect", label: "Prospect"},
+    {value: "on_hold", label: "On Hold"},
   ];
 
   const industryOptions = [
-    { value: "all", label: "All Industries" },
+    {value: "all", label: "All Industries"},
     ...Object.entries(industryLabels).map(([value, label]) => ({
       value,
       label,
@@ -74,23 +74,23 @@ export function ClientsTable({ clients }: ClientsTableProps) {
     <div className="space-y-4">
       {/* Filters */}
       <div className="flex flex-wrap items-center gap-3">
-        <div className="relative flex-1 min-w-64">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+        <div className="relative min-w-64 flex-1">
+          <Search className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
           <input
             type="text"
             placeholder="Search by company, contact..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="h-9 w-full rounded-lg border border-border bg-input pl-9 pr-4 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+            className="border-border bg-input text-foreground placeholder:text-muted-foreground focus:border-primary focus:ring-primary h-9 w-full rounded-lg border pr-4 pl-9 text-sm focus:ring-1 focus:outline-none"
           />
         </div>
 
         <div className="relative">
-          <Filter className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+          <Filter className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="h-9 appearance-none rounded-lg border border-border bg-input pl-9 pr-8 text-sm text-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+            className="border-border bg-input text-foreground focus:border-primary focus:ring-primary h-9 appearance-none rounded-lg border pr-8 pl-9 text-sm focus:ring-1 focus:outline-none"
           >
             {statusOptions.map((option) => (
               <option key={option.value} value={option.value}>
@@ -103,7 +103,7 @@ export function ClientsTable({ clients }: ClientsTableProps) {
         <select
           value={industryFilter}
           onChange={(e) => setIndustryFilter(e.target.value)}
-          className="h-9 appearance-none rounded-lg border border-border bg-input px-3 pr-8 text-sm text-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+          className="border-border bg-input text-foreground focus:border-primary focus:ring-primary h-9 appearance-none rounded-lg border px-3 pr-8 text-sm focus:ring-1 focus:outline-none"
         >
           {industryOptions.map((option) => (
             <option key={option.value} value={option.value}>
@@ -115,7 +115,7 @@ export function ClientsTable({ clients }: ClientsTableProps) {
         <a
           href="/studio/structure/client"
           target="_blank"
-          className="flex h-9 items-center gap-2 rounded-lg bg-primary px-4 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+          className="bg-primary text-primary-foreground hover:bg-primary/90 flex h-9 items-center gap-2 rounded-lg px-4 text-sm font-medium transition-colors"
         >
           Add in Studio
           <ExternalLink className="h-3 w-3" />
@@ -123,15 +123,15 @@ export function ClientsTable({ clients }: ClientsTableProps) {
       </div>
 
       {/* Results count */}
-      <p className="text-sm text-muted-foreground">
+      <p className="text-muted-foreground text-sm">
         Showing {filteredClients.length} of {clients.length} clients
       </p>
 
       {/* Table */}
-      <div className="overflow-x-auto rounded-xl border border-border bg-card">
+      <div className="border-border bg-card overflow-x-auto rounded-xl border">
         <table className="w-full">
           <thead>
-            <tr className="border-b border-border text-left text-xs font-medium text-muted-foreground">
+            <tr className="border-border text-muted-foreground border-b text-left text-xs font-medium">
               <th className="px-4 py-3">Company</th>
               <th className="px-4 py-3">Industry</th>
               <th className="px-4 py-3">Primary Contact</th>
@@ -141,50 +141,39 @@ export function ClientsTable({ clients }: ClientsTableProps) {
               <th className="px-4 py-3">Actions</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-border">
+          <tbody className="divide-border divide-y">
             {filteredClients.length === 0 ? (
               <tr>
-                <td colSpan={7} className="py-8 text-center text-sm text-muted-foreground">
+                <td colSpan={7} className="text-muted-foreground py-8 text-center text-sm">
                   No clients found
                 </td>
               </tr>
             ) : (
               filteredClients.map((client) => (
-                <tr
-                  key={client._id}
-                  className="text-sm transition-colors hover:bg-card-hover"
-                >
+                <tr key={client._id} className="hover:bg-card-hover text-sm transition-colors">
                   <td className="px-4 py-3">
                     <div>
-                      <p className="font-medium text-foreground">
-                        {client.companyName}
-                      </p>
+                      <p className="text-foreground font-medium">{client.companyName}</p>
                       {client.gstin && (
-                        <p className="text-xs text-muted-foreground">
-                          GSTIN: {client.gstin}
-                        </p>
+                        <p className="text-muted-foreground text-xs">GSTIN: {client.gstin}</p>
                       )}
                     </div>
                   </td>
-                  <td className="px-4 py-3 text-muted-foreground">
+                  <td className="text-muted-foreground px-4 py-3">
                     {client.industry ? industryLabels[client.industry] || client.industry : "-"}
                   </td>
                   <td className="px-4 py-3">
                     <div>
                       <p className="text-foreground">{client.primaryContact}</p>
                       {client.contactDesignation && (
-                        <p className="text-xs text-muted-foreground">
-                          {client.contactDesignation}
-                        </p>
+                        <p className="text-muted-foreground text-xs">{client.contactDesignation}</p>
                       )}
                     </div>
                   </td>
-                  <td className="px-4 py-3 text-foreground">
-                    {client.agreementFeePercentage
-                      ? `${client.agreementFeePercentage}%`
-                      : "-"}
+                  <td className="text-foreground px-4 py-3">
+                    {client.agreementFeePercentage ? `${client.agreementFeePercentage}%` : "-"}
                   </td>
-                  <td className="px-4 py-3 text-muted-foreground">
+                  <td className="text-muted-foreground px-4 py-3">
                     {client.paymentTerms ? `${client.paymentTerms} days` : "-"}
                   </td>
                   <td className="px-4 py-3">
@@ -195,7 +184,7 @@ export function ClientsTable({ clients }: ClientsTableProps) {
                       {client.contactEmail && (
                         <a
                           href={`mailto:${client.contactEmail}`}
-                          className="flex h-7 w-7 items-center justify-center rounded-md bg-muted text-muted-foreground transition-colors hover:bg-card-hover hover:text-foreground"
+                          className="bg-muted text-muted-foreground hover:bg-card-hover hover:text-foreground flex h-7 w-7 items-center justify-center rounded-md transition-colors"
                         >
                           <Mail className="h-3.5 w-3.5" />
                         </a>
@@ -203,7 +192,7 @@ export function ClientsTable({ clients }: ClientsTableProps) {
                       {client.contactPhone && (
                         <a
                           href={`tel:${client.contactPhone}`}
-                          className="flex h-7 w-7 items-center justify-center rounded-md bg-muted text-muted-foreground transition-colors hover:bg-card-hover hover:text-foreground"
+                          className="bg-muted text-muted-foreground hover:bg-card-hover hover:text-foreground flex h-7 w-7 items-center justify-center rounded-md transition-colors"
                         >
                           <Phone className="h-3.5 w-3.5" />
                         </a>
@@ -213,7 +202,7 @@ export function ClientsTable({ clients }: ClientsTableProps) {
                           href={client.website}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="flex h-7 w-7 items-center justify-center rounded-md bg-muted text-muted-foreground transition-colors hover:bg-card-hover hover:text-foreground"
+                          className="bg-muted text-muted-foreground hover:bg-card-hover hover:text-foreground flex h-7 w-7 items-center justify-center rounded-md transition-colors"
                         >
                           <Globe className="h-3.5 w-3.5" />
                         </a>

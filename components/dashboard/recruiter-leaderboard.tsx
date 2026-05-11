@@ -1,6 +1,6 @@
 "use client";
 
-import { Trophy } from "lucide-react";
+import {Trophy} from "lucide-react";
 
 interface RecruiterLeaderboardProps {
   data: {
@@ -20,18 +20,18 @@ function formatCurrency(value: number): string {
   return `₹${value.toLocaleString("en-IN")}`;
 }
 
-export function RecruiterLeaderboard({ data }: RecruiterLeaderboardProps) {
+export function RecruiterLeaderboard({data}: RecruiterLeaderboardProps) {
   const maxRevenue = Math.max(...data.map((d) => d.revenue), 1);
 
   return (
-    <div className="rounded-xl border border-border bg-card p-5">
+    <div className="border-border bg-card rounded-xl border p-5">
       <div className="mb-4 flex items-center gap-2">
-        <Trophy className="h-4 w-4 text-warning" />
-        <h3 className="text-sm font-medium text-foreground">Recruiter Leaderboard</h3>
+        <Trophy className="text-warning h-4 w-4" />
+        <h3 className="text-foreground text-sm font-medium">Recruiter Leaderboard</h3>
       </div>
 
       {data.length === 0 ? (
-        <p className="py-8 text-center text-sm text-muted-foreground">
+        <p className="text-muted-foreground py-8 text-center text-sm">
           No placement data available
         </p>
       ) : (
@@ -40,26 +40,24 @@ export function RecruiterLeaderboard({ data }: RecruiterLeaderboardProps) {
             <div key={recruiter.name} className="space-y-2">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="flex h-6 w-6 items-center justify-center rounded-full bg-muted text-xs font-semibold text-muted-foreground">
+                  <div className="bg-muted text-muted-foreground flex h-6 w-6 items-center justify-center rounded-full text-xs font-semibold">
                     {index + 1}
                   </div>
                   <div>
-                    <p className="text-sm font-medium text-foreground">
-                      {recruiter.name}
-                    </p>
-                    <p className="text-xs text-muted-foreground">
+                    <p className="text-foreground text-sm font-medium">{recruiter.name}</p>
+                    <p className="text-muted-foreground text-xs">
                       {recruiter.placements} placement{recruiter.placements !== 1 ? "s" : ""}
                     </p>
                   </div>
                 </div>
-                <span className="text-sm font-semibold text-foreground">
+                <span className="text-foreground text-sm font-semibold">
                   {formatCurrency(recruiter.revenue)}
                 </span>
               </div>
-              <div className="h-1.5 overflow-hidden rounded-full bg-muted">
+              <div className="bg-muted h-1.5 overflow-hidden rounded-full">
                 <div
-                  className="h-full rounded-full bg-primary transition-all"
-                  style={{ width: `${(recruiter.revenue / maxRevenue) * 100}%` }}
+                  className="bg-primary h-full rounded-full transition-all"
+                  style={{width: `${(recruiter.revenue / maxRevenue) * 100}%`}}
                 />
               </div>
             </div>

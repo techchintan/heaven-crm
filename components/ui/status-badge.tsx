@@ -1,5 +1,4 @@
-import { cn } from "@/lib/utils";
-import { Badge } from "@/components/ui/badge";
+import {Badge} from "@/components/ui/badge";
 
 interface StatusBadgeProps {
   status: string;
@@ -7,27 +6,36 @@ interface StatusBadgeProps {
   className?: string;
 }
 
-const placementStatusConfig: Record<string, { label: string; variant: "default" | "secondary" | "destructive" | "outline" }> = {
-  pending: { label: "Pending", variant: "secondary" },
-  invoiced: { label: "Invoiced", variant: "outline" },
-  paid: { label: "Paid", variant: "default" },
-  deducted: { label: "Deducted", variant: "destructive" },
-  partially_paid: { label: "Partial", variant: "outline" },
+const placementStatusConfig: Record<
+  string,
+  {label: string; variant: "default" | "secondary" | "destructive" | "outline"}
+> = {
+  pending: {label: "Pending", variant: "secondary"},
+  invoiced: {label: "Invoiced", variant: "outline"},
+  paid: {label: "Paid", variant: "default"},
+  deducted: {label: "Deducted", variant: "destructive"},
+  partially_paid: {label: "Partial", variant: "outline"},
 };
 
-const candidateStatusConfig: Record<string, { label: string; variant: "default" | "secondary" | "destructive" | "outline" }> = {
-  available: { label: "Available", variant: "default" },
-  placed: { label: "Placed", variant: "secondary" },
-  in_process: { label: "In Process", variant: "outline" },
-  on_hold: { label: "On Hold", variant: "secondary" },
-  not_available: { label: "Not Available", variant: "destructive" },
+const candidateStatusConfig: Record<
+  string,
+  {label: string; variant: "default" | "secondary" | "destructive" | "outline"}
+> = {
+  available: {label: "Available", variant: "default"},
+  placed: {label: "Placed", variant: "secondary"},
+  in_process: {label: "In Process", variant: "outline"},
+  on_hold: {label: "On Hold", variant: "secondary"},
+  not_available: {label: "Not Available", variant: "destructive"},
 };
 
-const clientStatusConfig: Record<string, { label: string; variant: "default" | "secondary" | "destructive" | "outline" }> = {
-  active: { label: "Active", variant: "default" },
-  inactive: { label: "Inactive", variant: "secondary" },
-  prospect: { label: "Prospect", variant: "outline" },
-  on_hold: { label: "On Hold", variant: "outline" },
+const clientStatusConfig: Record<
+  string,
+  {label: string; variant: "default" | "secondary" | "destructive" | "outline"}
+> = {
+  active: {label: "Active", variant: "default"},
+  inactive: {label: "Inactive", variant: "secondary"},
+  prospect: {label: "Prospect", variant: "outline"},
+  on_hold: {label: "On Hold", variant: "outline"},
 };
 
 /**
@@ -47,14 +55,14 @@ const clientStatusConfig: Record<string, { label: string; variant: "default" | "
  * <StatusBadge status="active" variant="client" />
  * ```
  */
-export function StatusBadge({ status, variant = "placement", className }: StatusBadgeProps) {
+export function StatusBadge({status, variant = "placement", className}: StatusBadgeProps) {
   const configs = {
     placement: placementStatusConfig,
     candidate: candidateStatusConfig,
     client: clientStatusConfig,
   };
 
-  const config = configs[variant][status] || { label: status, variant: "secondary" as const };
+  const config = configs[variant][status] || {label: status, variant: "secondary" as const};
 
   return (
     <Badge variant={config.variant} className={className}>

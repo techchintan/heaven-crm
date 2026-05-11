@@ -1,15 +1,15 @@
 "use client";
 
-import { FileText } from "lucide-react";
-import type { Placement } from "@/lib/sanity-queries";
-import { format, parseISO } from "date-fns";
-import { cn } from "@/lib/utils";
+import {FileText} from "lucide-react";
+import type {Placement} from "@/lib/sanity-queries";
+import {format, parseISO} from "date-fns";
+import {cn} from "@/lib/utils";
 
 interface RecentPlacementsProps {
   placements: Placement[];
 }
 
-const statusConfig: Record<string, { label: string; className: string }> = {
+const statusConfig: Record<string, {label: string; className: string}> = {
   pending: {
     label: "Pending",
     className: "bg-muted text-muted-foreground",
@@ -39,31 +39,29 @@ function formatCurrency(value: number): string {
   return `₹${value.toLocaleString("en-IN")}`;
 }
 
-export function RecentPlacements({ placements }: RecentPlacementsProps) {
+export function RecentPlacements({placements}: RecentPlacementsProps) {
   return (
-    <div className="rounded-xl border border-border bg-card p-5">
+    <div className="border-border bg-card rounded-xl border p-5">
       <div className="mb-4 flex items-center gap-2">
-        <FileText className="h-4 w-4 text-muted-foreground" />
-        <h3 className="text-sm font-medium text-foreground">Recent Placements</h3>
+        <FileText className="text-muted-foreground h-4 w-4" />
+        <h3 className="text-foreground text-sm font-medium">Recent Placements</h3>
       </div>
 
       {placements.length === 0 ? (
-        <p className="py-8 text-center text-sm text-muted-foreground">
-          No placements yet
-        </p>
+        <p className="text-muted-foreground py-8 text-center text-sm">No placements yet</p>
       ) : (
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
-              <tr className="border-b border-border text-left text-xs font-medium text-muted-foreground">
-                <th className="pb-3 pr-4">Candidate</th>
-                <th className="pb-3 pr-4">Client</th>
-                <th className="pb-3 pr-4">Date</th>
-                <th className="pb-3 pr-4 text-right">Value</th>
+              <tr className="border-border text-muted-foreground border-b text-left text-xs font-medium">
+                <th className="pr-4 pb-3">Candidate</th>
+                <th className="pr-4 pb-3">Client</th>
+                <th className="pr-4 pb-3">Date</th>
+                <th className="pr-4 pb-3 text-right">Value</th>
                 <th className="pb-3">Status</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-border">
+            <tbody className="divide-border divide-y">
               {placements.map((placement) => {
                 const status = statusConfig[placement.revenueStatus] || statusConfig.pending;
 
@@ -71,30 +69,28 @@ export function RecentPlacements({ placements }: RecentPlacementsProps) {
                   <tr key={placement._id} className="text-sm">
                     <td className="py-3 pr-4">
                       <div>
-                        <p className="font-medium text-foreground">
+                        <p className="text-foreground font-medium">
                           {placement.candidate?.fullName || "Unknown"}
                         </p>
-                        <p className="text-xs text-muted-foreground">
-                          {placement.jobTitle}
-                        </p>
+                        <p className="text-muted-foreground text-xs">{placement.jobTitle}</p>
                       </div>
                     </td>
-                    <td className="py-3 pr-4 text-foreground">
+                    <td className="text-foreground py-3 pr-4">
                       {placement.client?.companyName || "Unknown"}
                     </td>
-                    <td className="py-3 pr-4 text-muted-foreground">
+                    <td className="text-muted-foreground py-3 pr-4">
                       {placement.placementDate
                         ? format(parseISO(placement.placementDate), "dd/MM/yyyy")
                         : "-"}
                     </td>
-                    <td className="py-3 pr-4 text-right font-medium text-foreground">
+                    <td className="text-foreground py-3 pr-4 text-right font-medium">
                       {formatCurrency(placement.totalInvoiceValue || 0)}
                     </td>
                     <td className="py-3">
                       <span
                         className={cn(
                           "inline-flex rounded-full px-2 py-0.5 text-xs font-medium",
-                          status.className
+                          status.className,
                         )}
                       >
                         {status.label}

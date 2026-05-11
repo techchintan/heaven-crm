@@ -1,19 +1,19 @@
-import { Suspense } from "react";
-import { Header } from "@/components/layout/header";
-import { CandidatesTable } from "@/components/candidates/candidates-table";
-import { StatsCard } from "@/components/dashboard/stats-card";
-import { getCandidates } from "@/lib/sanity-queries";
-import { Users, UserCheck, Clock, UserX } from "lucide-react";
+import {Suspense} from "react";
+import {Header} from "@/components/layout/header";
+import {CandidatesTable} from "@/components/candidates/candidates-table";
+import {StatsCard} from "@/components/dashboard/stats-card";
+import {getCandidates} from "@/lib/sanity-queries";
+import {Users, UserCheck, Clock, UserX} from "lucide-react";
 
 function CandidatesSkeleton() {
   return (
     <div className="animate-pulse space-y-6 p-6">
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {[...Array(4)].map((_, i) => (
-          <div key={i} className="h-28 rounded-xl bg-card" />
+          <div key={i} className="bg-card h-28 rounded-xl" />
         ))}
       </div>
-      <div className="h-96 rounded-xl bg-card" />
+      <div className="bg-card h-96 rounded-xl" />
     </div>
   );
 }
@@ -29,29 +29,10 @@ async function CandidatesContent() {
     <div className="space-y-6 p-6">
       {/* Stats Summary */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <StatsCard
-          title="Total Candidates"
-          value={candidates.length}
-          icon={Users}
-        />
-        <StatsCard
-          title="Available"
-          value={availableCount}
-          icon={UserCheck}
-          variant="success"
-        />
-        <StatsCard
-          title="In Process"
-          value={inProcessCount}
-          icon={Clock}
-          variant="warning"
-        />
-        <StatsCard
-          title="Placed"
-          value={placedCount}
-          icon={UserX}
-          variant="info"
-        />
+        <StatsCard title="Total Candidates" value={candidates.length} icon={Users} />
+        <StatsCard title="Available" value={availableCount} icon={UserCheck} variant="success" />
+        <StatsCard title="In Process" value={inProcessCount} icon={Clock} variant="warning" />
+        <StatsCard title="Placed" value={placedCount} icon={UserX} variant="info" />
       </div>
 
       {/* Candidates Table */}
@@ -63,10 +44,7 @@ async function CandidatesContent() {
 export default function CandidatesPage() {
   return (
     <div className="flex flex-col">
-      <Header
-        title="Candidates"
-        subtitle="Manage your talent pool"
-      />
+      <Header title="Candidates" subtitle="Manage your talent pool" />
       <Suspense fallback={<CandidatesSkeleton />}>
         <CandidatesContent />
       </Suspense>

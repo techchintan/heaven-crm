@@ -14,7 +14,8 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "HeavenPro CRM - Recruitment Agency Dashboard",
-  description: "Professional recruitment agency management system for tracking placements, candidates, clients, and revenue",
+  description:
+    "Professional recruitment agency management system for tracking placements, candidates, clients, and revenue",
 };
 
 export default function RootLayout({
@@ -23,7 +24,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${geistSans.variable} ${geistMono.variable} h-full bg-background antialiased`}>
+    <html
+      lang="en"
+      className={`${geistSans.variable} ${geistMono.variable} bg-background h-full antialiased`}
+    >
       <body className="flex min-h-full flex-col">{children}</body>
     </html>
   );
