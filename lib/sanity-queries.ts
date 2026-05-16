@@ -30,12 +30,19 @@ export interface Candidate {
   createdAt: string;
 }
 
+export interface ClientStateTaxRegistration {
+  state: string;
+  branchName?: string;
+  gstin?: string;
+  pan?: string;
+  isPrimary?: boolean;
+}
+
 export interface Client {
   _id: string;
   companyName: string;
   industry?: string;
-  gstin?: string;
-  pan?: string;
+  stateTaxRegistrations?: ClientStateTaxRegistration[];
   primaryContact: string;
   contactDesignation?: string;
   contactEmail: string;
@@ -154,8 +161,13 @@ export async function getClients(): Promise<Client[]> {
       _id,
       companyName,
       industry,
-      gstin,
-      pan,
+      stateTaxRegistrations[]{
+        state,
+        branchName,
+        gstin,
+        pan,
+        isPrimary
+      },
       primaryContact,
       contactDesignation,
       contactEmail,

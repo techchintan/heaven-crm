@@ -3,7 +3,14 @@
 import {useState, useMemo} from "react";
 import {Search, Filter, ExternalLink, Mail, Phone, Globe} from "lucide-react";
 import {StatusBadge} from "@/components/ui/status-badge";
-import type {Client} from "@/lib/sanity-queries";
+import type {Client, ClientStateTaxRegistration} from "@/lib/sanity-queries";
+
+function primaryTaxRegistration(
+  registrations: ClientStateTaxRegistration[] | undefined,
+): ClientStateTaxRegistration | undefined {
+  if (!registrations?.length) return undefined;
+  return registrations.find((r) => r.isPrimary) ?? registrations[0];
+}
 
 interface ClientsTableProps {
   clients: Client[];
@@ -150,13 +157,22 @@ export function ClientsTable({clients}: ClientsTableProps) {
                 </td>
               </tr>
             ) : (
-              filteredClients.map((client) => (
+              filteredClients.map((client) => {
+                const taxReg = primaryTaxRegistration(client.stateTaxRegistrations);
+                const regCount = client.stateTaxRegistrations?.length ?? 0;
+
+                return (
                 <tr key={client._id} className="hover:bg-card-hover text-sm transition-colors">
                   <td className="px-4 py-3">
                     <div>
                       <p className="text-foreground font-medium">{client.companyName}</p>
-                      {client.gstin && (
-                        <p className="text-muted-foreground text-xs">GSTIN: {client.gstin}</p>
+                      {taxReg?.gstin && (
+                        <p className="text-muted-foreground text-xs">GSTIN: {taxReg.gstin}</p>
+                      )}
+                      {regCount > 1 && (
+                        <p className="text-muted-foreground text-xs">
+                          {regCount} state registrations
+                        </p>
                       )}
                     </div>
                   </td>
@@ -211,7 +227,8 @@ export function ClientsTable({clients}: ClientsTableProps) {
                     </div>
                   </td>
                 </tr>
-              ))
+                );
+              })
             )}
           </tbody>
         </table>

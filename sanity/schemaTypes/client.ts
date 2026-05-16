@@ -10,6 +10,12 @@ import {
   previewSubtitle,
   withEmoji,
 } from "../lib/preview";
+import {
+  indianStateLabels,
+  indianStateOptions,
+  validateGstin,
+  validatePan,
+} from "../lib/indian-states";
 import {clientTypeIcon} from "../lib/studio-icons";
 
 export const client = defineType({
@@ -27,7 +33,7 @@ export const client = defineType({
     {
       name: "legal",
       title: "Legal & Tax",
-      description: "Registered name and tax identifiers for invoicing",
+      description: "Registered name and state-wise GST / PAN for each branch",
       options: {collapsible: true, collapsed: true},
     },
     {
@@ -127,29 +133,96 @@ export const client = defineType({
       description: "Registered name if different from display name (contracts, GST)",
     }),
     defineField({
-      name: "gstin",
-      title: "GSTIN",
-      type: "string",
+      name: "stateTaxRegistrations",
+      title: "State-wise GST & PAN",
+      type: "array",
       fieldset: "legal",
-      description: "15-character GST Identification Number",
-      validation: (Rule) =>
-        Rule.custom((gstin) => {
-          if (!gstin) return true;
-          const gstinRegex = /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/;
-          return gstinRegex.test(gstin) ? true : "Invalid GSTIN format";
+      description: "Add one entry per state/branch where this client is registered for tax",
+      of: [
+        defineField({
+          name: "registration",
+          title: "State registration",
+          type: "object",
+          fields: [
+            defineField({
+              name: "state",
+              title: "State / UT",
+              type: "string",
+              description: "Indian state or union territory for this branch",
+              options: {list: [...indianStateOptions]},
+              validation: (Rule) => Rule.required().error("State is required"),
+            }),
+            defineField({
+              name: "branchName",
+              title: "Branch / Office",
+              type: "string",
+              description: "Optional label (e.g. Mumbai HQ, Bangalore office)",
+            }),
+            defineField({
+              name: "gstin",
+              title: "GSTIN",
+              type: "string",
+              description: "15-character GST Identification Number for this state",
+              validation: (Rule) => Rule.custom((gstin) => validateGstin(gstin)),
+            }),
+            defineField({
+              name: "pan",
+              title: "PAN",
+              type: "string",
+              description: "10-character PAN for this state registration",
+              validation: (Rule) => Rule.custom((pan) => validatePan(pan)),
+            }),
+            defineField({
+              name: "isPrimary",
+              title: "Primary for billing",
+              type: "boolean",
+              description: "Use this registration by default on invoices",
+              initialValue: false,
+            }),
+          ],
+          preview: {
+            select: {
+              state: "state",
+              branchName: "branchName",
+              gstin: "gstin",
+              pan: "pan",
+              isPrimary: "isPrimary",
+            },
+            prepare({state, branchName, gstin, pan, isPrimary}) {
+              const stateLabel = labeled(state, indianStateLabels, "State");
+              return {
+                title: isPrimary ? `★ ${stateLabel}` : stateLabel,
+                subtitle: previewSubtitle(
+                  branchName,
+                  gstin && `GSTIN: ${gstin}`,
+                  pan && `PAN: ${pan}`,
+                ),
+              };
+            },
+          },
         }),
-    }),
-    defineField({
-      name: "pan",
-      title: "PAN",
-      type: "string",
-      fieldset: "legal",
-      description: "10-character Permanent Account Number",
+      ],
       validation: (Rule) =>
-        Rule.custom((pan) => {
-          if (!pan) return true;
-          const panRegex = /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/;
-          return panRegex.test(pan) ? true : "Invalid PAN format (e.g., ABCDE1234F)";
+        Rule.custom((entries) => {
+          if (!entries || !Array.isArray(entries) || entries.length === 0) return true;
+
+          const keys = entries.map((entry) => {
+            const {state, branchName} = entry as {state?: string; branchName?: string};
+            return `${state ?? ""}::${(branchName ?? "").trim().toLowerCase()}`;
+          });
+          const uniqueKeys = new Set(keys);
+          if (uniqueKeys.size !== keys.length) {
+            return "Duplicate state and branch combination — use a distinct branch name when the state is the same";
+          }
+
+          const primaryCount = entries.filter(
+            (entry) => (entry as {isPrimary?: boolean}).isPrimary,
+          ).length;
+          if (primaryCount > 1) {
+            return "Only one state registration can be marked as primary for billing";
+          }
+
+          return true;
         }),
     }),
 

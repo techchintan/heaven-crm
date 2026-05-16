@@ -94,8 +94,51 @@ export type Client = {
     | "other";
   website?: string;
   legalName?: string;
-  gstin?: string;
-  pan?: string;
+  stateTaxRegistrations?: Array<{
+    state:
+      | "andhra_pradesh"
+      | "arunachal_pradesh"
+      | "assam"
+      | "bihar"
+      | "chhattisgarh"
+      | "goa"
+      | "gujarat"
+      | "haryana"
+      | "himachal_pradesh"
+      | "jharkhand"
+      | "karnataka"
+      | "kerala"
+      | "madhya_pradesh"
+      | "maharashtra"
+      | "manipur"
+      | "meghalaya"
+      | "mizoram"
+      | "nagaland"
+      | "odisha"
+      | "punjab"
+      | "rajasthan"
+      | "sikkim"
+      | "tamil_nadu"
+      | "telangana"
+      | "tripura"
+      | "uttar_pradesh"
+      | "uttarakhand"
+      | "west_bengal"
+      | "andaman_nicobar"
+      | "chandigarh"
+      | "dadra_nagar_haveli_daman_diu"
+      | "delhi"
+      | "jammu_kashmir"
+      | "ladakh"
+      | "lakshadweep"
+      | "puducherry";
+    branchName?: string;
+    gstin?: string;
+    pan?: string;
+    isPrimary?: boolean;
+    _type: "registration";
+    _key: string;
+  }>;
   contacts: Array<{
     name: string;
     designation?: string;

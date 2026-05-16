@@ -534,17 +534,214 @@
         },
         "optional": true
       },
-      "gstin": {
+      "stateTaxRegistrations": {
         "type": "objectAttribute",
         "value": {
-          "type": "string"
-        },
-        "optional": true
-      },
-      "pan": {
-        "type": "objectAttribute",
-        "value": {
-          "type": "string"
+          "type": "array",
+          "of": {
+            "type": "object",
+            "attributes": {
+              "state": {
+                "type": "objectAttribute",
+                "value": {
+                  "type": "union",
+                  "of": [
+                    {
+                      "type": "string",
+                      "value": "andhra_pradesh"
+                    },
+                    {
+                      "type": "string",
+                      "value": "arunachal_pradesh"
+                    },
+                    {
+                      "type": "string",
+                      "value": "assam"
+                    },
+                    {
+                      "type": "string",
+                      "value": "bihar"
+                    },
+                    {
+                      "type": "string",
+                      "value": "chhattisgarh"
+                    },
+                    {
+                      "type": "string",
+                      "value": "goa"
+                    },
+                    {
+                      "type": "string",
+                      "value": "gujarat"
+                    },
+                    {
+                      "type": "string",
+                      "value": "haryana"
+                    },
+                    {
+                      "type": "string",
+                      "value": "himachal_pradesh"
+                    },
+                    {
+                      "type": "string",
+                      "value": "jharkhand"
+                    },
+                    {
+                      "type": "string",
+                      "value": "karnataka"
+                    },
+                    {
+                      "type": "string",
+                      "value": "kerala"
+                    },
+                    {
+                      "type": "string",
+                      "value": "madhya_pradesh"
+                    },
+                    {
+                      "type": "string",
+                      "value": "maharashtra"
+                    },
+                    {
+                      "type": "string",
+                      "value": "manipur"
+                    },
+                    {
+                      "type": "string",
+                      "value": "meghalaya"
+                    },
+                    {
+                      "type": "string",
+                      "value": "mizoram"
+                    },
+                    {
+                      "type": "string",
+                      "value": "nagaland"
+                    },
+                    {
+                      "type": "string",
+                      "value": "odisha"
+                    },
+                    {
+                      "type": "string",
+                      "value": "punjab"
+                    },
+                    {
+                      "type": "string",
+                      "value": "rajasthan"
+                    },
+                    {
+                      "type": "string",
+                      "value": "sikkim"
+                    },
+                    {
+                      "type": "string",
+                      "value": "tamil_nadu"
+                    },
+                    {
+                      "type": "string",
+                      "value": "telangana"
+                    },
+                    {
+                      "type": "string",
+                      "value": "tripura"
+                    },
+                    {
+                      "type": "string",
+                      "value": "uttar_pradesh"
+                    },
+                    {
+                      "type": "string",
+                      "value": "uttarakhand"
+                    },
+                    {
+                      "type": "string",
+                      "value": "west_bengal"
+                    },
+                    {
+                      "type": "string",
+                      "value": "andaman_nicobar"
+                    },
+                    {
+                      "type": "string",
+                      "value": "chandigarh"
+                    },
+                    {
+                      "type": "string",
+                      "value": "dadra_nagar_haveli_daman_diu"
+                    },
+                    {
+                      "type": "string",
+                      "value": "delhi"
+                    },
+                    {
+                      "type": "string",
+                      "value": "jammu_kashmir"
+                    },
+                    {
+                      "type": "string",
+                      "value": "ladakh"
+                    },
+                    {
+                      "type": "string",
+                      "value": "lakshadweep"
+                    },
+                    {
+                      "type": "string",
+                      "value": "puducherry"
+                    }
+                  ]
+                },
+                "optional": false
+              },
+              "branchName": {
+                "type": "objectAttribute",
+                "value": {
+                  "type": "string"
+                },
+                "optional": true
+              },
+              "gstin": {
+                "type": "objectAttribute",
+                "value": {
+                  "type": "string"
+                },
+                "optional": true
+              },
+              "pan": {
+                "type": "objectAttribute",
+                "value": {
+                  "type": "string"
+                },
+                "optional": true
+              },
+              "isPrimary": {
+                "type": "objectAttribute",
+                "value": {
+                  "type": "boolean"
+                },
+                "optional": true
+              },
+              "_type": {
+                "type": "objectAttribute",
+                "value": {
+                  "type": "string",
+                  "value": "registration"
+                }
+              }
+            },
+            "rest": {
+              "type": "object",
+              "attributes": {
+                "_key": {
+                  "type": "objectAttribute",
+                  "value": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
         },
         "optional": true
       },
