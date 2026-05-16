@@ -284,8 +284,7 @@ export const candidate = defineType({
       type: "url",
       fieldset: "documents",
       description: "Full LinkedIn profile URL",
-      validation: (Rule) =>
-        Rule.uri({scheme: ["http", "https"]}).error("Please enter a valid URL"),
+      validation: (Rule) => Rule.uri({scheme: ["http", "https"]}).error("Please enter a valid URL"),
     }),
 
     // — Sourcing & Follow-up —

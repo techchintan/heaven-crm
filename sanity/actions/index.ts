@@ -1,15 +1,13 @@
 import {DocumentActionsResolver} from "sanity";
+import {AssignEmployeeCodePublishAction} from "./assignEmployeeCode";
 import {CalculateAndPublishAction} from "./calculatePlacementFields";
 
 /**
  * Resolve document actions for different document types
- * For placements, we add our custom Calculate & Publish action
  */
 export const resolveDocumentActions: DocumentActionsResolver = (prev, context) => {
-  // For placement documents, replace the default publish with our custom action
   if (context.schemaType === "placement") {
     return prev.map((originalAction) => {
-      // Replace the default publish action with our custom one
       if (originalAction.action === "publish") {
         return CalculateAndPublishAction;
       }
@@ -17,6 +15,14 @@ export const resolveDocumentActions: DocumentActionsResolver = (prev, context) =
     });
   }
 
-  // For all other document types, use default actions
+  if (context.schemaType === "teamMember") {
+    return prev.map((originalAction) => {
+      if (originalAction.action === "publish") {
+        return AssignEmployeeCodePublishAction;
+      }
+      return originalAction;
+    });
+  }
+
   return prev;
 };

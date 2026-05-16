@@ -1,6 +1,13 @@
-import {defineField, defineType} from "sanity";
+import {defineArrayMember, defineField, defineType} from "sanity";
 
-import {labeled, previewSubtitle, teamRoleLabels, workStatusLabels} from "../lib/preview";
+import {isValidEmployeeCode} from "../lib/employee-code";
+import {
+  labeled,
+  previewInr,
+  previewSubtitle,
+  teamRoleLabels,
+  workStatusLabels,
+} from "../lib/preview";
 import {teamMemberTypeIcon} from "../lib/studio-icons";
 
 export const teamMember = defineType({
@@ -12,8 +19,14 @@ export const teamMember = defineType({
     {
       name: "profile",
       title: "Profile",
-      description: "Name, contact details, and role",
+      description: "Employee ID, names, contact, and role",
       options: {collapsible: true, collapsed: false, columns: 2},
+    },
+    {
+      name: "personal",
+      title: "Personal Details",
+      description: "Residential address and parent or guardian contacts",
+      options: {collapsible: true, collapsed: true},
     },
     {
       name: "employment",
@@ -24,26 +37,47 @@ export const teamMember = defineType({
     {
       name: "compensation",
       title: "Compensation & Notes",
-      description: "Default incentive and internal HR notes",
+      description: "Salary, incentives, and internal HR notes",
       options: {collapsible: true, collapsed: true},
     },
   ],
   fields: [
     // — Profile —
     defineField({
-      name: "name",
-      title: "Full Name",
+      name: "employeeCode",
+      title: "Employee Code",
       type: "string",
       fieldset: "profile",
-      description: "Team member's full name as shown in the ATS",
-      validation: (Rule) => Rule.required().error("Name is required"),
+      description:
+        "Assigned once on first publish (e.g. HPSE01). Stays the same on later edits. Read-only.",
+      readOnly: true,
+      validation: (Rule) =>
+        Rule.custom((value) => {
+          if (!value || String(value).trim() === "") return true;
+          return isValidEmployeeCode(String(value)) ? true : "Use format HPSE01 (HPS + E + number)";
+        }),
+    }),
+    defineField({
+      name: "name",
+      title: "Display Name",
+      type: "string",
+      fieldset: "profile",
+      description: "Name shown in the ATS (may differ from legal name)",
+      validation: (Rule) => Rule.required().error("Display name is required"),
+    }),
+    defineField({
+      name: "legalName",
+      title: "Legal Name",
+      type: "string",
+      fieldset: "profile",
+      description: "Full legal name as per government ID or payroll records",
     }),
     defineField({
       name: "email",
-      title: "Email",
+      title: "Work Email",
       type: "string",
       fieldset: "profile",
-      description: "Work email address",
+      description: "Official work email address",
       validation: (Rule) => Rule.required().email().error("A valid email is required"),
     }),
     defineField({
@@ -51,7 +85,14 @@ export const teamMember = defineType({
       title: "Phone Number",
       type: "string",
       fieldset: "profile",
-      description: "Mobile or desk phone number",
+      description: "Primary mobile or phone number",
+    }),
+    defineField({
+      name: "alternatePhone",
+      title: "Alternate Phone Number",
+      type: "string",
+      fieldset: "profile",
+      description: "Secondary contact number",
     }),
     defineField({
       name: "role",
@@ -79,6 +120,84 @@ export const teamMember = defineType({
       description: "Domains or verticals this person mainly recruits for",
       of: [{type: "string"}],
       options: {layout: "tags"},
+    }),
+
+    // — Personal Details —
+    defineField({
+      name: "residentialAddress",
+      title: "Full Residential Address",
+      type: "text",
+      fieldset: "personal",
+      description: "Complete home address including city, state, and PIN code",
+      rows: 4,
+    }),
+    defineField({
+      name: "parentContacts",
+      title: "Parent / Guardian Details",
+      type: "array",
+      fieldset: "personal",
+      description: "Emergency or family contacts (name, phone, and relation)",
+      of: [
+        defineArrayMember({
+          type: "object",
+          name: "parentContact",
+          title: "Contact",
+          fields: [
+            defineField({
+              name: "name",
+              title: "Name",
+              type: "string",
+              description: "Parent or guardian full name",
+              validation: (Rule) => Rule.required().error("Name is required"),
+            }),
+            defineField({
+              name: "phone",
+              title: "Phone Number",
+              type: "string",
+              description: "Contact phone number",
+              validation: (Rule) => Rule.required().error("Phone number is required"),
+            }),
+            defineField({
+              name: "relation",
+              title: "Relation",
+              type: "string",
+              description: "Relationship to the team member",
+              options: {
+                list: [
+                  {title: "Father", value: "father"},
+                  {title: "Mother", value: "mother"},
+                  {title: "Guardian", value: "guardian"},
+                  {title: "Spouse", value: "spouse"},
+                  {title: "Sibling", value: "sibling"},
+                  {title: "Other", value: "other"},
+                ],
+              },
+              validation: (Rule) => Rule.required().error("Relation is required"),
+            }),
+          ],
+          preview: {
+            select: {
+              name: "name",
+              phone: "phone",
+              relation: "relation",
+            },
+            prepare({name, phone, relation}) {
+              const relationLabels: Record<string, string> = {
+                father: "Father",
+                mother: "Mother",
+                guardian: "Guardian",
+                spouse: "Spouse",
+                sibling: "Sibling",
+                other: "Other",
+              };
+              return {
+                title: name || "Unnamed contact",
+                subtitle: previewSubtitle(relationLabels[relation] || relation, phone),
+              };
+            },
+          },
+        }),
+      ],
     }),
 
     // — Employment —
@@ -135,8 +254,16 @@ export const teamMember = defineType({
 
     // — Compensation & Notes —
     defineField({
+      name: "salary",
+      title: "Annual Salary (INR)",
+      type: "number",
+      fieldset: "compensation",
+      description: "Annual CTC in Indian Rupees",
+      validation: (Rule) => Rule.min(0).error("Salary must be zero or greater"),
+    }),
+    defineField({
       name: "incentivePercentage",
-      title: "Incentive (%)",
+      title: "Placement Incentive (%)",
       type: "number",
       fieldset: "compensation",
       description: "Default placement incentive percentage for this team member",
@@ -155,6 +282,8 @@ export const teamMember = defineType({
   preview: {
     select: {
       name: "name",
+      legalName: "legalName",
+      employeeCode: "employeeCode",
       role: "role",
       email: "email",
       phone: "phone",
@@ -162,18 +291,35 @@ export const teamMember = defineType({
       isActive: "isActive",
       specializations: "specializations",
       incentivePercentage: "incentivePercentage",
+      salary: "salary",
     },
-    prepare({name, role, email, phone, workStatus, isActive, specializations, incentivePercentage}) {
+    prepare({
+      name,
+      legalName,
+      employeeCode,
+      role,
+      email,
+      phone,
+      workStatus,
+      isActive,
+      specializations,
+      incentivePercentage,
+      salary,
+    }) {
       const specs = Array.isArray(specializations)
         ? specializations.slice(0, 3).join(", ")
         : undefined;
       const roleLabel = labeled(role, teamRoleLabels, "No role");
+      const displayName = name || "Untitled team member";
+      const title = employeeCode ? `${employeeCode} · ${displayName}` : displayName;
 
       return {
-        title: isActive === false ? `${name || "Untitled"} (Inactive)` : name || "Untitled team member",
+        title: isActive === false ? `${title} (Inactive)` : title,
         subtitle: previewSubtitle(
+          legalName && legalName !== name && `Legal: ${legalName}`,
           roleLabel,
           labeled(workStatus, workStatusLabels, undefined),
+          previewInr(salary),
           incentivePercentage != null && `${incentivePercentage}% incentive`,
           specs,
           email,
@@ -183,6 +329,11 @@ export const teamMember = defineType({
     },
   },
   orderings: [
+    {
+      title: "Employee Code",
+      name: "employeeCodeAsc",
+      by: [{field: "employeeCode", direction: "asc"}],
+    },
     {
       title: "Name A-Z",
       name: "nameAsc",

@@ -114,8 +114,7 @@ export const client = defineType({
       type: "url",
       fieldset: "overview",
       description: "Company website URL",
-      validation: (Rule) =>
-        Rule.uri({scheme: ["http", "https"]}).error("Please enter a valid URL"),
+      validation: (Rule) => Rule.uri({scheme: ["http", "https"]}).error("Please enter a valid URL"),
     }),
 
     // — Legal & Tax —
