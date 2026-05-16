@@ -50,6 +50,13 @@ export type Placement = {
   workArrangement?: "onsite" | "hybrid" | "remote" | "flexible";
   workLocation?: string;
   clientReference?: string;
+  offerAcceptedDate?: string;
+  placementDate: string;
+  probationPeriodDays?: number;
+  probationEndDate?: string;
+  exitDate?: string;
+  invoiceDate?: string;
+  paymentDueDate?: string;
   baseSalary: number;
   feeMode: "percentage" | "flat";
   feePercentage?: number;
@@ -58,13 +65,6 @@ export type Placement = {
   feeAmount?: number;
   gstAmount?: number;
   totalInvoiceValue?: number;
-  placementDate: string;
-  offerAcceptedDate?: string;
-  probationPeriodDays?: number;
-  probationEndDate?: string;
-  invoiceDate?: string;
-  exitDate?: string;
-  paymentDueDate?: string;
   revenueStatus?: "pending" | "invoiced" | "paid" | "deducted" | "partially_paid";
   invoiceNumber?: string;
   paymentDate?: string;
@@ -80,7 +80,7 @@ export type Client = {
   _updatedAt: string;
   _rev: string;
   companyName: string;
-  legalName?: string;
+  status?: "active" | "inactive" | "prospect" | "in_progress" | "on_hold";
   industry?:
     | "it_software"
     | "banking_finance"
@@ -92,6 +92,8 @@ export type Client = {
     | "telecom"
     | "retail"
     | "other";
+  website?: string;
+  legalName?: string;
   gstin?: string;
   pan?: string;
   contacts: Array<{
@@ -99,21 +101,19 @@ export type Client = {
     designation?: string;
     email: string;
     phone?: string;
-    isActive?: boolean;
     isPrimary?: boolean;
+    isActive?: boolean;
     _type: "contact";
     _key: string;
   }>;
   billingEmail?: string;
   billingAddress?: string;
-  website?: string;
   feeModel?: "percent_ctc" | "flat_per_hire";
   agreementFeePercentage?: number;
   paymentTerms?: number;
   msaStartDate?: string;
   msaEndDate?: string;
   leadSource?: "inbound" | "referral" | "outbound" | "job_board" | "event" | "expansion" | "other";
-  status?: "active" | "inactive" | "prospect" | "on_hold";
   notes?: string;
   createdAt?: string;
 };
@@ -136,20 +136,6 @@ export type Candidate = {
   phone?: string;
   alternateEmail?: string;
   alternatePhone?: string;
-  primarySkill: string;
-  skills?: Array<string>;
-  experience?: number;
-  currentCompany?: string;
-  currentDesignation?: string;
-  currentLocation?: string;
-  preferredLocations?: Array<string>;
-  willingToRelocate?: boolean;
-  remotePreference?: "onsite" | "hybrid" | "remote" | "flexible";
-  languages?: Array<string>;
-  highestEducation?: string;
-  currentSalary?: number;
-  expectedSalary?: number;
-  noticePeriod?: number;
   status:
     | "immediately_available"
     | "available_next_30_days"
@@ -157,13 +143,27 @@ export type Candidate = {
     | "not_available"
     | "on_hold"
     | "placed";
-  linkedInUrl?: string;
+  assignedRecruiter?: TeamMemberReference;
+  primarySkill: string;
+  skills?: Array<string>;
+  experience?: number;
+  highestEducation?: string;
+  currentCompany?: string;
+  currentDesignation?: string;
+  currentLocation?: string;
+  currentSalary?: number;
+  expectedSalary?: number;
+  noticePeriod?: number;
+  remotePreference?: "onsite" | "hybrid" | "remote" | "flexible";
+  willingToRelocate?: boolean;
+  preferredLocations?: Array<string>;
+  languages?: Array<string>;
   resume?: {
     asset?: SanityFileAssetReference;
     media?: unknown;
     _type: "file";
   };
-  assignedRecruiter?: TeamMemberReference;
+  linkedInUrl?: string;
   source?: "linkedin" | "naukri" | "referral" | "job_portal" | "direct" | "other";
   lastContactedAt?: string;
   nextFollowUpAt?: string;
@@ -177,15 +177,27 @@ export type TeamMember = {
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
+  employeeCode?: string;
   name: string;
+  legalName?: string;
   email: string;
-  role: "trainee" | "recruiter" | "senior_recruiter" | "team_lead" | "manager" | "founder_ceo";
-  workStatus: "full_time" | "part_time" | "contract" | "intern";
-  specializations?: Array<string>;
   phone?: string;
+  alternatePhone?: string;
+  role: "trainee" | "recruiter" | "senior_recruiter" | "team_lead" | "manager" | "founder_ceo";
+  specializations?: Array<string>;
+  residentialAddress?: string;
+  parentContacts?: Array<{
+    name: string;
+    phone: string;
+    relation: "father" | "mother" | "guardian" | "spouse" | "sibling" | "other";
+    _type: "parentContact";
+    _key: string;
+  }>;
   isActive?: boolean;
+  workStatus: "full_time" | "part_time" | "contract" | "intern";
   joinedAt: string;
   leftAt?: string;
+  salary?: number;
   incentivePercentage?: number;
   notes?: string;
 };

@@ -59,6 +59,7 @@ export function ClientsTable({clients}: ClientsTableProps) {
     {value: "active", label: "Active"},
     {value: "inactive", label: "Inactive"},
     {value: "prospect", label: "Prospect"},
+    {value: "in_progress", label: "In Progress"},
     {value: "on_hold", label: "On Hold"},
   ];
 

@@ -45,7 +45,7 @@ export interface Client {
   website?: string;
   agreementFeePercentage?: number;
   paymentTerms?: number;
-  status: "active" | "inactive" | "prospect" | "on_hold";
+  status: "active" | "inactive" | "prospect" | "in_progress" | "on_hold";
   notes?: string;
   createdAt: string;
 }

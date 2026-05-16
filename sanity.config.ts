@@ -12,7 +12,7 @@ import {resolveDocumentActions} from "./sanity/actions";
 
 export default defineConfig({
   name: "heavenpro-ats",
-  title: "Heaven Pro ATS",
+  title: "HeavenPro ATS",
   basePath: "/studio",
   projectId,
   dataset,

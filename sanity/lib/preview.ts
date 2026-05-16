@@ -38,6 +38,7 @@ export const clientStatusLabels: Record<string, string> = {
   active: "Active",
   inactive: "Inactive",
   prospect: "Prospect",
+  in_progress: "In progress",
   on_hold: "On hold",
 };
 
@@ -45,6 +46,7 @@ export const clientStatusEmoji: Record<string, string> = {
   active: "🟢",
   inactive: "⚫",
   prospect: "🔵",
+  in_progress: "🟡",
   on_hold: "🟠",
 };
 

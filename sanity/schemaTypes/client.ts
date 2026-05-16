@@ -81,6 +81,7 @@ export const client = defineType({
           {title: "Active", value: "active"},
           {title: "Inactive", value: "inactive"},
           {title: "Prospect", value: "prospect"},
+          {title: "In Progress", value: "in_progress"},
           {title: "On Hold", value: "on_hold"},
         ],
         layout: "radio",

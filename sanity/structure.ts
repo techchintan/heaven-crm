@@ -22,6 +22,7 @@ import {
   placedCandidatesIcon,
   placementTypeIcon,
   placementsByStatusIcon,
+  inProgressClientsIcon,
   prospectClientsIcon,
   recentCandidatesIcon,
   recentPlacementsIcon,
@@ -254,6 +255,16 @@ export const structure: StructureResolver = (S) =>
                   S.documentTypeList("client")
                     .title("Prospects")
                     .filter('_type == "client" && status == "prospect"')
+                    .apiVersion(apiVersion)
+                    .defaultOrdering([{field: "companyName", direction: "asc"}]),
+                ),
+              S.listItem()
+                .title("In Progress")
+                .icon(inProgressClientsIcon)
+                .child(
+                  S.documentTypeList("client")
+                    .title("In Progress Clients")
+                    .filter('_type == "client" && status == "in_progress"')
                     .apiVersion(apiVersion)
                     .defaultOrdering([{field: "companyName", direction: "asc"}]),
                 ),

@@ -35,6 +35,7 @@ const clientStatusConfig: Record<
   active: {label: "Active", variant: "default"},
   inactive: {label: "Inactive", variant: "secondary"},
   prospect: {label: "Prospect", variant: "outline"},
+  in_progress: {label: "In Progress", variant: "outline"},
   on_hold: {label: "On Hold", variant: "outline"},
 };
 

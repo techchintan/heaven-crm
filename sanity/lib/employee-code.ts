@@ -1,5 +1,5 @@
 /**
- * Heaven Pro employee ID: HPS (company) + E (employee) + sequence.
+ * HeavenPro employee ID: HPS (company) + E (employee) + sequence.
  * Examples: HPSE01, HPSE02, … HPSE99, HPSE100
  */
 export const EMPLOYEE_CODE_PREFIX = "HPSE";

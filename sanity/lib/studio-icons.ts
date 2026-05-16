@@ -9,6 +9,7 @@ import {
   ListFilter,
   PauseCircle,
   Receipt,
+  CircleDashed,
   Sparkles,
   UserCheck,
   UserCog,
@@ -50,6 +51,7 @@ export const allClientsIcon = lucideIcon(Building2);
 export const activeClientsIcon = lucideIcon(CheckCircle2);
 export const inactiveClientsIcon = lucideIcon(UserMinus);
 export const prospectClientsIcon = lucideIcon(Sparkles);
+export const inProgressClientsIcon = lucideIcon(CircleDashed);
 
 export const allTeamIcon = lucideIcon(UserCog);
 export const activeTeamIcon = lucideIcon(UserCheck);
