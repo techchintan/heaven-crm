@@ -11,8 +11,8 @@ import {structure} from "./sanity/structure";
 import {resolveDocumentActions} from "./sanity/actions";
 
 export default defineConfig({
-  name: "heavenpro-crm",
-  title: "Heaven Pro CRM",
+  name: "heavenpro-ats",
+  title: "Heaven Pro ATS",
   basePath: "/studio",
   projectId,
   dataset,

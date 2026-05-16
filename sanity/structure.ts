@@ -5,7 +5,7 @@ import {apiVersion} from "./env";
 
 export const structure: StructureResolver = (S) =>
   S.list()
-    .title("CRM Dashboard")
+    .title("ATS Dashboard")
     .items([
       S.listItem()
         .title("Placements")

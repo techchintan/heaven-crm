@@ -65,7 +65,7 @@ export function Sidebar() {
           <div className="bg-primary text-primary-foreground flex h-8 w-8 items-center justify-center rounded-lg text-sm font-bold">
             HP
           </div>
-          <span className="text-foreground truncate font-semibold">HeavenPro CRM</span>
+          <span className="text-foreground truncate font-semibold">HeavenPro ATS</span>
         </Link>
       </div>
 

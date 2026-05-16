@@ -1,5 +1,5 @@
 /**
- * Format Utilities for HeavenPro CRM
+ * Format Utilities for HeavenPro ATS
  *
  * Provides consistent formatting for dates, currency, numbers, and other values
  * throughout the application.
