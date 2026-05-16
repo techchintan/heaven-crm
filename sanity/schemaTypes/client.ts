@@ -1,30 +1,98 @@
 import {defineField, defineType} from "sanity";
-import {CaseIcon} from "@sanity/icons";
+
+import {
+  clientStatusEmoji,
+  clientStatusLabels,
+  feeModelLabels,
+  industryLabels,
+  labeled,
+  leadSourceLabels,
+  previewSubtitle,
+  withEmoji,
+} from "../lib/preview";
+import {clientTypeIcon} from "../lib/studio-icons";
 
 export const client = defineType({
   name: "client",
   title: "Client",
   type: "document",
-  icon: CaseIcon,
+  icon: clientTypeIcon,
+  fieldsets: [
+    {
+      name: "overview",
+      title: "Company Overview",
+      description: "Display name, status, industry, and website",
+      options: {collapsible: true, collapsed: false},
+    },
+    {
+      name: "legal",
+      title: "Legal & Tax",
+      description: "Registered name and tax identifiers for invoicing",
+      options: {collapsible: true, collapsed: true},
+    },
+    {
+      name: "contactPeople",
+      title: "Points of Contact",
+      description: "Client POCs for hiring and day-to-day coordination",
+      options: {collapsible: true, collapsed: false},
+    },
+    {
+      name: "billing",
+      title: "Billing Details",
+      description: "Invoice delivery address and email",
+      options: {collapsible: true, collapsed: false},
+    },
+    {
+      name: "commercial",
+      title: "Commercial Terms",
+      description: "Default fees, payment terms, and agreement dates",
+      options: {collapsible: true, collapsed: false},
+    },
+    {
+      name: "relationship",
+      title: "Relationship",
+      description: "How you acquired this client and internal notes",
+      options: {collapsible: true, collapsed: true},
+    },
+    {
+      name: "meta",
+      title: "Record Info",
+      options: {collapsible: true, collapsed: true},
+    },
+  ],
   fields: [
+    // — Company Overview —
     defineField({
       name: "companyName",
       title: "Company Name",
       type: "string",
-      description: "Official company name",
+      fieldset: "overview",
+      description: "Display name used in the ATS and on invoices",
       validation: (Rule) => Rule.required().error("Company name is required"),
     }),
     defineField({
-      name: "legalName",
-      title: "Legal / Registered Name",
+      name: "status",
+      title: "Relationship Status",
       type: "string",
-      description: "If different from the display name (invoices, contracts)",
+      fieldset: "overview",
+      description: "Current stage of the client relationship",
+      options: {
+        list: [
+          {title: "Active", value: "active"},
+          {title: "Inactive", value: "inactive"},
+          {title: "Prospect", value: "prospect"},
+          {title: "On Hold", value: "on_hold"},
+        ],
+        layout: "radio",
+      },
+      initialValue: "active",
     }),
     defineField({
       name: "industry",
       title: "Industry",
       type: "string",
-      description: "Industry sector",
+      fieldset: "overview",
+      description: "Primary industry sector",
       options: {
         list: [
           {title: "IT & Software", value: "it_software"},
@@ -41,14 +109,32 @@ export const client = defineType({
       },
     }),
     defineField({
+      name: "website",
+      title: "Website",
+      type: "url",
+      fieldset: "overview",
+      description: "Company website URL",
+      validation: (Rule) =>
+        Rule.uri({scheme: ["http", "https"]}).error("Please enter a valid URL"),
+    }),
+
+    // — Legal & Tax —
+    defineField({
+      name: "legalName",
+      title: "Legal / Registered Name",
+      type: "string",
+      fieldset: "legal",
+      description: "Registered name if different from display name (contracts, GST)",
+    }),
+    defineField({
       name: "gstin",
       title: "GSTIN",
       type: "string",
-      description: "GST Identification Number (15 characters)",
+      fieldset: "legal",
+      description: "15-character GST Identification Number",
       validation: (Rule) =>
         Rule.custom((gstin) => {
-          if (!gstin) return true; // Optional field
-          // GSTIN format: 2 digit state code + 10 char PAN + 1 entity code + 1 check digit + Z
+          if (!gstin) return true;
           const gstinRegex = /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/;
           return gstinRegex.test(gstin) ? true : "Invalid GSTIN format";
         }),
@@ -57,19 +143,23 @@ export const client = defineType({
       name: "pan",
       title: "PAN",
       type: "string",
-      description: "Permanent Account Number (10 characters)",
+      fieldset: "legal",
+      description: "10-character Permanent Account Number",
       validation: (Rule) =>
         Rule.custom((pan) => {
-          if (!pan) return true; // Optional field
+          if (!pan) return true;
           const panRegex = /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/;
           return panRegex.test(pan) ? true : "Invalid PAN format (e.g., ABCDE1234F)";
         }),
     }),
+
+    // — Points of Contact —
     defineField({
       name: "contacts",
       title: "Client Contacts (POCs)",
       type: "array",
-      description: "One client can have multiple points of contact",
+      fieldset: "contactPeople",
+      description: "Add one or more points of contact at this client",
       of: [
         defineField({
           name: "contact",
@@ -80,37 +170,41 @@ export const client = defineType({
               name: "name",
               title: "Name",
               type: "string",
+              description: "Contact person's full name",
               validation: (Rule) => Rule.required().error("Contact name is required"),
             }),
             defineField({
               name: "designation",
               title: "Designation",
               type: "string",
+              description: "Job title or role at the client",
             }),
             defineField({
               name: "email",
               title: "Email",
               type: "string",
+              description: "Work email for this contact",
               validation: (Rule) => Rule.required().email().error("A valid email is required"),
             }),
             defineField({
               name: "phone",
               title: "Phone",
               type: "string",
-            }),
-            defineField({
-              name: "isActive",
-              title: "Active",
-              type: "boolean",
-              description: "Use this to mark only current POCs as active",
-              initialValue: true,
+              description: "Direct phone or mobile number",
             }),
             defineField({
               name: "isPrimary",
               title: "Primary Contact",
               type: "boolean",
-              description: "Mark the main POC for day-to-day communication",
+              description: "Main POC for day-to-day hiring communication",
               initialValue: false,
+            }),
+            defineField({
+              name: "isActive",
+              title: "Active",
+              type: "boolean",
+              description: "Uncheck if this person is no longer at the client",
+              initialValue: true,
             }),
           ],
           preview: {
@@ -118,13 +212,20 @@ export const client = defineType({
               title: "name",
               designation: "designation",
               email: "email",
+              phone: "phone",
               isActive: "isActive",
+              isPrimary: "isPrimary",
             },
-            prepare({title, designation, email, isActive}) {
-              const status = isActive === false ? "Inactive" : "Active";
+            prepare({title, designation, email, phone, isActive, isPrimary}) {
+              const displayName = title || "Unnamed contact";
               return {
-                title: title || "Unnamed contact",
-                subtitle: `${designation || "No designation"} | ${email || "No email"} | ${status}`,
+                title: isPrimary ? `★ ${displayName}` : displayName,
+                subtitle: previewSubtitle(
+                  designation || "No designation",
+                  email,
+                  phone,
+                  isActive === false ? "Inactive" : isPrimary ? "Primary · Active" : "Active",
+                ),
               };
             },
           },
@@ -133,35 +234,32 @@ export const client = defineType({
       validation: (Rule) =>
         Rule.required().min(1).error("Add at least one contact person for this client"),
     }),
+
+    // — Billing Details —
     defineField({
       name: "billingEmail",
       title: "Billing Email",
       type: "string",
-      description: "Email for invoices and billing",
+      fieldset: "billing",
+      description: "Email address for invoices and payment follow-ups",
       validation: (Rule) => Rule.email().error("Please enter a valid email"),
     }),
     defineField({
       name: "billingAddress",
       title: "Billing Address",
       type: "text",
-      description: "Complete billing address",
+      fieldset: "billing",
+      description: "Full billing address as it should appear on invoices",
       rows: 3,
     }),
-    defineField({
-      name: "website",
-      title: "Website",
-      type: "url",
-      description: "Company website URL",
-      validation: (Rule) =>
-        Rule.uri({
-          scheme: ["http", "https"],
-        }).error("Please enter a valid URL"),
-    }),
+
+    // — Commercial Terms —
     defineField({
       name: "feeModel",
       title: "Fee Model",
       type: "string",
-      description: "How you typically charge this client",
+      fieldset: "commercial",
+      description: "Default way you charge this client for placements",
       options: {
         list: [
           {title: "% of annual CTC", value: "percent_ctc"},
@@ -174,7 +272,8 @@ export const client = defineType({
       name: "agreementFeePercentage",
       title: "Default Fee Percentage",
       type: "number",
-      description: "Default recruitment fee percentage for this client",
+      fieldset: "commercial",
+      description: "Default recruitment fee % applied to new placements",
       initialValue: 8.33,
       validation: (Rule) => Rule.min(0).max(100).error("Fee percentage must be between 0 and 100"),
     }),
@@ -182,7 +281,8 @@ export const client = defineType({
       name: "paymentTerms",
       title: "Payment Terms (Days)",
       type: "number",
-      description: "Number of days for payment (e.g., 30, 45, 60)",
+      fieldset: "commercial",
+      description: "Net days for invoice payment (e.g. 30, 45, 60)",
       initialValue: 30,
       validation: (Rule) =>
         Rule.min(0).max(180).error("Payment terms must be between 0 and 180 days"),
@@ -191,14 +291,16 @@ export const client = defineType({
       name: "msaStartDate",
       title: "MSA / Framework Start",
       type: "date",
-      description: "Master agreement or commercial framework start",
+      fieldset: "commercial",
+      description: "Start date of master or commercial agreement",
       options: {dateFormat: "DD/MM/YYYY"},
     }),
     defineField({
       name: "msaEndDate",
       title: "MSA / Framework End",
       type: "date",
-      description: "Renew or renegotiate before this date",
+      fieldset: "commercial",
+      description: "Agreement end date — renew before this date",
       options: {dateFormat: "DD/MM/YYYY"},
       validation: (Rule) =>
         Rule.custom((end, context) => {
@@ -210,10 +312,14 @@ export const client = defineType({
           return true;
         }),
     }),
+
+    // — Relationship —
     defineField({
       name: "leadSource",
       title: "Lead Source",
       type: "string",
+      fieldset: "relationship",
+      description: "How this client relationship started",
       options: {
         list: [
           {title: "Inbound / Website", value: "inbound"},
@@ -227,59 +333,65 @@ export const client = defineType({
       },
     }),
     defineField({
-      name: "status",
-      title: "Status",
-      type: "string",
-      description: "Client relationship status",
-      options: {
-        list: [
-          {title: "Active", value: "active"},
-          {title: "Inactive", value: "inactive"},
-          {title: "Prospect", value: "prospect"},
-          {title: "On Hold", value: "on_hold"},
-        ],
-        layout: "radio",
-      },
-      initialValue: "active",
-    }),
-    defineField({
       name: "notes",
       title: "Internal Notes",
       type: "text",
-      description: "Private notes about this client",
+      fieldset: "relationship",
+      description: "Private notes about this client (not shared externally)",
       rows: 4,
     }),
+
+    // — Metadata —
     defineField({
       name: "createdAt",
       title: "Added On",
       type: "datetime",
+      fieldset: "meta",
+      description: "When this client was added to the ATS",
       readOnly: true,
       initialValue: () => new Date().toISOString(),
     }),
   ],
   preview: {
     select: {
-      title: "companyName",
-      subtitle: "industry",
+      companyName: "companyName",
+      industry: "industry",
       status: "status",
+      website: "website",
+      feeModel: "feeModel",
+      agreementFeePercentage: "agreementFeePercentage",
+      paymentTerms: "paymentTerms",
+      leadSource: "leadSource",
+      billingEmail: "billingEmail",
     },
-    prepare({title, subtitle, status}) {
-      const industryLabels: Record<string, string> = {
-        it_software: "IT & Software",
-        banking_finance: "Banking & Finance",
-        healthcare: "Healthcare",
-        manufacturing: "Manufacturing",
-        ecommerce: "E-commerce",
-        consulting: "Consulting",
-        education: "Education",
-        telecom: "Telecom",
-        retail: "Retail",
-        other: "Other",
-      };
-      const statusIndicator = status === "active" ? "●" : status === "inactive" ? "○" : "◐";
+    prepare({
+      companyName,
+      industry,
+      status,
+      website,
+      feeModel,
+      agreementFeePercentage,
+      paymentTerms,
+      leadSource,
+      billingEmail,
+    }) {
+      const feeLabel = feeModel ? labeled(feeModel, feeModelLabels) : undefined;
+      const feeDetail =
+        feeModel === "percent_ctc" && agreementFeePercentage != null
+          ? `${feeLabel} · ${agreementFeePercentage}%`
+          : feeLabel;
+
       return {
-        title: title || "Untitled",
-        subtitle: `${statusIndicator} ${industryLabels[subtitle] || subtitle || "No industry"}`,
+        title: companyName || "Untitled client",
+        subtitle: previewSubtitle(
+          withEmoji(status, clientStatusLabels, clientStatusEmoji),
+          labeled(industry, industryLabels, "No industry"),
+          feeDetail,
+          paymentTerms != null && `Net ${paymentTerms} days`,
+          labeled(leadSource, leadSourceLabels, undefined),
+          billingEmail,
+          website?.replace(/^https?:\/\//i, ""),
+        ),
       };
     },
   },

@@ -1,48 +1,74 @@
 import {defineField, defineType} from "sanity";
-import {DocumentsIcon} from "@sanity/icons";
+
+import {
+  engagementTypeLabels,
+  labeled,
+  previewDate,
+  previewInr,
+  previewSubtitle,
+  revenueStatusEmoji,
+  revenueStatusLabels,
+  withEmoji,
+} from "../lib/preview";
+import {placementTypeIcon} from "../lib/studio-icons";
 
 export const placement = defineType({
   name: "placement",
   title: "Placement",
   type: "document",
-  icon: DocumentsIcon,
+  icon: placementTypeIcon,
   fieldsets: [
     {
-      name: "references",
-      title: "Placement Details",
-      description: "Link the candidate, client, and recruiter",
+      name: "parties",
+      title: "Who Was Placed",
+      description: "Candidate, client, and recruiter for this placement",
+      options: {collapsible: true, collapsed: false},
+    },
+    {
+      name: "role",
+      title: "Role & Engagement",
+      description: "Position, employment type, and work location",
+      options: {collapsible: true, collapsed: false},
+    },
+    {
+      name: "timeline",
+      title: "Timeline",
+      description: "Key dates from offer through probation and billing",
+      options: {collapsible: true, collapsed: false},
     },
     {
       name: "financials",
-      title: "Financial Information",
-      description: "Salary and fee calculations",
+      title: "Fee Inputs",
+      description: "Salary and fee settings used to calculate the invoice",
       options: {collapsible: true, collapsed: false},
     },
     {
       name: "calculated",
-      title: "Calculated Values (Auto-computed)",
-      description: "These fields are automatically calculated based on inputs above",
+      title: "Invoice Totals",
+      description: "Auto-calculated from fee inputs (read-only)",
+      options: {collapsible: true, collapsed: true},
+    },
+    {
+      name: "billing",
+      title: "Billing & Collection",
+      description: "Revenue status, invoice reference, and payment received",
       options: {collapsible: true, collapsed: false},
     },
     {
-      name: "dates",
-      title: "Important Dates",
-      options: {collapsible: true, collapsed: false},
-    },
-    {
-      name: "status",
-      title: "Status & Payment",
-      options: {collapsible: true, collapsed: false},
+      name: "meta",
+      title: "Record Info",
+      options: {collapsible: true, collapsed: true},
     },
   ],
   fields: [
+    // — Who Was Placed —
     defineField({
       name: "candidate",
       title: "Candidate",
       type: "reference",
       to: [{type: "candidate"}],
-      fieldset: "references",
-      description: "The placed candidate",
+      fieldset: "parties",
+      description: "The candidate who was placed with the client",
       validation: (Rule) => Rule.required().error("Candidate is required"),
     }),
     defineField({
@@ -50,8 +76,8 @@ export const placement = defineType({
       title: "Client",
       type: "reference",
       to: [{type: "client"}],
-      fieldset: "references",
-      description: "The hiring company",
+      fieldset: "parties",
+      description: "The hiring company for this placement",
       validation: (Rule) => Rule.required().error("Client is required"),
     }),
     defineField({
@@ -59,24 +85,29 @@ export const placement = defineType({
       title: "Recruiter",
       type: "reference",
       to: [{type: "teamMember"}],
-      fieldset: "references",
-      description: "The recruiter who made this placement",
+      fieldset: "parties",
+      description: "Team member who closed this placement",
+      options: {
+        filter: '_type == "teamMember" && isActive == true',
+      },
       validation: (Rule) => Rule.required().error("Recruiter is required"),
     }),
+
+    // — Role & Engagement —
     defineField({
       name: "jobTitle",
       title: "Job Title",
       type: "string",
-      fieldset: "references",
-      description: "Position the candidate was hired for",
+      fieldset: "role",
+      description: "Role or designation the candidate was hired for",
       validation: (Rule) => Rule.required().error("Job title is required"),
     }),
     defineField({
       name: "engagementType",
       title: "Engagement Type",
       type: "string",
-      fieldset: "references",
-      description: "How the candidate is engaged with the client",
+      fieldset: "role",
+      description: "Employment arrangement with the client",
       options: {
         list: [
           {title: "Permanent", value: "permanent"},
@@ -92,7 +123,8 @@ export const placement = defineType({
       name: "workArrangement",
       title: "Work Arrangement",
       type: "string",
-      fieldset: "references",
+      fieldset: "role",
+      description: "On-site, hybrid, remote, or flexible working model",
       options: {
         list: [
           {title: "On-site", value: "onsite"},
@@ -107,22 +139,106 @@ export const placement = defineType({
       name: "workLocation",
       title: "Work Location",
       type: "string",
-      fieldset: "references",
-      description: 'City or region, or e.g. "Remote — India"',
+      fieldset: "role",
+      description: 'City or region, e.g. "Bangalore" or "Remote — India"',
     }),
     defineField({
       name: "clientReference",
       title: "Client PO / Job Reference",
       type: "string",
-      fieldset: "references",
+      fieldset: "role",
       description: "Purchase order, job code, or internal client reference for billing",
     }),
+
+    // — Timeline (chronological) —
+    defineField({
+      name: "offerAcceptedDate",
+      title: "Offer Accepted Date",
+      type: "date",
+      fieldset: "timeline",
+      description: "When the candidate accepted the offer (optional)",
+      options: {dateFormat: "DD/MM/YYYY"},
+      validation: (Rule) =>
+        Rule.custom((offerDate, context) => {
+          if (!offerDate) return true;
+          const parent = context.parent as {placementDate?: string};
+          const placementDate = parent?.placementDate;
+          if (!placementDate) return true;
+          return offerDate <= placementDate
+            ? true
+            : "Offer date should be on or before placement (joining) date";
+        }),
+    }),
+    defineField({
+      name: "placementDate",
+      title: "Placement / Joining Date",
+      type: "date",
+      fieldset: "timeline",
+      description: "Date the candidate joined — drives probation and invoicing",
+      options: {dateFormat: "DD/MM/YYYY"},
+      validation: (Rule) => Rule.required().error("Placement date is required"),
+    }),
+    defineField({
+      name: "probationPeriodDays",
+      title: "Probation Period (Days)",
+      type: "number",
+      fieldset: "timeline",
+      description: "Length of probation for early-exit rules. Defaults to 90 days if empty.",
+      initialValue: 90,
+      validation: (Rule) => Rule.min(1).max(365).integer(),
+    }),
+    defineField({
+      name: "probationEndDate",
+      title: "Probation End Date",
+      type: "date",
+      fieldset: "timeline",
+      description: "Placement date + probation period (auto-calculated)",
+      options: {dateFormat: "DD/MM/YYYY"},
+      readOnly: true,
+    }),
+    defineField({
+      name: "exitDate",
+      title: "Exit Date",
+      type: "date",
+      fieldset: "timeline",
+      description:
+        "If the candidate left early, set this date. May trigger fee deduction before probation ends.",
+      options: {dateFormat: "DD/MM/YYYY"},
+      validation: (Rule) =>
+        Rule.custom((exitDate, context) => {
+          const parent = context.parent as {placementDate?: string};
+          if (!exitDate || !parent?.placementDate) return true;
+          const exit = new Date(exitDate);
+          const placement = new Date(parent.placementDate);
+          return exit >= placement ? true : "Exit date must be on or after placement date";
+        }),
+    }),
+    defineField({
+      name: "invoiceDate",
+      title: "Invoice Date",
+      type: "date",
+      fieldset: "timeline",
+      description: "1st of the month following placement (auto-calculated)",
+      options: {dateFormat: "DD/MM/YYYY"},
+      readOnly: true,
+    }),
+    defineField({
+      name: "paymentDueDate",
+      title: "Payment Due Date",
+      type: "date",
+      fieldset: "timeline",
+      description: "Expected payment date from client payment terms (auto-calculated)",
+      options: {dateFormat: "DD/MM/YYYY"},
+      readOnly: true,
+    }),
+
+    // — Fee Inputs —
     defineField({
       name: "baseSalary",
       title: "Base Salary (INR per annum)",
       type: "number",
       fieldset: "financials",
-      description: "Annual salary offered to the candidate in Indian Rupees",
+      description: "Annual CTC offered to the candidate in Indian Rupees",
       validation: (Rule) => Rule.required().min(1).error("Base salary must be a positive number"),
     }),
     defineField({
@@ -130,7 +246,7 @@ export const placement = defineType({
       title: "Fee Type",
       type: "string",
       fieldset: "financials",
-      description: "Whether fee is a percentage of annual CTC or a fixed flat fee",
+      description: "Charge as a percentage of annual CTC or a fixed flat fee",
       options: {
         list: [
           {title: "% of annual CTC", value: "percentage"},
@@ -189,17 +305,18 @@ export const placement = defineType({
       title: "GST Percentage (%)",
       type: "number",
       fieldset: "financials",
-      description: "GST rate (fixed at 18%)",
+      description: "GST rate applied to the fee (fixed at 18%)",
       initialValue: 18,
       readOnly: true,
     }),
+
+    // — Invoice Totals (read-only) —
     defineField({
       name: "feeAmount",
       title: "Fee Amount (INR)",
       type: "number",
       fieldset: "calculated",
-      description:
-        "Calculated: either Base Salary × (Fee % ÷ 100), or the flat fee amount, before GST",
+      description: "Base salary × fee %, or flat fee amount, before GST (auto-calculated)",
       readOnly: true,
     }),
     defineField({
@@ -207,7 +324,7 @@ export const placement = defineType({
       title: "GST Amount (INR)",
       type: "number",
       fieldset: "calculated",
-      description: "Calculated: Fee Amount × 18%",
+      description: "Fee amount × GST % (auto-calculated)",
       readOnly: true,
     }),
     defineField({
@@ -215,108 +332,17 @@ export const placement = defineType({
       title: "Total Invoice Value (INR)",
       type: "number",
       fieldset: "calculated",
-      description: "Calculated: Fee Amount + GST Amount",
+      description: "Fee amount + GST (auto-calculated)",
       readOnly: true,
     }),
-    defineField({
-      name: "placementDate",
-      title: "Placement Date",
-      type: "date",
-      fieldset: "dates",
-      description: "Date when candidate joined the client",
-      options: {
-        dateFormat: "DD/MM/YYYY",
-      },
-      validation: (Rule) => Rule.required().error("Placement date is required"),
-    }),
-    defineField({
-      name: "offerAcceptedDate",
-      title: "Offer Accepted Date",
-      type: "date",
-      fieldset: "dates",
-      description: "When the candidate accepted the offer (optional)",
-      options: {
-        dateFormat: "DD/MM/YYYY",
-      },
-      validation: (Rule) =>
-        Rule.custom((offerDate, context) => {
-          if (!offerDate) return true;
-          const parent = context.parent as {placementDate?: string};
-          const placementDate = parent?.placementDate;
-          if (!placementDate) return true;
-          return offerDate <= placementDate
-            ? true
-            : "Offer date should be on or before placement (joining) date";
-        }),
-    }),
-    defineField({
-      name: "probationPeriodDays",
-      title: "Probation Period (Days)",
-      type: "number",
-      fieldset: "dates",
-      description:
-        "Used when calculating probation end and early-exit rules. Leave empty to use 90 days.",
-      initialValue: 90,
-      validation: (Rule) => Rule.min(1).max(365).integer(),
-    }),
-    defineField({
-      name: "probationEndDate",
-      title: "Probation End Date",
-      type: "date",
-      fieldset: "dates",
-      description: "Auto-calculated from placement date + probation period",
-      options: {
-        dateFormat: "DD/MM/YYYY",
-      },
-      readOnly: true,
-    }),
-    defineField({
-      name: "invoiceDate",
-      title: "Invoice Date",
-      type: "date",
-      fieldset: "dates",
-      description: "Auto-calculated: 1st of the month following placement",
-      options: {
-        dateFormat: "DD/MM/YYYY",
-      },
-      readOnly: true,
-    }),
-    defineField({
-      name: "exitDate",
-      title: "Exit Date",
-      type: "date",
-      fieldset: "dates",
-      description:
-        "Date when candidate left (if applicable). Triggers deduction if before probation end.",
-      options: {
-        dateFormat: "DD/MM/YYYY",
-      },
-      validation: (Rule) =>
-        Rule.custom((exitDate, context) => {
-          const parent = context.parent as {placementDate?: string};
-          if (!exitDate || !parent?.placementDate) return true;
-          const exit = new Date(exitDate);
-          const placement = new Date(parent.placementDate);
-          return exit >= placement ? true : "Exit date must be on or after placement date";
-        }),
-    }),
-    defineField({
-      name: "paymentDueDate",
-      title: "Payment Due Date",
-      type: "date",
-      fieldset: "dates",
-      description: "When payment is expected (based on client payment terms)",
-      options: {
-        dateFormat: "DD/MM/YYYY",
-      },
-      readOnly: true,
-    }),
+
+    // — Billing & Collection —
     defineField({
       name: "revenueStatus",
       title: "Revenue Status",
       type: "string",
-      fieldset: "status",
-      description: "Current status of this placement's revenue",
+      fieldset: "billing",
+      description: "Billing and collection status for this placement",
       options: {
         list: [
           {title: "Pending", value: "pending"},
@@ -333,38 +359,40 @@ export const placement = defineType({
       name: "invoiceNumber",
       title: "Invoice Number",
       type: "string",
-      fieldset: "status",
-      description: "Invoice reference number",
+      fieldset: "billing",
+      description: "Your invoice or reference number sent to the client",
     }),
     defineField({
       name: "paymentDate",
       title: "Payment Received Date",
       type: "date",
-      fieldset: "status",
-      description: "Date when payment was received",
-      options: {
-        dateFormat: "DD/MM/YYYY",
-      },
+      fieldset: "billing",
+      description: "Date payment was received from the client",
+      options: {dateFormat: "DD/MM/YYYY"},
     }),
     defineField({
       name: "amountReceived",
       title: "Amount Received (INR)",
       type: "number",
-      fieldset: "status",
-      description: "Actual amount received (may differ from invoice if deducted)",
+      fieldset: "billing",
+      description: "Actual amount received (may be less than invoice after deductions)",
       validation: (Rule) => Rule.min(0).error("Amount must be positive"),
     }),
+
+    // — Notes & metadata —
     defineField({
       name: "notes",
       title: "Internal Notes",
       type: "text",
-      description: "Private notes about this placement",
+      description: "Private notes about this placement (not shared with clients)",
       rows: 4,
     }),
     defineField({
       name: "createdAt",
       title: "Created At",
       type: "datetime",
+      fieldset: "meta",
+      description: "When this placement record was first created",
       readOnly: true,
       initialValue: () => new Date().toISOString(),
     }),
@@ -373,35 +401,38 @@ export const placement = defineType({
     select: {
       candidateName: "candidate.fullName",
       clientName: "client.companyName",
+      recruiterName: "recruiter.name",
+      jobTitle: "jobTitle",
       placementDate: "placementDate",
       status: "revenueStatus",
       totalInvoice: "totalInvoiceValue",
+      engagementType: "engagementType",
+      invoiceNumber: "invoiceNumber",
     },
-    prepare({candidateName, clientName, placementDate, status, totalInvoice}) {
-      const statusLabels: Record<string, string> = {
-        pending: "⏳ Pending",
-        invoiced: "📄 Invoiced",
-        paid: "✅ Paid",
-        deducted: "❌ Deducted",
-        partially_paid: "⚠️ Partial",
-      };
-
-      // Format date as DD/MM/YYYY
-      let formattedDate = "";
-      if (placementDate) {
-        const date = new Date(placementDate);
-        const day = String(date.getDate()).padStart(2, "0");
-        const month = String(date.getMonth() + 1).padStart(2, "0");
-        const year = date.getFullYear();
-        formattedDate = `${day}/${month}/${year}`;
-      }
-
-      // Format currency
-      const formattedAmount = totalInvoice ? `₹${totalInvoice.toLocaleString("en-IN")}` : "";
+    prepare({
+      candidateName,
+      clientName,
+      recruiterName,
+      jobTitle,
+      placementDate,
+      status,
+      totalInvoice,
+      engagementType,
+      invoiceNumber,
+    }) {
+      const parties = `${candidateName || "Candidate"} → ${clientName || "Client"}`;
+      const title = jobTitle ? `${parties} · ${jobTitle}` : parties;
 
       return {
-        title: `${candidateName || "Unknown"} → ${clientName || "Unknown"}`,
-        subtitle: `${formattedDate} • ${formattedAmount} • ${statusLabels[status] || status || ""}`,
+        title,
+        subtitle: previewSubtitle(
+          previewDate(placementDate),
+          previewInr(totalInvoice),
+          withEmoji(status, revenueStatusLabels, revenueStatusEmoji),
+          invoiceNumber && `Inv #${invoiceNumber}`,
+          recruiterName && `Recruiter: ${recruiterName}`,
+          labeled(engagementType, engagementTypeLabels),
+        ),
       };
     },
   },

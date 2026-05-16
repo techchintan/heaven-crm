@@ -1,7 +1,34 @@
 import type {StructureResolver} from "sanity/structure";
-import {DocumentsIcon, UsersIcon, CaseIcon, UserIcon, SearchIcon} from "@sanity/icons";
 
 import {apiVersion} from "./env";
+import {
+  allCandidatesIcon,
+  allClientsIcon,
+  allPlacementsIcon,
+  allTeamIcon,
+  atRiskPlacementsIcon,
+  availableCandidatesIcon,
+  candidateTypeIcon,
+  clientTypeIcon,
+  deductedPlacementIcon,
+  inactiveClientsIcon,
+  inactiveTeamIcon,
+  invoicedPlacementIcon,
+  notAvailableCandidatesIcon,
+  noticePeriodCandidatesIcon,
+  onHoldCandidatesIcon,
+  paidPlacementIcon,
+  pendingPlacementIcon,
+  placedCandidatesIcon,
+  placementTypeIcon,
+  placementsByStatusIcon,
+  prospectClientsIcon,
+  recentCandidatesIcon,
+  recentPlacementsIcon,
+  teamMemberTypeIcon,
+  activeClientsIcon,
+  activeTeamIcon,
+} from "./lib/studio-icons";
 
 export const structure: StructureResolver = (S) =>
   S.list()
@@ -9,14 +36,14 @@ export const structure: StructureResolver = (S) =>
     .items([
       S.listItem()
         .title("Placements")
-        .icon(DocumentsIcon)
+        .icon(placementTypeIcon)
         .child(
           S.list()
             .title("Placements")
             .items([
               S.listItem()
                 .title("All Placements")
-                .icon(DocumentsIcon)
+                .icon(allPlacementsIcon)
                 .child(
                   S.documentTypeList("placement")
                     .title("All Placements")
@@ -25,13 +52,14 @@ export const structure: StructureResolver = (S) =>
               S.divider(),
               S.listItem()
                 .title("By Status")
-                .icon(SearchIcon)
+                .icon(placementsByStatusIcon)
                 .child(
                   S.list()
                     .title("Placements by Status")
                     .items([
                       S.listItem()
                         .title("Pending")
+                        .icon(pendingPlacementIcon)
                         .child(
                           S.documentTypeList("placement")
                             .title("Pending Placements")
@@ -41,6 +69,7 @@ export const structure: StructureResolver = (S) =>
                         ),
                       S.listItem()
                         .title("Invoiced")
+                        .icon(invoicedPlacementIcon)
                         .child(
                           S.documentTypeList("placement")
                             .title("Invoiced Placements")
@@ -50,6 +79,7 @@ export const structure: StructureResolver = (S) =>
                         ),
                       S.listItem()
                         .title("Paid")
+                        .icon(paidPlacementIcon)
                         .child(
                           S.documentTypeList("placement")
                             .title("Paid Placements")
@@ -59,6 +89,7 @@ export const structure: StructureResolver = (S) =>
                         ),
                       S.listItem()
                         .title("Deducted (Early Exit)")
+                        .icon(deductedPlacementIcon)
                         .child(
                           S.documentTypeList("placement")
                             .title("Deducted Placements")
@@ -70,6 +101,7 @@ export const structure: StructureResolver = (S) =>
                 ),
               S.listItem()
                 .title("Recent (Last 30 Days)")
+                .icon(recentPlacementsIcon)
                 .child(
                   S.documentTypeList("placement")
                     .title("Recent Placements")
@@ -84,6 +116,7 @@ export const structure: StructureResolver = (S) =>
                 ),
               S.listItem()
                 .title("At Risk (In Probation)")
+                .icon(atRiskPlacementsIcon)
                 .child(
                   S.documentTypeList("placement")
                     .title("At Risk Placements")
@@ -101,14 +134,14 @@ export const structure: StructureResolver = (S) =>
       S.divider(),
       S.listItem()
         .title("Candidates")
-        .icon(UsersIcon)
+        .icon(candidateTypeIcon)
         .child(
           S.list()
             .title("Candidates")
             .items([
               S.listItem()
                 .title("All Candidates")
-                .icon(UsersIcon)
+                .icon(allCandidatesIcon)
                 .child(
                   S.documentTypeList("candidate")
                     .title("All Candidates")
@@ -117,6 +150,7 @@ export const structure: StructureResolver = (S) =>
               S.divider(),
               S.listItem()
                 .title("Available Candidates")
+                .icon(availableCandidatesIcon)
                 .child(
                   S.documentTypeList("candidate")
                     .title("Available Candidates")
@@ -127,7 +161,8 @@ export const structure: StructureResolver = (S) =>
                     .defaultOrdering([{field: "fullName", direction: "asc"}]),
                 ),
               S.listItem()
-                .title("On Notice Period Candidates")
+                .title("On Notice Period")
+                .icon(noticePeriodCandidatesIcon)
                 .child(
                   S.documentTypeList("candidate")
                     .title("On Notice Period Candidates")
@@ -137,6 +172,7 @@ export const structure: StructureResolver = (S) =>
                 ),
               S.listItem()
                 .title("Not Available")
+                .icon(notAvailableCandidatesIcon)
                 .child(
                   S.documentTypeList("candidate")
                     .title("Not Available Candidates")
@@ -145,7 +181,8 @@ export const structure: StructureResolver = (S) =>
                     .defaultOrdering([{field: "fullName", direction: "asc"}]),
                 ),
               S.listItem()
-                .title("On Hold Candidates")
+                .title("On Hold")
+                .icon(onHoldCandidatesIcon)
                 .child(
                   S.documentTypeList("candidate")
                     .title("On Hold Candidates")
@@ -154,18 +191,19 @@ export const structure: StructureResolver = (S) =>
                     .defaultOrdering([{field: "fullName", direction: "asc"}]),
                 ),
               S.listItem()
-                .title("Placed Candidates (Joined)")
+                .title("Placed (Joined)")
+                .icon(placedCandidatesIcon)
                 .child(
                   S.documentTypeList("candidate")
-                    .title("Placed Candidates (Joined)")
+                    .title("Placed Candidates")
                     .filter('_type == "candidate" && status == "placed"')
                     .apiVersion(apiVersion)
                     .defaultOrdering([{field: "fullName", direction: "asc"}]),
                 ),
-
               S.divider(),
               S.listItem()
                 .title("Recently Added")
+                .icon(recentCandidatesIcon)
                 .child(
                   S.documentTypeList("candidate")
                     .title("Recent Candidates")
@@ -175,14 +213,14 @@ export const structure: StructureResolver = (S) =>
         ),
       S.listItem()
         .title("Clients")
-        .icon(CaseIcon)
+        .icon(clientTypeIcon)
         .child(
           S.list()
             .title("Clients")
             .items([
               S.listItem()
                 .title("All Clients")
-                .icon(CaseIcon)
+                .icon(allClientsIcon)
                 .child(
                   S.documentTypeList("client")
                     .title("All Clients")
@@ -191,6 +229,7 @@ export const structure: StructureResolver = (S) =>
               S.divider(),
               S.listItem()
                 .title("Active Clients")
+                .icon(activeClientsIcon)
                 .child(
                   S.documentTypeList("client")
                     .title("Active Clients")
@@ -200,6 +239,7 @@ export const structure: StructureResolver = (S) =>
                 ),
               S.listItem()
                 .title("Inactive Clients")
+                .icon(inactiveClientsIcon)
                 .child(
                   S.documentTypeList("client")
                     .title("Inactive Clients")
@@ -209,6 +249,7 @@ export const structure: StructureResolver = (S) =>
                 ),
               S.listItem()
                 .title("Prospects")
+                .icon(prospectClientsIcon)
                 .child(
                   S.documentTypeList("client")
                     .title("Prospects")
@@ -221,14 +262,14 @@ export const structure: StructureResolver = (S) =>
       S.divider(),
       S.listItem()
         .title("Team Members")
-        .icon(UserIcon)
+        .icon(teamMemberTypeIcon)
         .child(
           S.list()
             .title("Team")
             .items([
               S.listItem()
                 .title("All Team Members")
-                .icon(UserIcon)
+                .icon(allTeamIcon)
                 .child(
                   S.documentTypeList("teamMember")
                     .title("All Team Members")
@@ -237,6 +278,7 @@ export const structure: StructureResolver = (S) =>
               S.divider(),
               S.listItem()
                 .title("Active Members")
+                .icon(activeTeamIcon)
                 .child(
                   S.documentTypeList("teamMember")
                     .title("Active Team Members")
@@ -246,6 +288,7 @@ export const structure: StructureResolver = (S) =>
                 ),
               S.listItem()
                 .title("Inactive Members")
+                .icon(inactiveTeamIcon)
                 .child(
                   S.documentTypeList("teamMember")
                     .title("Inactive Team Members")
