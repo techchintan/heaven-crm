@@ -91,8 +91,8 @@ async function DashboardContent() {
           variant="info"
         />
         <StatsCard
-          title="Active Clients"
-          value={stats.activeClients}
+          title="Active Vendors"
+          value={stats.activeVendors}
           description="Hiring companies"
           icon={Building2}
         />

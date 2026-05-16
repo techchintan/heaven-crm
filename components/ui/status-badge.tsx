@@ -2,7 +2,7 @@ import {Badge} from "@/components/ui/badge";
 
 interface StatusBadgeProps {
   status: string;
-  variant?: "placement" | "candidate" | "client";
+  variant?: "placement" | "candidate" | "vendor";
   className?: string;
 }
 
@@ -28,7 +28,7 @@ const candidateStatusConfig: Record<
   not_available: {label: "Not Available", variant: "destructive"},
 };
 
-const clientStatusConfig: Record<
+const vendorStatusConfig: Record<
   string,
   {label: string; variant: "default" | "secondary" | "destructive" | "outline"}
 > = {
@@ -46,21 +46,21 @@ const clientStatusConfig: Record<
  * Uses shadcn Badge component with pre-configured status mappings.
  *
  * @param status - The status key to display
- * @param variant - The context type: 'placement' | 'candidate' | 'client'
+ * @param variant - The context type: 'placement' | 'candidate' | 'vendor'
  * @param className - Additional CSS classes
  *
  * @example
  * ```tsx
  * <StatusBadge status="paid" variant="placement" />
  * <StatusBadge status="available" variant="candidate" />
- * <StatusBadge status="active" variant="client" />
+ * <StatusBadge status="active" variant="vendor" />
  * ```
  */
 export function StatusBadge({status, variant = "placement", className}: StatusBadgeProps) {
   const configs = {
     placement: placementStatusConfig,
     candidate: candidateStatusConfig,
-    client: clientStatusConfig,
+    vendor: vendorStatusConfig,
   };
 
   const config = configs[variant][status] || {label: status, variant: "secondary" as const};

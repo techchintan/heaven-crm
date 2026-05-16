@@ -30,7 +30,7 @@ export interface Candidate {
   createdAt: string;
 }
 
-export interface ClientStateTaxRegistration {
+export interface VendorStateTaxRegistration {
   state: string;
   branchName?: string;
   gstin?: string;
@@ -38,14 +38,14 @@ export interface ClientStateTaxRegistration {
   isPrimary?: boolean;
 }
 
-export interface Client {
+export interface Vendor {
   _id: string;
   companyName: string;
   industry?: string;
-  stateTaxRegistrations?: ClientStateTaxRegistration[];
-  primaryContact: string;
+  stateTaxRegistrations?: VendorStateTaxRegistration[];
+  primaryContact?: string;
   contactDesignation?: string;
-  contactEmail: string;
+  contactEmail?: string;
   contactPhone?: string;
   billingEmail?: string;
   billingAddress?: string;
@@ -64,7 +64,7 @@ export interface Placement {
     fullName: string;
     primarySkill: string;
   };
-  client: {
+  vendor: {
     _id: string;
     companyName: string;
   };
@@ -102,7 +102,7 @@ export async function getPlacements(): Promise<Placement[]> {
         fullName,
         primarySkill
       },
-      "client": client->{
+      "vendor": vendor->{
         _id,
         companyName
       },
@@ -155,9 +155,9 @@ export async function getCandidates(): Promise<Candidate[]> {
   `);
 }
 
-export async function getClients(): Promise<Client[]> {
+export async function getVendors(): Promise<Vendor[]> {
   return client.fetch(`
-    *[_type == "client"] | order(companyName asc) {
+    *[_type == "vendor"] | order(companyName asc) {
       _id,
       companyName,
       industry,
@@ -168,10 +168,22 @@ export async function getClients(): Promise<Client[]> {
         pan,
         isPrimary
       },
-      primaryContact,
-      contactDesignation,
-      contactEmail,
-      contactPhone,
+      "primaryContact": coalesce(
+        contacts[isPrimary == true][0].name,
+        contacts[0].name
+      ),
+      "contactDesignation": coalesce(
+        contacts[isPrimary == true][0].designation,
+        contacts[0].designation
+      ),
+      "contactEmail": coalesce(
+        contacts[isPrimary == true][0].email,
+        contacts[0].email
+      ),
+      "contactPhone": coalesce(
+        contacts[isPrimary == true][0].phone,
+        contacts[0].phone
+      ),
       billingEmail,
       billingAddress,
       website,
@@ -206,7 +218,7 @@ export interface DashboardStats {
   paidRevenue: number;
   deductedCount: number;
   activeCandidates: number;
-  activeClients: number;
+  activeVendors: number;
   teamMembers: number;
   recentPlacements: Placement[];
   atRiskPlacements: Placement[];
@@ -223,10 +235,10 @@ export interface DashboardStats {
 }
 
 export async function getDashboardStats(): Promise<DashboardStats> {
-  const [placements, candidates, clients, teamMembers] = await Promise.all([
+  const [placements, candidates, vendors, teamMembers] = await Promise.all([
     getPlacements(),
     getCandidates(),
-    getClients(),
+    getVendors(),
     getTeamMembers(),
   ]);
 
@@ -292,7 +304,7 @@ export async function getDashboardStats(): Promise<DashboardStats> {
     paidRevenue,
     deductedCount,
     activeCandidates: candidates.filter((c) => c.status === "available").length,
-    activeClients: clients.filter((c) => c.status === "active").length,
+    activeVendors: vendors.filter((v) => v.status === "active").length,
     teamMembers: teamMembers.filter((t) => t.isActive).length,
     recentPlacements: placements.slice(0, 5),
     atRiskPlacements,

@@ -3,15 +3,15 @@ import type {StructureResolver} from "sanity/structure";
 import {apiVersion} from "./env";
 import {
   allCandidatesIcon,
-  allClientsIcon,
+  allVendorsIcon,
   allPlacementsIcon,
   allTeamIcon,
   atRiskPlacementsIcon,
   availableCandidatesIcon,
   candidateTypeIcon,
-  clientTypeIcon,
+  vendorTypeIcon,
   deductedPlacementIcon,
-  inactiveClientsIcon,
+  inactiveVendorsIcon,
   inactiveTeamIcon,
   invoicedPlacementIcon,
   notAvailableCandidatesIcon,
@@ -22,12 +22,12 @@ import {
   placedCandidatesIcon,
   placementTypeIcon,
   placementsByStatusIcon,
-  inProgressClientsIcon,
-  prospectClientsIcon,
+  inProgressVendorsIcon,
+  prospectVendorsIcon,
   recentCandidatesIcon,
   recentPlacementsIcon,
   teamMemberTypeIcon,
-  activeClientsIcon,
+  activeVendorsIcon,
   activeTeamIcon,
 } from "./lib/studio-icons";
 
@@ -213,58 +213,58 @@ export const structure: StructureResolver = (S) =>
             ]),
         ),
       S.listItem()
-        .title("Clients")
-        .icon(clientTypeIcon)
+        .title("Vendors")
+        .icon(vendorTypeIcon)
         .child(
           S.list()
-            .title("Clients")
+            .title("Vendors")
             .items([
               S.listItem()
-                .title("All Clients")
-                .icon(allClientsIcon)
+                .title("All Vendors")
+                .icon(allVendorsIcon)
                 .child(
-                  S.documentTypeList("client")
-                    .title("All Clients")
+                  S.documentTypeList("vendor")
+                    .title("All Vendors")
                     .defaultOrdering([{field: "companyName", direction: "asc"}]),
                 ),
               S.divider(),
               S.listItem()
-                .title("Active Clients")
-                .icon(activeClientsIcon)
+                .title("Active Vendors")
+                .icon(activeVendorsIcon)
                 .child(
-                  S.documentTypeList("client")
-                    .title("Active Clients")
-                    .filter('_type == "client" && status == "active"')
+                  S.documentTypeList("vendor")
+                    .title("Active Vendors")
+                    .filter('_type == "vendor" && status == "active"')
                     .apiVersion(apiVersion)
                     .defaultOrdering([{field: "companyName", direction: "asc"}]),
                 ),
               S.listItem()
-                .title("Inactive Clients")
-                .icon(inactiveClientsIcon)
+                .title("Inactive Vendors")
+                .icon(inactiveVendorsIcon)
                 .child(
-                  S.documentTypeList("client")
-                    .title("Inactive Clients")
-                    .filter('_type == "client" && status == "inactive"')
+                  S.documentTypeList("vendor")
+                    .title("Inactive Vendors")
+                    .filter('_type == "vendor" && status == "inactive"')
                     .apiVersion(apiVersion)
                     .defaultOrdering([{field: "companyName", direction: "asc"}]),
                 ),
               S.listItem()
                 .title("Prospects")
-                .icon(prospectClientsIcon)
+                .icon(prospectVendorsIcon)
                 .child(
-                  S.documentTypeList("client")
+                  S.documentTypeList("vendor")
                     .title("Prospects")
-                    .filter('_type == "client" && status == "prospect"')
+                    .filter('_type == "vendor" && status == "prospect"')
                     .apiVersion(apiVersion)
                     .defaultOrdering([{field: "companyName", direction: "asc"}]),
                 ),
               S.listItem()
                 .title("In Progress")
-                .icon(inProgressClientsIcon)
+                .icon(inProgressVendorsIcon)
                 .child(
-                  S.documentTypeList("client")
-                    .title("In Progress Clients")
-                    .filter('_type == "client" && status == "in_progress"')
+                  S.documentTypeList("vendor")
+                    .title("In Progress Vendors")
+                    .filter('_type == "vendor" && status == "in_progress"')
                     .apiVersion(apiVersion)
                     .defaultOrdering([{field: "companyName", direction: "asc"}]),
                 ),

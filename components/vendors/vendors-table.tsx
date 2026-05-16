@@ -3,17 +3,17 @@
 import {useState, useMemo} from "react";
 import {Search, Filter, ExternalLink, Mail, Phone, Globe} from "lucide-react";
 import {StatusBadge} from "@/components/ui/status-badge";
-import type {Client, ClientStateTaxRegistration} from "@/lib/sanity-queries";
+import type {Vendor, VendorStateTaxRegistration} from "@/lib/sanity-queries";
 
 function primaryTaxRegistration(
-  registrations: ClientStateTaxRegistration[] | undefined,
-): ClientStateTaxRegistration | undefined {
+  registrations: VendorStateTaxRegistration[] | undefined,
+): VendorStateTaxRegistration | undefined {
   if (!registrations?.length) return undefined;
   return registrations.find((r) => r.isPrimary) ?? registrations[0];
 }
 
-interface ClientsTableProps {
-  clients: Client[];
+interface VendorsTableProps {
+  vendors: Vendor[];
 }
 
 const industryLabels: Record<string, string> = {
@@ -29,13 +29,13 @@ const industryLabels: Record<string, string> = {
   other: "Other",
 };
 
-export function ClientsTable({clients}: ClientsTableProps) {
+export function VendorsTable({vendors}: VendorsTableProps) {
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [industryFilter, setIndustryFilter] = useState<string>("all");
 
-  const filteredClients = useMemo(() => {
-    let result = [...clients];
+  const filteredVendors = useMemo(() => {
+    let result = [...vendors];
 
     // Search filter
     if (search) {
@@ -59,7 +59,7 @@ export function ClientsTable({clients}: ClientsTableProps) {
     }
 
     return result;
-  }, [clients, search, statusFilter, industryFilter]);
+  }, [vendors, search, statusFilter, industryFilter]);
 
   const statusOptions = [
     {value: "all", label: "All Status"},
@@ -121,7 +121,7 @@ export function ClientsTable({clients}: ClientsTableProps) {
         </select>
 
         <a
-          href="/studio/structure/client"
+          href="/studio/structure/vendor"
           target="_blank"
           className="bg-primary text-primary-foreground hover:bg-primary/90 flex h-9 items-center gap-2 rounded-lg px-4 text-sm font-medium transition-colors"
         >
@@ -132,7 +132,7 @@ export function ClientsTable({clients}: ClientsTableProps) {
 
       {/* Results count */}
       <p className="text-muted-foreground text-sm">
-        Showing {filteredClients.length} of {clients.length} clients
+        Showing {filteredVendors.length} of {vendors.length} vendors
       </p>
 
       {/* Table */}
@@ -150,83 +150,85 @@ export function ClientsTable({clients}: ClientsTableProps) {
             </tr>
           </thead>
           <tbody className="divide-border divide-y">
-            {filteredClients.length === 0 ? (
+            {filteredVendors.length === 0 ? (
               <tr>
                 <td colSpan={7} className="text-muted-foreground py-8 text-center text-sm">
-                  No clients found
+                  No vendors found
                 </td>
               </tr>
             ) : (
-              filteredClients.map((client) => {
-                const taxReg = primaryTaxRegistration(client.stateTaxRegistrations);
-                const regCount = client.stateTaxRegistrations?.length ?? 0;
+              filteredVendors.map((vendor) => {
+                const taxReg = primaryTaxRegistration(vendor.stateTaxRegistrations);
+                const regCount = vendor.stateTaxRegistrations?.length ?? 0;
 
                 return (
-                <tr key={client._id} className="hover:bg-card-hover text-sm transition-colors">
-                  <td className="px-4 py-3">
-                    <div>
-                      <p className="text-foreground font-medium">{client.companyName}</p>
-                      {taxReg?.gstin && (
-                        <p className="text-muted-foreground text-xs">GSTIN: {taxReg.gstin}</p>
-                      )}
-                      {regCount > 1 && (
-                        <p className="text-muted-foreground text-xs">
-                          {regCount} state registrations
-                        </p>
-                      )}
-                    </div>
-                  </td>
-                  <td className="text-muted-foreground px-4 py-3">
-                    {client.industry ? industryLabels[client.industry] || client.industry : "-"}
-                  </td>
-                  <td className="px-4 py-3">
-                    <div>
-                      <p className="text-foreground">{client.primaryContact}</p>
-                      {client.contactDesignation && (
-                        <p className="text-muted-foreground text-xs">{client.contactDesignation}</p>
-                      )}
-                    </div>
-                  </td>
-                  <td className="text-foreground px-4 py-3">
-                    {client.agreementFeePercentage ? `${client.agreementFeePercentage}%` : "-"}
-                  </td>
-                  <td className="text-muted-foreground px-4 py-3">
-                    {client.paymentTerms ? `${client.paymentTerms} days` : "-"}
-                  </td>
-                  <td className="px-4 py-3">
-                    <StatusBadge status={client.status} variant="client" />
-                  </td>
-                  <td className="px-4 py-3">
-                    <div className="flex items-center gap-2">
-                      {client.contactEmail && (
-                        <a
-                          href={`mailto:${client.contactEmail}`}
-                          className="bg-muted text-muted-foreground hover:bg-card-hover hover:text-foreground flex h-7 w-7 items-center justify-center rounded-md transition-colors"
-                        >
-                          <Mail className="h-3.5 w-3.5" />
-                        </a>
-                      )}
-                      {client.contactPhone && (
-                        <a
-                          href={`tel:${client.contactPhone}`}
-                          className="bg-muted text-muted-foreground hover:bg-card-hover hover:text-foreground flex h-7 w-7 items-center justify-center rounded-md transition-colors"
-                        >
-                          <Phone className="h-3.5 w-3.5" />
-                        </a>
-                      )}
-                      {client.website && (
-                        <a
-                          href={client.website}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="bg-muted text-muted-foreground hover:bg-card-hover hover:text-foreground flex h-7 w-7 items-center justify-center rounded-md transition-colors"
-                        >
-                          <Globe className="h-3.5 w-3.5" />
-                        </a>
-                      )}
-                    </div>
-                  </td>
-                </tr>
+                  <tr key={vendor._id} className="hover:bg-card-hover text-sm transition-colors">
+                    <td className="px-4 py-3">
+                      <div>
+                        <p className="text-foreground font-medium">{vendor.companyName}</p>
+                        {taxReg?.gstin && (
+                          <p className="text-muted-foreground text-xs">GSTIN: {taxReg.gstin}</p>
+                        )}
+                        {regCount > 1 && (
+                          <p className="text-muted-foreground text-xs">
+                            {regCount} state registrations
+                          </p>
+                        )}
+                      </div>
+                    </td>
+                    <td className="text-muted-foreground px-4 py-3">
+                      {vendor.industry ? industryLabels[vendor.industry] || vendor.industry : "-"}
+                    </td>
+                    <td className="px-4 py-3">
+                      <div>
+                        <p className="text-foreground">{vendor.primaryContact || "—"}</p>
+                        {vendor.contactDesignation && (
+                          <p className="text-muted-foreground text-xs">
+                            {vendor.contactDesignation}
+                          </p>
+                        )}
+                      </div>
+                    </td>
+                    <td className="text-foreground px-4 py-3">
+                      {vendor.agreementFeePercentage ? `${vendor.agreementFeePercentage}%` : "-"}
+                    </td>
+                    <td className="text-muted-foreground px-4 py-3">
+                      {vendor.paymentTerms ? `${vendor.paymentTerms} days` : "-"}
+                    </td>
+                    <td className="px-4 py-3">
+                      <StatusBadge status={vendor.status} variant="vendor" />
+                    </td>
+                    <td className="px-4 py-3">
+                      <div className="flex items-center gap-2">
+                        {vendor.contactEmail && (
+                          <a
+                            href={`mailto:${vendor.contactEmail}`}
+                            className="bg-muted text-muted-foreground hover:bg-card-hover hover:text-foreground flex h-7 w-7 items-center justify-center rounded-md transition-colors"
+                          >
+                            <Mail className="h-3.5 w-3.5" />
+                          </a>
+                        )}
+                        {vendor.contactPhone && (
+                          <a
+                            href={`tel:${vendor.contactPhone}`}
+                            className="bg-muted text-muted-foreground hover:bg-card-hover hover:text-foreground flex h-7 w-7 items-center justify-center rounded-md transition-colors"
+                          >
+                            <Phone className="h-3.5 w-3.5" />
+                          </a>
+                        )}
+                        {vendor.website && (
+                          <a
+                            href={vendor.website}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="bg-muted text-muted-foreground hover:bg-card-hover hover:text-foreground flex h-7 w-7 items-center justify-center rounded-md transition-colors"
+                          >
+                            <Globe className="h-3.5 w-3.5" />
+                          </a>
+                        )}
+                      </div>
+                    </td>
+                  </tr>
                 );
               })
             )}

@@ -25,7 +25,7 @@ import {lucideIcon} from "./icons";
 /** Document type icons (match dashboard sidebar). */
 export const placementTypeIcon = lucideIcon(FileText);
 export const candidateTypeIcon = lucideIcon(Users);
-export const clientTypeIcon = lucideIcon(Building2);
+export const vendorTypeIcon = lucideIcon(Building2);
 export const teamMemberTypeIcon = lucideIcon(UserCog);
 
 /** Structure navigation icons. */
@@ -47,11 +47,11 @@ export const onHoldCandidatesIcon = lucideIcon(PauseCircle);
 export const placedCandidatesIcon = lucideIcon(UserCheck);
 export const recentCandidatesIcon = lucideIcon(UserPlus);
 
-export const allClientsIcon = lucideIcon(Building2);
-export const activeClientsIcon = lucideIcon(CheckCircle2);
-export const inactiveClientsIcon = lucideIcon(UserMinus);
-export const prospectClientsIcon = lucideIcon(Sparkles);
-export const inProgressClientsIcon = lucideIcon(CircleDashed);
+export const allVendorsIcon = lucideIcon(Building2);
+export const activeVendorsIcon = lucideIcon(CheckCircle2);
+export const inactiveVendorsIcon = lucideIcon(UserMinus);
+export const prospectVendorsIcon = lucideIcon(Sparkles);
+export const inProgressVendorsIcon = lucideIcon(CircleDashed);
 
 export const allTeamIcon = lucideIcon(UserCog);
 export const activeTeamIcon = lucideIcon(UserCheck);

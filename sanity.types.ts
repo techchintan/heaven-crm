@@ -22,11 +22,11 @@ export type CandidateReference = {
   [internalGroqTypeReferenceTo]?: "candidate";
 };
 
-export type ClientReference = {
+export type VendorReference = {
   _ref: string;
   _type: "reference";
   _weak?: boolean;
-  [internalGroqTypeReferenceTo]?: "client";
+  [internalGroqTypeReferenceTo]?: "vendor";
 };
 
 export type TeamMemberReference = {
@@ -43,13 +43,13 @@ export type Placement = {
   _updatedAt: string;
   _rev: string;
   candidate: CandidateReference;
-  client: ClientReference;
+  vendor: VendorReference;
   recruiter: TeamMemberReference;
   jobTitle: string;
   engagementType?: "permanent" | "contract" | "contract_to_hire" | "temporary";
   workArrangement?: "onsite" | "hybrid" | "remote" | "flexible";
   workLocation?: string;
-  clientReference?: string;
+  vendorReference?: string;
   offerAcceptedDate?: string;
   placementDate: string;
   probationPeriodDays?: number;
@@ -73,9 +73,9 @@ export type Placement = {
   createdAt?: string;
 };
 
-export type Client = {
+export type Vendor = {
   _id: string;
-  _type: "client";
+  _type: "vendor";
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
@@ -375,10 +375,10 @@ export type Geopoint = {
 
 export type AllSanitySchemaTypes =
   | CandidateReference
-  | ClientReference
+  | VendorReference
   | TeamMemberReference
   | Placement
-  | Client
+  | Vendor
   | SanityFileAssetReference
   | Candidate
   | TeamMember

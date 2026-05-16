@@ -47,7 +47,7 @@ export function AtRiskPlacements({placements}: AtRiskPlacementsProps) {
                     {placement.candidate?.fullName || "Unknown"}
                   </p>
                   <p className="text-muted-foreground truncate text-xs">
-                    {placement.client?.companyName || "Unknown"} - {placement.jobTitle}
+                    {placement.vendor?.companyName || "Unknown"} - {placement.jobTitle}
                   </p>
                 </div>
                 <div className="ml-4 flex flex-col items-end">

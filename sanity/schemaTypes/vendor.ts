@@ -1,8 +1,8 @@
 import {defineField, defineType} from "sanity";
 
 import {
-  clientStatusEmoji,
-  clientStatusLabels,
+  vendorStatusEmoji,
+  vendorStatusLabels,
   feeModelLabels,
   industryLabels,
   labeled,
@@ -16,13 +16,13 @@ import {
   validateGstin,
   validatePan,
 } from "../lib/indian-states";
-import {clientTypeIcon} from "../lib/studio-icons";
+import {vendorTypeIcon} from "../lib/studio-icons";
 
-export const client = defineType({
-  name: "client",
-  title: "Client",
+export const vendor = defineType({
+  name: "vendor",
+  title: "Vendor",
   type: "document",
-  icon: clientTypeIcon,
+  icon: vendorTypeIcon,
   fieldsets: [
     {
       name: "overview",
@@ -39,7 +39,7 @@ export const client = defineType({
     {
       name: "contactPeople",
       title: "Points of Contact",
-      description: "Client POCs for hiring and day-to-day coordination",
+      description: "Vendor POCs for hiring and day-to-day coordination",
       options: {collapsible: true, collapsed: false},
     },
     {
@@ -57,7 +57,7 @@ export const client = defineType({
     {
       name: "relationship",
       title: "Relationship",
-      description: "How you acquired this client and internal notes",
+      description: "How you acquired this vendor and internal notes",
       options: {collapsible: true, collapsed: true},
     },
     {
@@ -81,7 +81,7 @@ export const client = defineType({
       title: "Relationship Status",
       type: "string",
       fieldset: "overview",
-      description: "Current stage of the client relationship",
+      description: "Current stage of the vendor relationship",
       options: {
         list: [
           {title: "Active", value: "active"},
@@ -137,7 +137,7 @@ export const client = defineType({
       title: "State-wise GST & PAN",
       type: "array",
       fieldset: "legal",
-      description: "Add one entry per state/branch where this client is registered for tax",
+      description: "Add one entry per state/branch where this vendor is registered for tax",
       of: [
         defineField({
           name: "registration",
@@ -229,10 +229,10 @@ export const client = defineType({
     // — Points of Contact —
     defineField({
       name: "contacts",
-      title: "Client Contacts (POCs)",
+      title: "Vendor Contacts (POCs)",
       type: "array",
       fieldset: "contactPeople",
-      description: "Add one or more points of contact at this client",
+      description: "Add one or more points of contact at this vendor",
       of: [
         defineField({
           name: "contact",
@@ -250,7 +250,7 @@ export const client = defineType({
               name: "designation",
               title: "Designation",
               type: "string",
-              description: "Job title or role at the client",
+              description: "Job title or role at the vendor",
             }),
             defineField({
               name: "email",
@@ -276,7 +276,7 @@ export const client = defineType({
               name: "isActive",
               title: "Active",
               type: "boolean",
-              description: "Uncheck if this person is no longer at the client",
+              description: "Uncheck if this person is no longer at the vendor",
               initialValue: true,
             }),
           ],
@@ -305,7 +305,7 @@ export const client = defineType({
         }),
       ],
       validation: (Rule) =>
-        Rule.required().min(1).error("Add at least one contact person for this client"),
+        Rule.required().min(1).error("Add at least one contact person for this vendor"),
     }),
 
     // — Billing Details —
@@ -332,7 +332,7 @@ export const client = defineType({
       title: "Fee Model",
       type: "string",
       fieldset: "commercial",
-      description: "Default way you charge this client for placements",
+      description: "Default way you charge this vendor for placements",
       options: {
         list: [
           {title: "% of annual CTC", value: "percent_ctc"},
@@ -392,7 +392,7 @@ export const client = defineType({
       title: "Lead Source",
       type: "string",
       fieldset: "relationship",
-      description: "How this client relationship started",
+      description: "How this vendor relationship started",
       options: {
         list: [
           {title: "Inbound / Website", value: "inbound"},
@@ -400,7 +400,7 @@ export const client = defineType({
           {title: "Outbound / BD", value: "outbound"},
           {title: "Job board / Marketplace", value: "job_board"},
           {title: "Event", value: "event"},
-          {title: "Existing client expansion", value: "expansion"},
+          {title: "Existing vendor expansion", value: "expansion"},
           {title: "Other", value: "other"},
         ],
       },
@@ -410,7 +410,7 @@ export const client = defineType({
       title: "Internal Notes",
       type: "text",
       fieldset: "relationship",
-      description: "Private notes about this client (not shared externally)",
+      description: "Private notes about this vendor (not shared externally)",
       rows: 4,
     }),
 
@@ -420,7 +420,7 @@ export const client = defineType({
       title: "Added On",
       type: "datetime",
       fieldset: "meta",
-      description: "When this client was added to the ATS",
+      description: "When this vendor was added to the ATS",
       readOnly: true,
       initialValue: () => new Date().toISOString(),
     }),
@@ -455,9 +455,9 @@ export const client = defineType({
           : feeLabel;
 
       return {
-        title: companyName || "Untitled client",
+        title: companyName || "Untitled vendor",
         subtitle: previewSubtitle(
-          withEmoji(status, clientStatusLabels, clientStatusEmoji),
+          withEmoji(status, vendorStatusLabels, vendorStatusEmoji),
           labeled(industry, industryLabels, "No industry"),
           feeDetail,
           paymentTerms != null && `Net ${paymentTerms} days`,

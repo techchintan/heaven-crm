@@ -21,7 +21,7 @@ export const placement = defineType({
     {
       name: "parties",
       title: "Who Was Placed",
-      description: "Candidate, client, and recruiter for this placement",
+      description: "Candidate, vendor, and recruiter for this placement",
       options: {collapsible: true, collapsed: false},
     },
     {
@@ -68,17 +68,17 @@ export const placement = defineType({
       type: "reference",
       to: [{type: "candidate"}],
       fieldset: "parties",
-      description: "The candidate who was placed with the client",
+      description: "The candidate who was placed with the vendor",
       validation: (Rule) => Rule.required().error("Candidate is required"),
     }),
     defineField({
-      name: "client",
-      title: "Client",
+      name: "vendor",
+      title: "Vendor",
       type: "reference",
-      to: [{type: "client"}],
+      to: [{type: "vendor"}],
       fieldset: "parties",
       description: "The hiring company for this placement",
-      validation: (Rule) => Rule.required().error("Client is required"),
+      validation: (Rule) => Rule.required().error("Vendor is required"),
     }),
     defineField({
       name: "recruiter",
@@ -107,7 +107,7 @@ export const placement = defineType({
       title: "Engagement Type",
       type: "string",
       fieldset: "role",
-      description: "Employment arrangement with the client",
+      description: "Employment arrangement with the vendor",
       options: {
         list: [
           {title: "Permanent", value: "permanent"},
@@ -143,11 +143,11 @@ export const placement = defineType({
       description: 'City or region, e.g. "Bangalore" or "Remote — India"',
     }),
     defineField({
-      name: "clientReference",
-      title: "Client PO / Job Reference",
+      name: "vendorReference",
+      title: "Vendor PO / Job Reference",
       type: "string",
       fieldset: "role",
-      description: "Purchase order, job code, or internal client reference for billing",
+      description: "Purchase order, job code, or internal vendor reference for billing",
     }),
 
     // — Timeline (chronological) —
@@ -227,7 +227,7 @@ export const placement = defineType({
       title: "Payment Due Date",
       type: "date",
       fieldset: "timeline",
-      description: "Expected payment date from client payment terms (auto-calculated)",
+      description: "Expected payment date from vendor payment terms (auto-calculated)",
       options: {dateFormat: "DD/MM/YYYY"},
       readOnly: true,
     }),
@@ -360,14 +360,14 @@ export const placement = defineType({
       title: "Invoice Number",
       type: "string",
       fieldset: "billing",
-      description: "Your invoice or reference number sent to the client",
+      description: "Your invoice or reference number sent to the vendor",
     }),
     defineField({
       name: "paymentDate",
       title: "Payment Received Date",
       type: "date",
       fieldset: "billing",
-      description: "Date payment was received from the client",
+      description: "Date payment was received from the vendor",
       options: {dateFormat: "DD/MM/YYYY"},
     }),
     defineField({
@@ -384,7 +384,7 @@ export const placement = defineType({
       name: "notes",
       title: "Internal Notes",
       type: "text",
-      description: "Private notes about this placement (not shared with clients)",
+      description: "Private notes about this placement (not shared with vendors)",
       rows: 4,
     }),
     defineField({
@@ -400,7 +400,7 @@ export const placement = defineType({
   preview: {
     select: {
       candidateName: "candidate.fullName",
-      clientName: "client.companyName",
+      vendorName: "vendor.companyName",
       recruiterName: "recruiter.name",
       jobTitle: "jobTitle",
       placementDate: "placementDate",
@@ -411,7 +411,7 @@ export const placement = defineType({
     },
     prepare({
       candidateName,
-      clientName,
+      vendorName,
       recruiterName,
       jobTitle,
       placementDate,
@@ -420,7 +420,7 @@ export const placement = defineType({
       engagementType,
       invoiceNumber,
     }) {
-      const parties = `${candidateName || "Candidate"} → ${clientName || "Client"}`;
+      const parties = `${candidateName || "Candidate"} → ${vendorName || "Vendor"}`;
       const title = jobTitle ? `${parties} · ${jobTitle}` : parties;
 
       return {

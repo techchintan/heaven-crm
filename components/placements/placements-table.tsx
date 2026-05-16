@@ -10,7 +10,7 @@ interface PlacementsTableProps {
   placements: Placement[];
 }
 
-type SortField = "placementDate" | "totalInvoiceValue" | "candidateName" | "clientName";
+type SortField = "placementDate" | "totalInvoiceValue" | "candidateName" | "vendorName";
 type SortDirection = "asc" | "desc";
 
 function formatCurrency(value: number): string {
@@ -45,7 +45,7 @@ export function PlacementsTable({placements}: PlacementsTableProps) {
       result = result.filter(
         (p) =>
           p.candidate?.fullName?.toLowerCase().includes(searchLower) ||
-          p.client?.companyName?.toLowerCase().includes(searchLower) ||
+          p.vendor?.companyName?.toLowerCase().includes(searchLower) ||
           p.jobTitle?.toLowerCase().includes(searchLower) ||
           p.recruiter?.name?.toLowerCase().includes(searchLower),
       );
@@ -70,8 +70,8 @@ export function PlacementsTable({placements}: PlacementsTableProps) {
         case "candidateName":
           comparison = (a.candidate?.fullName || "").localeCompare(b.candidate?.fullName || "");
           break;
-        case "clientName":
-          comparison = (a.client?.companyName || "").localeCompare(b.client?.companyName || "");
+        case "vendorName":
+          comparison = (a.vendor?.companyName || "").localeCompare(b.vendor?.companyName || "");
           break;
       }
       return sortDirection === "asc" ? comparison : -comparison;
@@ -106,7 +106,7 @@ export function PlacementsTable({placements}: PlacementsTableProps) {
           <Search className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
           <input
             type="text"
-            placeholder="Search by candidate, client, job title..."
+            placeholder="Search by candidate, vendor, job title..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="border-border bg-input text-foreground placeholder:text-muted-foreground focus:border-primary focus:ring-primary h-9 w-full rounded-lg border pr-4 pl-9 text-sm focus:ring-1 focus:outline-none"
@@ -159,11 +159,11 @@ export function PlacementsTable({placements}: PlacementsTableProps) {
               </th>
               <th
                 className="hover:text-foreground cursor-pointer px-4 py-3"
-                onClick={() => handleSort("clientName")}
+                onClick={() => handleSort("vendorName")}
               >
                 <div className="flex items-center gap-1">
-                  Client
-                  {renderSortIcon("clientName", sortField, sortDirection)}
+                  Vendor
+                  {renderSortIcon("vendorName", sortField, sortDirection)}
                 </div>
               </th>
               <th className="px-4 py-3">Recruiter</th>
@@ -208,7 +208,7 @@ export function PlacementsTable({placements}: PlacementsTableProps) {
                     </div>
                   </td>
                   <td className="text-foreground px-4 py-3">
-                    {placement.client?.companyName || "Unknown"}
+                    {placement.vendor?.companyName || "Unknown"}
                   </td>
                   <td className="text-muted-foreground px-4 py-3">
                     {placement.recruiter?.name || "Unknown"}

@@ -28,7 +28,7 @@ const navItems: {
     items: [
       {name: "Placements", href: "/placements", icon: FileText},
       {name: "Candidates", href: "/candidates", icon: Users},
-      {name: "Clients", href: "/clients", icon: Building2},
+      {name: "Vendors", href: "/vendors", icon: Building2},
       {name: "Team", href: "/team", icon: UserCog},
     ],
   },

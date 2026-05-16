@@ -2,9 +2,9 @@ import {type SchemaTypeDefinition} from "sanity";
 
 import {teamMember} from "./teamMember";
 import {candidate} from "./candidate";
-import {client} from "./client";
+import {vendor} from "./vendor";
 import {placement} from "./placement";
 
 export const schema: {types: SchemaTypeDefinition[]} = {
-  types: [teamMember, candidate, client, placement],
+  types: [teamMember, candidate, vendor, placement],
 };

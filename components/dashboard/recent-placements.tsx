@@ -55,7 +55,7 @@ export function RecentPlacements({placements}: RecentPlacementsProps) {
             <thead>
               <tr className="border-border text-muted-foreground border-b text-left text-xs font-medium">
                 <th className="pr-4 pb-3">Candidate</th>
-                <th className="pr-4 pb-3">Client</th>
+                <th className="pr-4 pb-3">Vendor</th>
                 <th className="pr-4 pb-3">Date</th>
                 <th className="pr-4 pb-3 text-right">Value</th>
                 <th className="pb-3">Status</th>
@@ -76,7 +76,7 @@ export function RecentPlacements({placements}: RecentPlacementsProps) {
                       </div>
                     </td>
                     <td className="text-foreground py-3 pr-4">
-                      {placement.client?.companyName || "Unknown"}
+                      {placement.vendor?.companyName || "Unknown"}
                     </td>
                     <td className="text-muted-foreground py-3 pr-4">
                       {placement.placementDate

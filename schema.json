@@ -31,7 +31,7 @@
   },
   {
     "type": "type",
-    "name": "client.reference",
+    "name": "vendor.reference",
     "value": {
       "type": "object",
       "attributes": {
@@ -56,7 +56,7 @@
           "optional": true
         }
       },
-      "dereferencesTo": "client"
+      "dereferencesTo": "vendor"
     }
   },
   {
@@ -132,11 +132,11 @@
         },
         "optional": false
       },
-      "client": {
+      "vendor": {
         "type": "objectAttribute",
         "value": {
           "type": "inline",
-          "name": "client.reference"
+          "name": "vendor.reference"
         },
         "optional": false
       },
@@ -212,7 +212,7 @@
         },
         "optional": true
       },
-      "clientReference": {
+      "vendorReference": {
         "type": "objectAttribute",
         "value": {
           "type": "string"
@@ -401,7 +401,7 @@
     }
   },
   {
-    "name": "client",
+    "name": "vendor",
     "type": "document",
     "attributes": {
       "_id": {
@@ -414,7 +414,7 @@
         "type": "objectAttribute",
         "value": {
           "type": "string",
-          "value": "client"
+          "value": "vendor"
         }
       },
       "_createdAt": {

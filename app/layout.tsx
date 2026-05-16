@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "HeavenPro ATS - Recruitment Agency Dashboard",
   description:
-    "Professional recruitment agency management system for tracking placements, candidates, clients, and revenue",
+    "Professional recruitment agency management system for tracking placements, candidates, vendors, and revenue",
 };
 
 export default function RootLayout({

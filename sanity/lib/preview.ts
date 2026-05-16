@@ -34,7 +34,7 @@ export const candidateStatusEmoji: Record<string, string> = {
   placed: "✅",
 };
 
-export const clientStatusLabels: Record<string, string> = {
+export const vendorStatusLabels: Record<string, string> = {
   active: "Active",
   inactive: "Inactive",
   prospect: "Prospect",
@@ -42,7 +42,7 @@ export const clientStatusLabels: Record<string, string> = {
   on_hold: "On hold",
 };
 
-export const clientStatusEmoji: Record<string, string> = {
+export const vendorStatusEmoji: Record<string, string> = {
   active: "🟢",
   inactive: "⚫",
   prospect: "🔵",
