@@ -1,4 +1,9 @@
-import {client} from "@/sanity/lib/client";
+import {sanityFetch} from "@/sanity/lib/live";
+
+async function fetchQuery<T>(query: string, params?: Record<string, unknown>): Promise<T> {
+  const {data} = await sanityFetch({query, params});
+  return data as T;
+}
 
 // Types
 export interface TeamMember {
@@ -102,7 +107,7 @@ export interface Placement {
 
 // Queries
 export async function getPlacements(): Promise<Placement[]> {
-  return client.fetch(`
+  return fetchQuery<Placement[]>(`
     *[_type == "placement"] | order(placementDate desc) {
       _id,
       "candidate": candidate->{
@@ -141,7 +146,7 @@ export async function getPlacements(): Promise<Placement[]> {
 }
 
 export async function getCandidates(): Promise<Candidate[]> {
-  return client.fetch(`
+  return fetchQuery<Candidate[]>(`
     *[_type == "candidate"] | order(createdAt desc) {
       _id,
       fullName,
@@ -164,7 +169,7 @@ export async function getCandidates(): Promise<Candidate[]> {
 }
 
 export async function getVendors(): Promise<Vendor[]> {
-  return client.fetch(`
+  return fetchQuery<Vendor[]>(`
     *[_type == "vendor"] | order(companyName asc) {
       _id,
       companyName,
@@ -205,7 +210,7 @@ export async function getVendors(): Promise<Vendor[]> {
 }
 
 export async function getTeamMembers(): Promise<TeamMember[]> {
-  return client.fetch(`
+  return fetchQuery<TeamMember[]>(`
     *[_type == "teamMember"] | order(name asc) {
       _id,
       name,
@@ -299,7 +304,7 @@ export interface TeamMemberDetail extends TeamMember {
 
 // Detail Queries (single records)
 export async function getPlacementById(id: string): Promise<PlacementDetail | null> {
-  return client.fetch(
+  return fetchQuery<PlacementDetail | null>(
     `
     *[_type == "placement" && _id == $id][0] {
       _id,
@@ -356,7 +361,7 @@ export async function getPlacementById(id: string): Promise<PlacementDetail | nu
 }
 
 export async function getCandidateById(id: string): Promise<CandidateDetail | null> {
-  return client.fetch(
+  return fetchQuery<CandidateDetail | null>(
     `
     *[_type == "candidate" && _id == $id][0] {
       _id,
@@ -395,7 +400,7 @@ export async function getCandidateById(id: string): Promise<CandidateDetail | nu
 }
 
 export async function getVendorById(id: string): Promise<VendorDetail | null> {
-  return client.fetch(
+  return fetchQuery<VendorDetail | null>(
     `
     *[_type == "vendor" && _id == $id][0] {
       _id,
@@ -452,7 +457,7 @@ export async function getVendorById(id: string): Promise<VendorDetail | null> {
 }
 
 export async function getTeamMemberById(id: string): Promise<TeamMemberDetail | null> {
-  return client.fetch(
+  return fetchQuery<TeamMemberDetail | null>(
     `
     *[_type == "teamMember" && _id == $id][0] {
       _id,
@@ -479,7 +484,7 @@ export async function getTeamMemberById(id: string): Promise<TeamMemberDetail | 
 }
 
 export async function getPlacementsByCandidate(candidateId: string): Promise<Placement[]> {
-  return client.fetch(
+  return fetchQuery<Placement[]>(
     `
     *[_type == "placement" && candidate._ref == $candidateId] | order(placementDate desc) {
       _id,
@@ -510,7 +515,7 @@ export async function getPlacementsByCandidate(candidateId: string): Promise<Pla
 }
 
 export async function getPlacementsByVendor(vendorId: string): Promise<Placement[]> {
-  return client.fetch(
+  return fetchQuery<Placement[]>(
     `
     *[_type == "placement" && vendor._ref == $vendorId] | order(placementDate desc) {
       _id,
@@ -541,7 +546,7 @@ export async function getPlacementsByVendor(vendorId: string): Promise<Placement
 }
 
 export async function getPlacementsByRecruiter(recruiterId: string): Promise<Placement[]> {
-  return client.fetch(
+  return fetchQuery<Placement[]>(
     `
     *[_type == "placement" && recruiter._ref == $recruiterId] | order(placementDate desc) {
       _id,
