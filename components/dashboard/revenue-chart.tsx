@@ -27,7 +27,7 @@ function formatCurrency(value: number): string {
 export function RevenueChart({data}: RevenueChartProps) {
   return (
     <Card>
-      <CardHeader className="flex flex-row items-center justify-between border-b border-border pb-4">
+      <CardHeader className="flex flex-row items-center justify-between">
         <div>
           <CardTitle className="text-sm font-semibold">Revenue Overview</CardTitle>
           <CardDescription className="text-xs">Actual vs Projected (Last 6 months)</CardDescription>
@@ -43,7 +43,7 @@ export function RevenueChart({data}: RevenueChartProps) {
           </div>
         </div>
       </CardHeader>
-      <CardContent className="pt-4">
+      <CardContent>
         <div className="h-64 w-full min-w-0">
           <ResponsiveContainer width="100%" height={256} debounce={50}>
             <AreaChart data={data} margin={{top: 10, right: 10, left: 0, bottom: 0}}>

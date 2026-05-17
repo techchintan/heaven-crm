@@ -1,5 +1,5 @@
 import {cn} from "@/lib/utils";
-import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card";
+import {Card, CardContent} from "@/components/ui/card";
 import {LucideIcon} from "lucide-react";
 
 interface StatsCardProps {
@@ -15,27 +15,18 @@ interface StatsCardProps {
   className?: string;
 }
 
-const variantStyles = {
-  default: "",
-  success: "border-success/20 bg-success-muted",
-  warning: "border-warning/20 bg-warning-muted",
-  danger: "border-danger/20 bg-danger-muted",
-  info: "border-info/20 bg-info-muted",
-};
-
 const iconVariantStyles = {
-  default: "bg-muted text-muted-foreground",
-  success: "bg-success/15 text-success",
-  warning: "bg-warning/15 text-warning",
-  danger: "bg-danger/15 text-danger",
-  info: "bg-info/15 text-info",
+  default: "text-muted-foreground",
+  success: "text-success",
+  warning: "text-warning",
+  danger: "text-danger",
+  info: "text-info",
 };
 
 /**
  * StatsCard Component
  *
- * A reusable card component for displaying key metrics in dashboards.
- * Supports multiple variants, trend indicators, and custom icons.
+ * A clean card component for displaying key metrics with consistent white backgrounds.
  */
 export function StatsCard({
   title,
@@ -47,44 +38,35 @@ export function StatsCard({
   className,
 }: StatsCardProps) {
   return (
-    <Card className={cn(variantStyles[variant], className)}>
-      <CardHeader className="flex flex-row items-center justify-between pb-3">
-        <CardTitle className="text-sm font-medium text-muted-foreground">{title}</CardTitle>
-        {Icon && (
-          <div
-            className={cn(
-              "flex h-9 w-9 items-center justify-center rounded-lg",
-              iconVariantStyles[variant],
-            )}
-          >
-            <Icon className="h-4 w-4" />
-          </div>
-        )}
-      </CardHeader>
-      <CardContent>
-        <div className="flex items-end justify-between gap-3">
-          <div className="flex-1">
-            <div className="text-2xl font-bold tracking-tight text-foreground">{value}</div>
+    <Card className={className}>
+      <CardContent className="p-5">
+        <div className="flex items-start justify-between">
+          <div className="space-y-2">
+            <p className="text-sm font-medium text-muted-foreground">{title}</p>
+            <p className="text-2xl font-semibold tracking-tight text-foreground">{value}</p>
             {description && (
-              <p className="mt-1 text-xs text-muted-foreground">{description}</p>
+              <p className="text-xs text-muted-foreground">{description}</p>
             )}
           </div>
-          {trend && (
-            <div
-              className={cn(
-                "inline-flex items-center gap-1 rounded-md px-2 py-1 text-xs font-medium",
-                trend.isPositive
-                  ? "bg-success/10 text-success"
-                  : "bg-danger/10 text-danger",
-              )}
-            >
-              <span>
-                {trend.isPositive ? "+" : ""}
-                {trend.value}%
-              </span>
+          {Icon && (
+            <div className={cn("mt-0.5", iconVariantStyles[variant])}>
+              <Icon className="h-5 w-5" />
             </div>
           )}
         </div>
+        {trend && (
+          <div className="mt-3 pt-3 border-t border-border">
+            <span
+              className={cn(
+                "text-xs font-medium",
+                trend.isPositive ? "text-success" : "text-danger"
+              )}
+            >
+              {trend.isPositive ? "+" : ""}
+              {trend.value}% from last month
+            </span>
+          </div>
+        )}
       </CardContent>
     </Card>
   );

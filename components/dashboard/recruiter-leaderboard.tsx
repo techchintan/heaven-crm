@@ -26,11 +26,11 @@ export function RecruiterLeaderboard({data}: RecruiterLeaderboardProps) {
 
   return (
     <Card>
-      <CardHeader className="flex flex-row items-center gap-2 border-b border-border pb-4">
+      <CardHeader className="flex flex-row items-center gap-2">
         <Trophy className="h-4 w-4 text-warning" />
         <CardTitle className="text-sm font-semibold">Recruiter Leaderboard</CardTitle>
       </CardHeader>
-      <CardContent className="pt-4">
+      <CardContent>
         {data.length === 0 ? (
           <p className="py-10 text-center text-sm text-muted-foreground">
             No placement data available

@@ -19,15 +19,15 @@ function formatCurrency(value: number): string {
 
 export function AtRiskPlacements({placements}: AtRiskPlacementsProps) {
   return (
-    <Card className="border-warning/20 bg-warning-muted">
-      <CardHeader className="flex flex-row items-center justify-between gap-2 border-b border-warning/20 pb-4">
+    <Card>
+      <CardHeader className="flex flex-row items-center justify-between gap-2">
         <div className="flex items-center gap-2">
           <AlertTriangle className="h-4 w-4 text-warning" />
           <CardTitle className="text-sm font-semibold">At-Risk Probations</CardTitle>
         </div>
         <Badge variant="warning">{placements.length} active</Badge>
       </CardHeader>
-      <CardContent className="pt-4">
+      <CardContent>
         {placements.length === 0 ? (
           <p className="py-6 text-center text-sm text-muted-foreground">
             No at-risk placements within 30 days
@@ -42,7 +42,7 @@ export function AtRiskPlacements({placements}: AtRiskPlacementsProps) {
               return (
                 <div
                   key={placement._id}
-                  className="flex items-center justify-between rounded-lg border border-warning/10 bg-card p-3 shadow-sm"
+                  className="flex items-center justify-between rounded-lg border border-border bg-muted/30 p-3"
                 >
                   <div className="min-w-0 flex-1">
                     <p className="truncate text-sm font-medium text-foreground">

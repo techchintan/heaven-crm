@@ -39,11 +39,11 @@ function formatCurrency(value: number): string {
 export function RecentPlacements({placements}: RecentPlacementsProps) {
   return (
     <Card>
-      <CardHeader className="flex flex-row items-center gap-2 border-b border-border pb-4">
+      <CardHeader className="flex flex-row items-center gap-2">
         <FileText className="h-4 w-4 text-muted-foreground" />
         <CardTitle className="text-sm font-semibold">Recent Placements</CardTitle>
       </CardHeader>
-      <CardContent className="p-0">
+      <CardContent className="px-0 pb-0">
         {placements.length === 0 ? (
           <p className="py-10 text-center text-sm text-muted-foreground">No placements yet</p>
         ) : (
