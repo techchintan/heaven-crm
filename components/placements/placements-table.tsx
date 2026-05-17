@@ -1,6 +1,7 @@
 "use client";
 
 import {useState, useMemo} from "react";
+import {useRouter} from "next/navigation";
 import {Search, Filter, ExternalLink, ChevronUp, ChevronDown} from "lucide-react";
 import {format, parseISO} from "date-fns";
 import {StatusBadge} from "@/components/ui/status-badge";
@@ -38,6 +39,7 @@ function SortIcon({
 }
 
 export function PlacementsTable({placements}: PlacementsTableProps) {
+  const router = useRouter();
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [sortField, setSortField] = useState<SortField>("placementDate");
@@ -218,10 +220,16 @@ export function PlacementsTable({placements}: PlacementsTableProps) {
               </TableRow>
             ) : (
               filteredPlacements.map((placement) => (
-                <TableRow key={placement._id}>
+                <TableRow
+                  key={placement._id}
+                  className="cursor-pointer"
+                  onClick={() => router.push(`/placements/${placement._id}`)}
+                >
                   <TableCell>
                     <div>
-                      <p className="font-medium">{placement.candidate?.fullName || "Unknown"}</p>
+                      <p className="text-primary font-medium">
+                        {placement.candidate?.fullName || "Unknown"}
+                      </p>
                       <p className="text-muted-foreground text-xs">{placement.jobTitle}</p>
                     </div>
                   </TableCell>

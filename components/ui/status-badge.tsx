@@ -27,6 +27,9 @@ const candidateStatusConfig: Record<
     variant: "default" | "secondary" | "destructive" | "outline" | "success" | "warning" | "info";
   }
 > = {
+  immediately_available: {label: "Immediately Available", variant: "success"},
+  available_next_30_days: {label: "Available (30 Days)", variant: "success"},
+  on_notice_period: {label: "On Notice", variant: "warning"},
   available: {label: "Available", variant: "success"},
   placed: {label: "Placed", variant: "default"},
   in_process: {label: "In Process", variant: "info"},

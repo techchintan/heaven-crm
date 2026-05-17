@@ -1,6 +1,7 @@
 "use client";
 
 import {useState, useMemo} from "react";
+import {useRouter} from "next/navigation";
 import {Search, Filter, ExternalLink, Mail, Phone, Globe} from "lucide-react";
 import {StatusBadge} from "@/components/ui/status-badge";
 import {Input} from "@/components/ui/input";
@@ -33,6 +34,7 @@ const industryLabels: Record<string, string> = {
 };
 
 export function VendorsTable({vendors}: VendorsTableProps) {
+  const router = useRouter();
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [industryFilter, setIndustryFilter] = useState<string>("all");
@@ -162,10 +164,14 @@ export function VendorsTable({vendors}: VendorsTableProps) {
                 const regCount = vendor.stateTaxRegistrations?.length ?? 0;
 
                 return (
-                  <TableRow key={vendor._id}>
+                  <TableRow
+                    key={vendor._id}
+                    className="cursor-pointer"
+                    onClick={() => router.push(`/vendors/${vendor._id}`)}
+                  >
                     <TableCell>
                       <div>
-                        <p className="font-medium">{vendor.companyName}</p>
+                        <p className="text-primary font-medium">{vendor.companyName}</p>
                         {taxReg?.gstin && (
                           <p className="text-muted-foreground text-xs">GSTIN: {taxReg.gstin}</p>
                         )}

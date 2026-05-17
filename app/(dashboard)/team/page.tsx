@@ -1,4 +1,5 @@
 import {Suspense} from "react";
+import Link from "next/link";
 import {Header} from "@/components/layout/header";
 import {StatsCard} from "@/components/dashboard/stats-card";
 import {getTeamMembers, getPlacements} from "@/lib/sanity-queries";
@@ -7,10 +8,12 @@ import {Card, CardContent, CardHeader} from "@/components/ui/card";
 import {Badge} from "@/components/ui/badge";
 
 const roleLabels: Record<string, string> = {
+  trainee: "Trainee",
   recruiter: "Recruiter",
   senior_recruiter: "Senior Recruiter",
   team_lead: "Team Lead",
   manager: "Manager",
+  founder_ceo: "Founder & CEO",
 };
 
 function formatCurrency(value: number): string {
@@ -118,27 +121,29 @@ async function TeamContent() {
           {memberStats.map((member) => (
             <Card key={member._id} className="transition-shadow hover:shadow-md">
               <CardHeader className="pb-3">
-                <div className="flex items-start justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="bg-primary/10 text-primary flex h-11 w-11 items-center justify-center rounded-full text-base font-semibold">
-                      {member.name
-                        .split(" ")
-                        .map((n) => n[0])
-                        .join("")
-                        .toUpperCase()
-                        .slice(0, 2)}
+                <Link href={`/team/${member._id}`} className="block">
+                  <div className="flex items-start justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className="bg-primary/10 text-primary flex h-11 w-11 items-center justify-center rounded-full text-base font-semibold">
+                        {member.name
+                          .split(" ")
+                          .map((n) => n[0])
+                          .join("")
+                          .toUpperCase()
+                          .slice(0, 2)}
+                      </div>
+                      <div>
+                        <h3 className="text-primary font-medium">{member.name}</h3>
+                        <p className="text-muted-foreground text-sm">
+                          {member.role ? roleLabels[member.role] || member.role : "Recruiter"}
+                        </p>
+                      </div>
                     </div>
-                    <div>
-                      <h3 className="text-foreground font-medium">{member.name}</h3>
-                      <p className="text-muted-foreground text-sm">
-                        {member.role ? roleLabels[member.role] || member.role : "Recruiter"}
-                      </p>
-                    </div>
+                    <Badge variant={member.isActive ? "success" : "secondary"}>
+                      {member.isActive ? "Active" : "Inactive"}
+                    </Badge>
                   </div>
-                  <Badge variant={member.isActive ? "success" : "secondary"}>
-                    {member.isActive ? "Active" : "Inactive"}
-                  </Badge>
-                </div>
+                </Link>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="border-border grid grid-cols-2 gap-4 border-t pt-4">
