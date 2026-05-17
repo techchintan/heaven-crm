@@ -10,10 +10,10 @@ function VendorsSkeleton() {
     <div className="animate-pulse space-y-6 p-6">
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
         {[...Array(5)].map((_, i) => (
-          <div key={i} className="h-28 rounded-lg bg-muted" />
+          <div key={i} className="bg-muted h-28 rounded-lg" />
         ))}
       </div>
-      <div className="h-96 rounded-lg bg-muted" />
+      <div className="bg-muted h-96 rounded-lg" />
     </div>
   );
 }

@@ -15,15 +15,10 @@ interface HeaderProps {
  */
 export function Header({title, subtitle, className}: HeaderProps) {
   return (
-    <header
-      className={cn(
-        "flex h-16 items-center border-b border-border bg-card px-6",
-        className,
-      )}
-    >
+    <header className={cn("border-border bg-card flex h-16 items-center border-b px-6", className)}>
       <div className="flex flex-col gap-0.5">
-        <h1 className="text-lg font-semibold tracking-tight text-foreground">{title}</h1>
-        {subtitle && <p className="text-sm text-muted-foreground">{subtitle}</p>}
+        <h1 className="text-foreground text-lg font-semibold tracking-tight">{title}</h1>
+        {subtitle && <p className="text-muted-foreground text-sm">{subtitle}</p>}
       </div>
     </header>
   );

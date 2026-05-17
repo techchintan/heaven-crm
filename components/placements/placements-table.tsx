@@ -4,17 +4,9 @@ import {useState, useMemo} from "react";
 import {Search, Filter, ExternalLink, ChevronUp, ChevronDown} from "lucide-react";
 import {format, parseISO} from "date-fns";
 import {StatusBadge} from "@/components/ui/status-badge";
-import {Button} from "@/components/ui/button";
 import {Input} from "@/components/ui/input";
 import {Card} from "@/components/ui/card";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
 import type {Placement} from "@/lib/sanity-queries";
 
 interface PlacementsTableProps {
@@ -115,7 +107,7 @@ export function PlacementsTable({placements}: PlacementsTableProps) {
       {/* Filters */}
       <div className="flex flex-wrap items-center gap-3">
         <div className="relative min-w-64 flex-1">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+          <Search className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
           <Input
             type="text"
             placeholder="Search by candidate, vendor, job title..."
@@ -126,11 +118,11 @@ export function PlacementsTable({placements}: PlacementsTableProps) {
         </div>
 
         <div className="relative">
-          <Filter className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+          <Filter className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="h-9 appearance-none rounded-md border border-border bg-card pl-9 pr-8 text-sm text-foreground shadow-sm focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+            className="border-border bg-card text-foreground focus:ring-ring h-9 appearance-none rounded-md border pr-8 pl-9 text-sm shadow-sm focus:ring-2 focus:ring-offset-2 focus:outline-none"
           >
             {statusOptions.map((option) => (
               <option key={option.value} value={option.value}>
@@ -143,7 +135,7 @@ export function PlacementsTable({placements}: PlacementsTableProps) {
         <a
           href="/studio/structure/placement"
           target="_blank"
-          className="inline-flex h-9 items-center justify-center gap-2 rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground shadow-sm transition-all duration-150 hover:bg-primary/90 active:scale-[0.98]"
+          className="bg-primary text-primary-foreground hover:bg-primary/90 inline-flex h-9 items-center justify-center gap-2 rounded-md px-4 text-sm font-medium shadow-sm transition-all duration-150 active:scale-[0.98]"
         >
           Add in Studio
           <ExternalLink className="h-3 w-3" />
@@ -151,51 +143,67 @@ export function PlacementsTable({placements}: PlacementsTableProps) {
       </div>
 
       {/* Results count */}
-      <p className="text-sm text-muted-foreground">
+      <p className="text-muted-foreground text-sm">
         Showing {filteredPlacements.length} of {placements.length} placements
       </p>
 
       {/* Table */}
-      <Card className="p-0 overflow-hidden">
+      <Card className="overflow-hidden p-0">
         <Table>
           <TableHeader>
             <TableRow className="hover:bg-transparent">
               <TableHead
-                className="cursor-pointer select-none hover:text-foreground"
+                className="hover:text-foreground cursor-pointer select-none"
                 onClick={() => handleSort("candidateName")}
               >
                 <div className="flex items-center gap-1">
                   Candidate
-                  <SortIcon field="candidateName" activeSortField={sortField} activeSortDirection={sortDirection} />
+                  <SortIcon
+                    field="candidateName"
+                    activeSortField={sortField}
+                    activeSortDirection={sortDirection}
+                  />
                 </div>
               </TableHead>
               <TableHead
-                className="cursor-pointer select-none hover:text-foreground"
+                className="hover:text-foreground cursor-pointer select-none"
                 onClick={() => handleSort("vendorName")}
               >
                 <div className="flex items-center gap-1">
                   Vendor
-                  <SortIcon field="vendorName" activeSortField={sortField} activeSortDirection={sortDirection} />
+                  <SortIcon
+                    field="vendorName"
+                    activeSortField={sortField}
+                    activeSortDirection={sortDirection}
+                  />
                 </div>
               </TableHead>
               <TableHead>Recruiter</TableHead>
               <TableHead
-                className="cursor-pointer select-none hover:text-foreground"
+                className="hover:text-foreground cursor-pointer select-none"
                 onClick={() => handleSort("placementDate")}
               >
                 <div className="flex items-center gap-1">
                   Placement Date
-                  <SortIcon field="placementDate" activeSortField={sortField} activeSortDirection={sortDirection} />
+                  <SortIcon
+                    field="placementDate"
+                    activeSortField={sortField}
+                    activeSortDirection={sortDirection}
+                  />
                 </div>
               </TableHead>
               <TableHead>Probation End</TableHead>
               <TableHead
-                className="cursor-pointer select-none hover:text-foreground text-right"
+                className="hover:text-foreground cursor-pointer text-right select-none"
                 onClick={() => handleSort("totalInvoiceValue")}
               >
                 <div className="flex items-center justify-end gap-1">
                   Invoice Value
-                  <SortIcon field="totalInvoiceValue" activeSortField={sortField} activeSortDirection={sortDirection} />
+                  <SortIcon
+                    field="totalInvoiceValue"
+                    activeSortField={sortField}
+                    activeSortDirection={sortDirection}
+                  />
                 </div>
               </TableHead>
               <TableHead>Status</TableHead>
@@ -204,7 +212,7 @@ export function PlacementsTable({placements}: PlacementsTableProps) {
           <TableBody>
             {filteredPlacements.length === 0 ? (
               <TableRow className="hover:bg-transparent">
-                <TableCell colSpan={7} className="py-10 text-center text-muted-foreground">
+                <TableCell colSpan={7} className="text-muted-foreground py-10 text-center">
                   No placements found
                 </TableCell>
               </TableRow>
@@ -214,7 +222,7 @@ export function PlacementsTable({placements}: PlacementsTableProps) {
                   <TableCell>
                     <div>
                       <p className="font-medium">{placement.candidate?.fullName || "Unknown"}</p>
-                      <p className="text-xs text-muted-foreground">{placement.jobTitle}</p>
+                      <p className="text-muted-foreground text-xs">{placement.jobTitle}</p>
                     </div>
                   </TableCell>
                   <TableCell>{placement.vendor?.companyName || "Unknown"}</TableCell>

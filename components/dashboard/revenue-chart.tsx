@@ -34,11 +34,11 @@ export function RevenueChart({data}: RevenueChartProps) {
         </div>
         <div className="flex items-center gap-4 text-xs">
           <div className="flex items-center gap-1.5">
-            <div className="h-2.5 w-2.5 rounded-full bg-chart-1" />
+            <div className="bg-chart-1 h-2.5 w-2.5 rounded-full" />
             <span className="text-muted-foreground">Actual</span>
           </div>
           <div className="flex items-center gap-1.5">
-            <div className="h-2.5 w-2.5 rounded-full bg-info" />
+            <div className="bg-info h-2.5 w-2.5 rounded-full" />
             <span className="text-muted-foreground">Projected</span>
           </div>
         </div>

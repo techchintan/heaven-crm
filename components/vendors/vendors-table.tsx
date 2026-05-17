@@ -3,17 +3,9 @@
 import {useState, useMemo} from "react";
 import {Search, Filter, ExternalLink, Mail, Phone, Globe} from "lucide-react";
 import {StatusBadge} from "@/components/ui/status-badge";
-import {Button} from "@/components/ui/button";
 import {Input} from "@/components/ui/input";
 import {Card} from "@/components/ui/card";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
 import type {Vendor, VendorStateTaxRegistration} from "@/lib/sanity-queries";
 
 function primaryTaxRegistration(
@@ -91,7 +83,7 @@ export function VendorsTable({vendors}: VendorsTableProps) {
       {/* Filters */}
       <div className="flex flex-wrap items-center gap-3">
         <div className="relative min-w-64 flex-1">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+          <Search className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
           <Input
             type="text"
             placeholder="Search by company, contact..."
@@ -102,11 +94,11 @@ export function VendorsTable({vendors}: VendorsTableProps) {
         </div>
 
         <div className="relative">
-          <Filter className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+          <Filter className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="h-9 appearance-none rounded-md border border-border bg-card pl-9 pr-8 text-sm text-foreground shadow-sm focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+            className="border-border bg-card text-foreground focus:ring-ring h-9 appearance-none rounded-md border pr-8 pl-9 text-sm shadow-sm focus:ring-2 focus:ring-offset-2 focus:outline-none"
           >
             {statusOptions.map((option) => (
               <option key={option.value} value={option.value}>
@@ -119,7 +111,7 @@ export function VendorsTable({vendors}: VendorsTableProps) {
         <select
           value={industryFilter}
           onChange={(e) => setIndustryFilter(e.target.value)}
-          className="h-9 appearance-none rounded-md border border-border bg-card px-3 pr-8 text-sm text-foreground shadow-sm focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+          className="border-border bg-card text-foreground focus:ring-ring h-9 appearance-none rounded-md border px-3 pr-8 text-sm shadow-sm focus:ring-2 focus:ring-offset-2 focus:outline-none"
         >
           {industryOptions.map((option) => (
             <option key={option.value} value={option.value}>
@@ -131,7 +123,7 @@ export function VendorsTable({vendors}: VendorsTableProps) {
         <a
           href="/studio/structure/vendor"
           target="_blank"
-          className="inline-flex h-9 items-center justify-center gap-2 rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground shadow-sm transition-all duration-150 hover:bg-primary/90 active:scale-[0.98]"
+          className="bg-primary text-primary-foreground hover:bg-primary/90 inline-flex h-9 items-center justify-center gap-2 rounded-md px-4 text-sm font-medium shadow-sm transition-all duration-150 active:scale-[0.98]"
         >
           Add in Studio
           <ExternalLink className="h-3 w-3" />
@@ -139,12 +131,12 @@ export function VendorsTable({vendors}: VendorsTableProps) {
       </div>
 
       {/* Results count */}
-      <p className="text-sm text-muted-foreground">
+      <p className="text-muted-foreground text-sm">
         Showing {filteredVendors.length} of {vendors.length} vendors
       </p>
 
       {/* Table */}
-      <Card className="p-0 overflow-hidden">
+      <Card className="overflow-hidden p-0">
         <Table>
           <TableHeader>
             <TableRow className="hover:bg-transparent">
@@ -160,7 +152,7 @@ export function VendorsTable({vendors}: VendorsTableProps) {
           <TableBody>
             {filteredVendors.length === 0 ? (
               <TableRow className="hover:bg-transparent">
-                <TableCell colSpan={7} className="py-10 text-center text-muted-foreground">
+                <TableCell colSpan={7} className="text-muted-foreground py-10 text-center">
                   No vendors found
                 </TableCell>
               </TableRow>
@@ -175,10 +167,10 @@ export function VendorsTable({vendors}: VendorsTableProps) {
                       <div>
                         <p className="font-medium">{vendor.companyName}</p>
                         {taxReg?.gstin && (
-                          <p className="text-xs text-muted-foreground">GSTIN: {taxReg.gstin}</p>
+                          <p className="text-muted-foreground text-xs">GSTIN: {taxReg.gstin}</p>
                         )}
                         {regCount > 1 && (
-                          <p className="text-xs text-muted-foreground">
+                          <p className="text-muted-foreground text-xs">
                             {regCount} state registrations
                           </p>
                         )}
@@ -191,7 +183,7 @@ export function VendorsTable({vendors}: VendorsTableProps) {
                       <div>
                         <p>{vendor.primaryContact || "—"}</p>
                         {vendor.contactDesignation && (
-                          <p className="text-xs text-muted-foreground">
+                          <p className="text-muted-foreground text-xs">
                             {vendor.contactDesignation}
                           </p>
                         )}
@@ -212,7 +204,7 @@ export function VendorsTable({vendors}: VendorsTableProps) {
                           <a
                             href={`mailto:${vendor.contactEmail}`}
                             title="Send email"
-                            className="flex h-7 w-7 items-center justify-center rounded-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+                            className="text-muted-foreground hover:bg-muted hover:text-foreground flex h-7 w-7 items-center justify-center rounded-sm transition-colors"
                           >
                             <Mail className="h-3.5 w-3.5" />
                           </a>
@@ -221,7 +213,7 @@ export function VendorsTable({vendors}: VendorsTableProps) {
                           <a
                             href={`tel:${vendor.contactPhone}`}
                             title="Call"
-                            className="flex h-7 w-7 items-center justify-center rounded-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+                            className="text-muted-foreground hover:bg-muted hover:text-foreground flex h-7 w-7 items-center justify-center rounded-sm transition-colors"
                           >
                             <Phone className="h-3.5 w-3.5" />
                           </a>
@@ -232,7 +224,7 @@ export function VendorsTable({vendors}: VendorsTableProps) {
                             target="_blank"
                             rel="noopener noreferrer"
                             title="Visit website"
-                            className="flex h-7 w-7 items-center justify-center rounded-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+                            className="text-muted-foreground hover:bg-muted hover:text-foreground flex h-7 w-7 items-center justify-center rounded-sm transition-colors"
                           >
                             <Globe className="h-3.5 w-3.5" />
                           </a>

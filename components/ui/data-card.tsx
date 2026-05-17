@@ -25,13 +25,13 @@ export function DataCard({
 }: DataCardProps) {
   return (
     <Card className={className}>
-      <CardHeader className="border-b border-border pb-4">
+      <CardHeader className="border-border border-b pb-4">
         <CardTitle className="text-base font-semibold">{title}</CardTitle>
         {description && <CardDescription>{description}</CardDescription>}
       </CardHeader>
       <CardContent className={cn("pt-4", isLoading && "animate-pulse")}>{children}</CardContent>
       {footer && (
-        <div className="-mx-4 -mb-4 border-t border-border bg-muted/30 px-4 py-3 rounded-b-lg">
+        <div className="border-border bg-muted/30 -mx-4 -mb-4 rounded-b-lg border-t px-4 py-3">
           {footer}
         </div>
       )}

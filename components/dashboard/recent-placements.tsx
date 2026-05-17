@@ -5,14 +5,7 @@ import type {Placement} from "@/lib/sanity-queries";
 import {format, parseISO} from "date-fns";
 import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card";
 import {Badge} from "@/components/ui/badge";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
 
 interface RecentPlacementsProps {
   placements: Placement[];
@@ -40,12 +33,12 @@ export function RecentPlacements({placements}: RecentPlacementsProps) {
   return (
     <Card>
       <CardHeader className="flex flex-row items-center gap-2">
-        <FileText className="h-4 w-4 text-muted-foreground" />
+        <FileText className="text-muted-foreground h-4 w-4" />
         <CardTitle className="text-sm font-semibold">Recent Placements</CardTitle>
       </CardHeader>
       <CardContent className="px-0 pb-0">
         {placements.length === 0 ? (
-          <p className="py-10 text-center text-sm text-muted-foreground">No placements yet</p>
+          <p className="text-muted-foreground py-10 text-center text-sm">No placements yet</p>
         ) : (
           <Table>
             <TableHeader>
@@ -66,7 +59,7 @@ export function RecentPlacements({placements}: RecentPlacementsProps) {
                     <TableCell>
                       <div>
                         <p className="font-medium">{placement.candidate?.fullName || "Unknown"}</p>
-                        <p className="text-xs text-muted-foreground">{placement.jobTitle}</p>
+                        <p className="text-muted-foreground text-xs">{placement.jobTitle}</p>
                       </div>
                     </TableCell>
                     <TableCell>{placement.vendor?.companyName || "Unknown"}</TableCell>

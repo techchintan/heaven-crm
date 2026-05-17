@@ -42,11 +42,9 @@ export function StatsCard({
       <CardContent className="p-5">
         <div className="flex items-start justify-between">
           <div className="space-y-2">
-            <p className="text-sm font-medium text-muted-foreground">{title}</p>
-            <p className="text-2xl font-semibold tracking-tight text-foreground">{value}</p>
-            {description && (
-              <p className="text-xs text-muted-foreground">{description}</p>
-            )}
+            <p className="text-muted-foreground text-sm font-medium">{title}</p>
+            <p className="text-foreground text-2xl font-semibold tracking-tight">{value}</p>
+            {description && <p className="text-muted-foreground text-xs">{description}</p>}
           </div>
           {Icon && (
             <div className={cn("mt-0.5", iconVariantStyles[variant])}>
@@ -55,11 +53,11 @@ export function StatsCard({
           )}
         </div>
         {trend && (
-          <div className="mt-3 pt-3 border-t border-border">
+          <div className="border-border mt-3 border-t pt-3">
             <span
               className={cn(
                 "text-xs font-medium",
-                trend.isPositive ? "text-success" : "text-danger"
+                trend.isPositive ? "text-success" : "text-danger",
               )}
             >
               {trend.isPositive ? "+" : ""}

@@ -8,7 +8,10 @@ interface StatusBadgeProps {
 
 const placementStatusConfig: Record<
   string,
-  {label: string; variant: "default" | "secondary" | "destructive" | "outline" | "success" | "warning" | "info"}
+  {
+    label: string;
+    variant: "default" | "secondary" | "destructive" | "outline" | "success" | "warning" | "info";
+  }
 > = {
   pending: {label: "Pending", variant: "secondary"},
   invoiced: {label: "Invoiced", variant: "info"},
@@ -19,7 +22,10 @@ const placementStatusConfig: Record<
 
 const candidateStatusConfig: Record<
   string,
-  {label: string; variant: "default" | "secondary" | "destructive" | "outline" | "success" | "warning" | "info"}
+  {
+    label: string;
+    variant: "default" | "secondary" | "destructive" | "outline" | "success" | "warning" | "info";
+  }
 > = {
   available: {label: "Available", variant: "success"},
   placed: {label: "Placed", variant: "default"},
@@ -30,7 +36,10 @@ const candidateStatusConfig: Record<
 
 const vendorStatusConfig: Record<
   string,
-  {label: string; variant: "default" | "secondary" | "destructive" | "outline" | "success" | "warning" | "info"}
+  {
+    label: string;
+    variant: "default" | "secondary" | "destructive" | "outline" | "success" | "warning" | "info";
+  }
 > = {
   active: {label: "Active", variant: "success"},
   inactive: {label: "Inactive", variant: "secondary"},

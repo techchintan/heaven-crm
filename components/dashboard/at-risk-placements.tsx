@@ -22,14 +22,14 @@ export function AtRiskPlacements({placements}: AtRiskPlacementsProps) {
     <Card>
       <CardHeader className="flex flex-row items-center justify-between gap-2">
         <div className="flex items-center gap-2">
-          <AlertTriangle className="h-4 w-4 text-warning" />
+          <AlertTriangle className="text-warning h-4 w-4" />
           <CardTitle className="text-sm font-semibold">At-Risk Probations</CardTitle>
         </div>
         <Badge variant="warning">{placements.length} active</Badge>
       </CardHeader>
       <CardContent>
         {placements.length === 0 ? (
-          <p className="py-6 text-center text-sm text-muted-foreground">
+          <p className="text-muted-foreground py-6 text-center text-sm">
             No at-risk placements within 30 days
           </p>
         ) : (
@@ -42,21 +42,21 @@ export function AtRiskPlacements({placements}: AtRiskPlacementsProps) {
               return (
                 <div
                   key={placement._id}
-                  className="flex items-center justify-between rounded-lg border border-border bg-muted/30 p-3"
+                  className="border-border bg-muted/30 flex items-center justify-between rounded-lg border p-3"
                 >
                   <div className="min-w-0 flex-1">
-                    <p className="truncate text-sm font-medium text-foreground">
+                    <p className="text-foreground truncate text-sm font-medium">
                       {placement.candidate?.fullName || "Unknown"}
                     </p>
-                    <p className="truncate text-xs text-muted-foreground">
+                    <p className="text-muted-foreground truncate text-xs">
                       {placement.vendor?.companyName || "Unknown"} - {placement.jobTitle}
                     </p>
                   </div>
                   <div className="ml-4 flex flex-col items-end gap-1">
-                    <span className="text-sm font-semibold text-foreground">
+                    <span className="text-foreground text-sm font-semibold">
                       {formatCurrency(placement.totalInvoiceValue || 0)}
                     </span>
-                    <div className="flex items-center gap-1 text-xs text-warning">
+                    <div className="text-warning flex items-center gap-1 text-xs">
                       <Clock className="h-3 w-3" />
                       <span>{daysLeft} days left</span>
                     </div>
