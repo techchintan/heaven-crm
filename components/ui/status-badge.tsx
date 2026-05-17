@@ -1,7 +1,7 @@
 import {Badge} from "@/components/ui/badge";
 
 interface StatusBadgeProps {
-  status: string;
+  status: string | null | undefined;
   variant?: "placement" | "candidate" | "vendor";
   className?: string;
 }
@@ -63,7 +63,11 @@ export function StatusBadge({status, variant = "placement", className}: StatusBa
     vendor: vendorStatusConfig,
   };
 
-  const config = configs[variant][status] || {label: status, variant: "secondary" as const};
+  const resolvedStatus = status ?? "pending";
+  const config = configs[variant][resolvedStatus] || {
+    label: resolvedStatus,
+    variant: "secondary" as const,
+  };
 
   return (
     <Badge variant={config.variant} className={className}>

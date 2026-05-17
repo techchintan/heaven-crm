@@ -2,7 +2,7 @@ import {Suspense} from "react";
 import {notFound} from "next/navigation";
 import Link from "next/link";
 import {ArrowLeft, ExternalLink, Mail, Phone} from "lucide-react";
-import {getTeamMemberById, getPlacementsByRecruiter} from "@/lib/sanity-queries";
+import {getPlacementsByRecruiter, getTeamMemberById} from "@/sanity/lib/fetch";
 import {formatCurrency, formatDate, formatStatus} from "@/lib/format";
 import {Card, CardContent, CardHeader} from "@/components/ui/card";
 import {Badge} from "@/components/ui/badge";

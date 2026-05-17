@@ -7,17 +7,21 @@ import {StatusBadge} from "@/components/ui/status-badge";
 import {Input} from "@/components/ui/input";
 import {Card} from "@/components/ui/card";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
-import type {Vendor, VendorStateTaxRegistration} from "@/lib/sanity-queries";
+import type {VendorsQueryResult} from "@/sanity.types";
+
+type VendorStateTaxRegistration = NonNullable<
+  NonNullable<VendorsQueryResult[number]["stateTaxRegistrations"]>[number]
+>;
 
 function primaryTaxRegistration(
-  registrations: VendorStateTaxRegistration[] | undefined,
+  registrations: VendorsQueryResult[number]["stateTaxRegistrations"],
 ): VendorStateTaxRegistration | undefined {
   if (!registrations?.length) return undefined;
   return registrations.find((r) => r.isPrimary) ?? registrations[0];
 }
 
 interface VendorsTableProps {
-  vendors: Vendor[];
+  vendors: VendorsQueryResult;
 }
 
 const industryLabels: Record<string, string> = {

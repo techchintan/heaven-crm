@@ -1,14 +1,14 @@
 "use client";
 
 import {FileText} from "lucide-react";
-import type {Placement} from "@/lib/sanity-queries";
+import type {PlacementsQueryResult} from "@/sanity.types";
 import {format, parseISO} from "date-fns";
 import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card";
 import {Badge} from "@/components/ui/badge";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
 
 interface RecentPlacementsProps {
-  placements: Placement[];
+  placements: PlacementsQueryResult;
 }
 
 const statusConfig: Record<
@@ -52,7 +52,8 @@ export function RecentPlacements({placements}: RecentPlacementsProps) {
             </TableHeader>
             <TableBody>
               {placements.map((placement) => {
-                const status = statusConfig[placement.revenueStatus] || statusConfig.pending;
+                const status =
+                  statusConfig[placement.revenueStatus ?? "pending"] || statusConfig.pending;
 
                 return (
                   <TableRow key={placement._id}>

@@ -2,7 +2,7 @@ import {Suspense} from "react";
 import {Header} from "@/components/layout/header";
 import {VendorsTable} from "@/components/vendors/vendors-table";
 import {StatsCard} from "@/components/dashboard/stats-card";
-import {getVendors} from "@/lib/sanity-queries";
+import {getVendors} from "@/sanity/lib/fetch";
 import {Building2, CheckCircle2, Clock, Loader2, PauseCircle} from "lucide-react";
 
 function VendorsSkeleton() {

@@ -8,10 +8,10 @@ import {StatusBadge} from "@/components/ui/status-badge";
 import {Input} from "@/components/ui/input";
 import {Card} from "@/components/ui/card";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
-import type {Placement} from "@/lib/sanity-queries";
+import type {PlacementsQueryResult} from "@/sanity.types";
 
 interface PlacementsTableProps {
-  placements: Placement[];
+  placements: PlacementsQueryResult;
 }
 
 type SortField = "placementDate" | "totalInvoiceValue" | "candidateName" | "vendorName";
