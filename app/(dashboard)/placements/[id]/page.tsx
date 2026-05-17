@@ -1,7 +1,7 @@
 import {Suspense} from "react";
 import {notFound} from "next/navigation";
 import Link from "next/link";
-import {ArrowLeft, ExternalLink, Calendar, IndianRupee, Briefcase, MapPin} from "lucide-react";
+import {ArrowLeft, ExternalLink, Calendar, IndianRupee, Briefcase} from "lucide-react";
 import {getPlacementById} from "@/lib/sanity-queries";
 import {formatCurrency, formatDate, formatStatus} from "@/lib/format";
 import {Card, CardContent, CardHeader} from "@/components/ui/card";
@@ -132,7 +132,8 @@ async function PlacementDetailContent({id}: {id: string}) {
               <p className="text-muted-foreground text-xs">Engagement</p>
               <p className="text-foreground text-lg font-semibold">
                 {placement.engagementType
-                  ? engagementLabels[placement.engagementType] || formatStatus(placement.engagementType)
+                  ? engagementLabels[placement.engagementType] ||
+                    formatStatus(placement.engagementType)
                   : "--"}
               </p>
             </div>
@@ -155,7 +156,10 @@ async function PlacementDetailContent({id}: {id: string}) {
                   label="Name"
                   value={
                     placement.candidate ? (
-                      <Link href={`/candidates/${placement.candidate._id}`} className="text-primary hover:underline">
+                      <Link
+                        href={`/candidates/${placement.candidate._id}`}
+                        className="text-primary hover:underline"
+                      >
                         {placement.candidate.fullName}
                       </Link>
                     ) : null
@@ -169,13 +173,21 @@ async function PlacementDetailContent({id}: {id: string}) {
                   label="Company"
                   value={
                     placement.vendor ? (
-                      <Link href={`/vendors/${placement.vendor._id}`} className="text-primary hover:underline">
+                      <Link
+                        href={`/vendors/${placement.vendor._id}`}
+                        className="text-primary hover:underline"
+                      >
                         {placement.vendor.companyName}
                       </Link>
                     ) : null
                   }
                 />
-                <DetailField label="Payment Terms" value={placement.vendor?.paymentTerms ? `${placement.vendor.paymentTerms} days` : null} />
+                <DetailField
+                  label="Payment Terms"
+                  value={
+                    placement.vendor?.paymentTerms ? `${placement.vendor.paymentTerms} days` : null
+                  }
+                />
               </DetailSection>
               <Separator />
               <DetailSection title="Recruiter">
@@ -183,13 +195,19 @@ async function PlacementDetailContent({id}: {id: string}) {
                   label="Name"
                   value={
                     placement.recruiter ? (
-                      <Link href={`/team/${placement.recruiter._id}`} className="text-primary hover:underline">
+                      <Link
+                        href={`/team/${placement.recruiter._id}`}
+                        className="text-primary hover:underline"
+                      >
                         {placement.recruiter.name}
                       </Link>
                     ) : null
                   }
                 />
-                <DetailField label="Role" value={placement.recruiter?.role ? formatStatus(placement.recruiter.role) : null} />
+                <DetailField
+                  label="Role"
+                  value={placement.recruiter?.role ? formatStatus(placement.recruiter.role) : null}
+                />
               </DetailSection>
             </CardContent>
           </Card>
@@ -204,11 +222,21 @@ async function PlacementDetailContent({id}: {id: string}) {
                 <DetailField label="Job Title" value={placement.jobTitle} />
                 <DetailField
                   label="Engagement Type"
-                  value={placement.engagementType ? engagementLabels[placement.engagementType] || formatStatus(placement.engagementType) : null}
+                  value={
+                    placement.engagementType
+                      ? engagementLabels[placement.engagementType] ||
+                        formatStatus(placement.engagementType)
+                      : null
+                  }
                 />
                 <DetailField
                   label="Work Arrangement"
-                  value={placement.workArrangement ? workArrangementLabels[placement.workArrangement] || formatStatus(placement.workArrangement) : null}
+                  value={
+                    placement.workArrangement
+                      ? workArrangementLabels[placement.workArrangement] ||
+                        formatStatus(placement.workArrangement)
+                      : null
+                  }
                 />
                 <DetailField label="Work Location" value={placement.workLocation} />
                 <DetailField label="Vendor PO / Reference" value={placement.vendorReference} />
@@ -226,7 +254,10 @@ async function PlacementDetailContent({id}: {id: string}) {
             </CardHeader>
             <CardContent className="space-y-6">
               <DetailSection title="Fee Inputs">
-                <DetailField label="Base Salary (p.a.)" value={formatCurrency(placement.baseSalary)} />
+                <DetailField
+                  label="Base Salary (p.a.)"
+                  value={formatCurrency(placement.baseSalary)}
+                />
                 <DetailField label="Fee Structure" value={feeDisplay} />
                 <DetailField label="GST Rate" value={`${placement.gstPercentage || 18}%`} />
               </DetailSection>
@@ -253,13 +284,38 @@ async function PlacementDetailContent({id}: {id: string}) {
             </CardHeader>
             <CardContent>
               <DetailSection title="">
-                <DetailField label="Offer Accepted" value={placement.offerAcceptedDate ? formatDate(placement.offerAcceptedDate) : null} />
-                <DetailField label="Placement / Joining" value={placement.placementDate ? formatDate(placement.placementDate) : null} />
-                <DetailField label="Probation Period" value={placement.probationPeriodDays ? `${placement.probationPeriodDays} days` : null} />
-                <DetailField label="Probation End" value={placement.probationEndDate ? formatDate(placement.probationEndDate) : null} />
-                <DetailField label="Invoice Date" value={placement.invoiceDate ? formatDate(placement.invoiceDate) : null} />
-                <DetailField label="Payment Due" value={placement.paymentDueDate ? formatDate(placement.paymentDueDate) : null} />
-                <DetailField label="Exit Date" value={placement.exitDate ? formatDate(placement.exitDate) : null} />
+                <DetailField
+                  label="Offer Accepted"
+                  value={
+                    placement.offerAcceptedDate ? formatDate(placement.offerAcceptedDate) : null
+                  }
+                />
+                <DetailField
+                  label="Placement / Joining"
+                  value={placement.placementDate ? formatDate(placement.placementDate) : null}
+                />
+                <DetailField
+                  label="Probation Period"
+                  value={
+                    placement.probationPeriodDays ? `${placement.probationPeriodDays} days` : null
+                  }
+                />
+                <DetailField
+                  label="Probation End"
+                  value={placement.probationEndDate ? formatDate(placement.probationEndDate) : null}
+                />
+                <DetailField
+                  label="Invoice Date"
+                  value={placement.invoiceDate ? formatDate(placement.invoiceDate) : null}
+                />
+                <DetailField
+                  label="Payment Due"
+                  value={placement.paymentDueDate ? formatDate(placement.paymentDueDate) : null}
+                />
+                <DetailField
+                  label="Exit Date"
+                  value={placement.exitDate ? formatDate(placement.exitDate) : null}
+                />
               </DetailSection>
             </CardContent>
           </Card>
@@ -271,10 +327,19 @@ async function PlacementDetailContent({id}: {id: string}) {
             </CardHeader>
             <CardContent>
               <DetailSection title="">
-                <DetailField label="Revenue Status" value={<StatusBadge status={placement.revenueStatus} variant="placement" />} />
+                <DetailField
+                  label="Revenue Status"
+                  value={<StatusBadge status={placement.revenueStatus} variant="placement" />}
+                />
                 <DetailField label="Invoice Number" value={placement.invoiceNumber} />
-                <DetailField label="Payment Date" value={placement.paymentDate ? formatDate(placement.paymentDate) : null} />
-                <DetailField label="Amount Received" value={placement.amountReceived ? formatCurrency(placement.amountReceived) : null} />
+                <DetailField
+                  label="Payment Date"
+                  value={placement.paymentDate ? formatDate(placement.paymentDate) : null}
+                />
+                <DetailField
+                  label="Amount Received"
+                  value={placement.amountReceived ? formatCurrency(placement.amountReceived) : null}
+                />
               </DetailSection>
             </CardContent>
           </Card>
@@ -288,7 +353,7 @@ async function PlacementDetailContent({id}: {id: string}) {
             <h2 className="text-foreground text-base font-semibold">Internal Notes</h2>
           </CardHeader>
           <CardContent>
-            <p className="text-muted-foreground whitespace-pre-wrap text-sm">{placement.notes}</p>
+            <p className="text-muted-foreground text-sm whitespace-pre-wrap">{placement.notes}</p>
           </CardContent>
         </Card>
       )}

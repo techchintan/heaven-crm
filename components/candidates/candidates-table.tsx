@@ -126,7 +126,11 @@ export function CandidatesTable({candidates}: CandidatesTableProps) {
               </TableRow>
             ) : (
               filteredCandidates.map((candidate) => (
-                <TableRow key={candidate._id} className="cursor-pointer" onClick={() => router.push(`/candidates/${candidate._id}`)}>
+                <TableRow
+                  key={candidate._id}
+                  className="cursor-pointer"
+                  onClick={() => router.push(`/candidates/${candidate._id}`)}
+                >
                   <TableCell>
                     <div>
                       <p className="text-primary font-medium">{candidate.fullName}</p>

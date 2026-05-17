@@ -1,16 +1,7 @@
 import {Suspense} from "react";
 import {notFound} from "next/navigation";
 import Link from "next/link";
-import {
-  ArrowLeft,
-  ExternalLink,
-  Mail,
-  Phone,
-  Link2,
-  MapPin,
-  Briefcase,
-  GraduationCap,
-} from "lucide-react";
+import {ArrowLeft, ExternalLink, Mail, Phone, Link2, MapPin} from "lucide-react";
 import {getCandidateById, getPlacementsByCandidate} from "@/lib/sanity-queries";
 import {formatCurrency, formatDate, formatDateTime, formatStatus} from "@/lib/format";
 import {Card, CardContent, CardHeader} from "@/components/ui/card";
@@ -157,7 +148,10 @@ async function CandidateDetailContent({id}: {id: string}) {
             <CardContent className="space-y-6">
               <DetailSection title="">
                 <DetailField label="Primary Skill" value={candidate.primarySkill} />
-                <DetailField label="Experience" value={candidate.experience ? `${candidate.experience} years` : null} />
+                <DetailField
+                  label="Experience"
+                  value={candidate.experience ? `${candidate.experience} years` : null}
+                />
                 <DetailField label="Highest Education" value={candidate.highestEducation} />
                 <DetailField label="Current Company" value={candidate.currentCompany} />
                 <DetailField label="Current Designation" value={candidate.currentDesignation} />
@@ -167,7 +161,7 @@ async function CandidateDetailContent({id}: {id: string}) {
                 <>
                   <Separator />
                   <div>
-                    <h3 className="text-foreground text-sm font-semibold uppercase tracking-wider mb-3">
+                    <h3 className="text-foreground mb-3 text-sm font-semibold tracking-wider uppercase">
                       Skills
                     </h3>
                     <div className="flex flex-wrap gap-2">
@@ -190,9 +184,18 @@ async function CandidateDetailContent({id}: {id: string}) {
             </CardHeader>
             <CardContent>
               <DetailSection title="">
-                <DetailField label="Current Salary (p.a.)" value={candidate.currentSalary ? formatCurrency(candidate.currentSalary) : null} />
-                <DetailField label="Expected Salary (p.a.)" value={candidate.expectedSalary ? formatCurrency(candidate.expectedSalary) : null} />
-                <DetailField label="Notice Period" value={candidate.noticePeriod ? `${candidate.noticePeriod} days` : null} />
+                <DetailField
+                  label="Current Salary (p.a.)"
+                  value={candidate.currentSalary ? formatCurrency(candidate.currentSalary) : null}
+                />
+                <DetailField
+                  label="Expected Salary (p.a.)"
+                  value={candidate.expectedSalary ? formatCurrency(candidate.expectedSalary) : null}
+                />
+                <DetailField
+                  label="Notice Period"
+                  value={candidate.noticePeriod ? `${candidate.noticePeriod} days` : null}
+                />
               </DetailSection>
             </CardContent>
           </Card>
@@ -218,22 +221,52 @@ async function CandidateDetailContent({id}: {id: string}) {
           {/* Preferences */}
           <Card>
             <CardHeader className="pb-4">
-              <h2 className="text-foreground text-base font-semibold">Preferences &amp; Sourcing</h2>
+              <h2 className="text-foreground text-base font-semibold">
+                Preferences &amp; Sourcing
+              </h2>
             </CardHeader>
             <CardContent className="space-y-6">
               <DetailSection title="">
-                <DetailField label="Work Mode" value={candidate.remotePreference ? workModeLabels[candidate.remotePreference] || formatStatus(candidate.remotePreference) : null} />
-                <DetailField label="Willing to Relocate" value={candidate.willingToRelocate ? "Yes" : candidate.willingToRelocate === false ? "No" : null} />
-                <DetailField label="Source" value={candidate.source ? sourceLabels[candidate.source] || formatStatus(candidate.source) : null} />
+                <DetailField
+                  label="Work Mode"
+                  value={
+                    candidate.remotePreference
+                      ? workModeLabels[candidate.remotePreference] ||
+                        formatStatus(candidate.remotePreference)
+                      : null
+                  }
+                />
+                <DetailField
+                  label="Willing to Relocate"
+                  value={
+                    candidate.willingToRelocate
+                      ? "Yes"
+                      : candidate.willingToRelocate === false
+                        ? "No"
+                        : null
+                  }
+                />
+                <DetailField
+                  label="Source"
+                  value={
+                    candidate.source
+                      ? sourceLabels[candidate.source] || formatStatus(candidate.source)
+                      : null
+                  }
+                />
               </DetailSection>
               {candidate.preferredLocations && candidate.preferredLocations.length > 0 && (
                 <>
                   <Separator />
                   <div>
-                    <h3 className="text-foreground text-sm font-semibold uppercase tracking-wider mb-3">Preferred Locations</h3>
+                    <h3 className="text-foreground mb-3 text-sm font-semibold tracking-wider uppercase">
+                      Preferred Locations
+                    </h3>
                     <div className="flex flex-wrap gap-2">
                       {candidate.preferredLocations.map((loc) => (
-                        <Badge key={loc} variant="outline">{loc}</Badge>
+                        <Badge key={loc} variant="outline">
+                          {loc}
+                        </Badge>
                       ))}
                     </div>
                   </div>
@@ -243,10 +276,14 @@ async function CandidateDetailContent({id}: {id: string}) {
                 <>
                   <Separator />
                   <div>
-                    <h3 className="text-foreground text-sm font-semibold uppercase tracking-wider mb-3">Languages</h3>
+                    <h3 className="text-foreground mb-3 text-sm font-semibold tracking-wider uppercase">
+                      Languages
+                    </h3>
                     <div className="flex flex-wrap gap-2">
                       {candidate.languages.map((lang) => (
-                        <Badge key={lang} variant="outline">{lang}</Badge>
+                        <Badge key={lang} variant="outline">
+                          {lang}
+                        </Badge>
                       ))}
                     </div>
                   </div>
@@ -266,15 +303,29 @@ async function CandidateDetailContent({id}: {id: string}) {
                   label="Assigned Recruiter"
                   value={
                     candidate.assignedRecruiter ? (
-                      <Link href={`/team/${candidate.assignedRecruiter._id}`} className="text-primary hover:underline">
+                      <Link
+                        href={`/team/${candidate.assignedRecruiter._id}`}
+                        className="text-primary hover:underline"
+                      >
                         {candidate.assignedRecruiter.name}
                       </Link>
                     ) : null
                   }
                 />
-                <DetailField label="Last Contacted" value={candidate.lastContactedAt ? formatDateTime(candidate.lastContactedAt) : null} />
-                <DetailField label="Next Follow-up" value={candidate.nextFollowUpAt ? formatDateTime(candidate.nextFollowUpAt) : null} />
-                <DetailField label="Added On" value={candidate.createdAt ? formatDate(candidate.createdAt) : null} />
+                <DetailField
+                  label="Last Contacted"
+                  value={
+                    candidate.lastContactedAt ? formatDateTime(candidate.lastContactedAt) : null
+                  }
+                />
+                <DetailField
+                  label="Next Follow-up"
+                  value={candidate.nextFollowUpAt ? formatDateTime(candidate.nextFollowUpAt) : null}
+                />
+                <DetailField
+                  label="Added On"
+                  value={candidate.createdAt ? formatDate(candidate.createdAt) : null}
+                />
               </DetailSection>
             </CardContent>
           </Card>
@@ -288,7 +339,7 @@ async function CandidateDetailContent({id}: {id: string}) {
             <h2 className="text-foreground text-base font-semibold">Internal Notes</h2>
           </CardHeader>
           <CardContent>
-            <p className="text-muted-foreground whitespace-pre-wrap text-sm">{candidate.notes}</p>
+            <p className="text-muted-foreground text-sm whitespace-pre-wrap">{candidate.notes}</p>
           </CardContent>
         </Card>
       )}
@@ -317,12 +368,17 @@ async function CandidateDetailContent({id}: {id: string}) {
                 {placements.map((p) => (
                   <TableRow key={p._id}>
                     <TableCell>
-                      <Link href={`/placements/${p._id}`} className="text-primary font-medium hover:underline">
+                      <Link
+                        href={`/placements/${p._id}`}
+                        className="text-primary font-medium hover:underline"
+                      >
                         {p.jobTitle}
                       </Link>
                     </TableCell>
                     <TableCell>{p.vendor?.companyName || "--"}</TableCell>
-                    <TableCell className="text-muted-foreground">{p.recruiter?.name || "--"}</TableCell>
+                    <TableCell className="text-muted-foreground">
+                      {p.recruiter?.name || "--"}
+                    </TableCell>
                     <TableCell className="text-muted-foreground">
                       {p.placementDate ? formatDate(p.placementDate) : "--"}
                     </TableCell>

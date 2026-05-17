@@ -117,13 +117,17 @@ async function TeamDetailContent({id}: {id: string}) {
         <Card>
           <CardContent className="p-5">
             <p className="text-muted-foreground text-sm">Total Revenue</p>
-            <p className="text-foreground mt-1 text-2xl font-semibold">{formatCurrency(totalRevenue)}</p>
+            <p className="text-foreground mt-1 text-2xl font-semibold">
+              {formatCurrency(totalRevenue)}
+            </p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="p-5">
             <p className="text-muted-foreground text-sm">Collected</p>
-            <p className="text-foreground mt-1 text-2xl font-semibold">{formatCurrency(paidRevenue)}</p>
+            <p className="text-foreground mt-1 text-2xl font-semibold">
+              {formatCurrency(paidRevenue)}
+            </p>
           </CardContent>
         </Card>
       </div>
@@ -142,7 +146,10 @@ async function TeamDetailContent({id}: {id: string}) {
                 <DetailField label="Display Name" value={member.name} />
                 <DetailField label="Legal Name" value={member.legalName} />
                 <DetailField label="Employee Code" value={member.employeeCode} />
-                <DetailField label="Role" value={member.role ? roleLabels[member.role] || formatStatus(member.role) : null} />
+                <DetailField
+                  label="Role"
+                  value={member.role ? roleLabels[member.role] || formatStatus(member.role) : null}
+                />
                 <DetailField label="Email" value={member.email} />
                 <DetailField label="Phone" value={member.phone} />
                 <DetailField label="Alternate Phone" value={member.alternatePhone} />
@@ -151,10 +158,14 @@ async function TeamDetailContent({id}: {id: string}) {
                 <>
                   <Separator className="my-4" />
                   <div>
-                    <h3 className="text-foreground text-sm font-semibold uppercase tracking-wider mb-3">Specializations</h3>
+                    <h3 className="text-foreground mb-3 text-sm font-semibold tracking-wider uppercase">
+                      Specializations
+                    </h3>
                     <div className="flex flex-wrap gap-2">
                       {member.specializations.map((spec) => (
-                        <Badge key={spec} variant="secondary">{spec}</Badge>
+                        <Badge key={spec} variant="secondary">
+                          {spec}
+                        </Badge>
                       ))}
                     </div>
                   </div>
@@ -198,9 +209,22 @@ async function TeamDetailContent({id}: {id: string}) {
             <CardContent>
               <DetailSection title="">
                 <DetailField label="Status" value={member.isActive ? "Active" : "Inactive"} />
-                <DetailField label="Work Status" value={member.workStatus ? workStatusLabels[member.workStatus] || formatStatus(member.workStatus) : null} />
-                <DetailField label="Joined" value={member.joinedAt ? formatDate(member.joinedAt) : null} />
-                <DetailField label="Left" value={member.leftAt ? formatDate(member.leftAt) : null} />
+                <DetailField
+                  label="Work Status"
+                  value={
+                    member.workStatus
+                      ? workStatusLabels[member.workStatus] || formatStatus(member.workStatus)
+                      : null
+                  }
+                />
+                <DetailField
+                  label="Joined"
+                  value={member.joinedAt ? formatDate(member.joinedAt) : null}
+                />
+                <DetailField
+                  label="Left"
+                  value={member.leftAt ? formatDate(member.leftAt) : null}
+                />
               </DetailSection>
             </CardContent>
           </Card>
@@ -212,8 +236,16 @@ async function TeamDetailContent({id}: {id: string}) {
             </CardHeader>
             <CardContent>
               <DetailSection title="">
-                <DetailField label="Annual Salary" value={member.salary ? formatCurrency(member.salary) : null} />
-                <DetailField label="Incentive %" value={member.incentivePercentage != null ? `${member.incentivePercentage}%` : null} />
+                <DetailField
+                  label="Annual Salary"
+                  value={member.salary ? formatCurrency(member.salary) : null}
+                />
+                <DetailField
+                  label="Incentive %"
+                  value={
+                    member.incentivePercentage != null ? `${member.incentivePercentage}%` : null
+                  }
+                />
               </DetailSection>
             </CardContent>
           </Card>
@@ -227,7 +259,7 @@ async function TeamDetailContent({id}: {id: string}) {
             <h2 className="text-foreground text-base font-semibold">Internal Notes</h2>
           </CardHeader>
           <CardContent>
-            <p className="text-muted-foreground whitespace-pre-wrap text-sm">{member.notes}</p>
+            <p className="text-muted-foreground text-sm whitespace-pre-wrap">{member.notes}</p>
           </CardContent>
         </Card>
       )}
@@ -256,12 +288,17 @@ async function TeamDetailContent({id}: {id: string}) {
                 {placements.map((p) => (
                   <TableRow key={p._id}>
                     <TableCell>
-                      <Link href={`/placements/${p._id}`} className="text-primary font-medium hover:underline">
+                      <Link
+                        href={`/placements/${p._id}`}
+                        className="text-primary font-medium hover:underline"
+                      >
                         {p.candidate?.fullName || "--"}
                       </Link>
                     </TableCell>
                     <TableCell>{p.jobTitle}</TableCell>
-                    <TableCell className="text-muted-foreground">{p.vendor?.companyName || "--"}</TableCell>
+                    <TableCell className="text-muted-foreground">
+                      {p.vendor?.companyName || "--"}
+                    </TableCell>
                     <TableCell className="text-muted-foreground">
                       {p.placementDate ? formatDate(p.placementDate) : "--"}
                     </TableCell>

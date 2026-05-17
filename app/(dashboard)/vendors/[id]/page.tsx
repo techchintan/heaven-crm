@@ -8,7 +8,6 @@ import {Card, CardContent, CardHeader} from "@/components/ui/card";
 import {Badge} from "@/components/ui/badge";
 import {StatusBadge} from "@/components/ui/status-badge";
 import {DetailSection, DetailField} from "@/components/ui/detail-section";
-import {Separator} from "@/components/ui/separator";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
 
 function VendorDetailSkeleton() {
@@ -53,10 +52,7 @@ const leadSourceLabels: Record<string, string> = {
 };
 
 async function VendorDetailContent({id}: {id: string}) {
-  const [vendor, placements] = await Promise.all([
-    getVendorById(id),
-    getPlacementsByVendor(id),
-  ]);
+  const [vendor, placements] = await Promise.all([getVendorById(id), getPlacementsByVendor(id)]);
 
   if (!vendor) {
     notFound();
@@ -94,7 +90,9 @@ async function VendorDetailContent({id}: {id: string}) {
             </h1>
             <p className="text-muted-foreground text-sm">
               {vendor.industry ? industryLabels[vendor.industry] || vendor.industry : "Vendor"}
-              {vendor.legalName && vendor.legalName !== vendor.companyName ? ` \u00b7 ${vendor.legalName}` : ""}
+              {vendor.legalName && vendor.legalName !== vendor.companyName
+                ? ` \u00b7 ${vendor.legalName}`
+                : ""}
             </p>
           </div>
         </div>
@@ -132,7 +130,9 @@ async function VendorDetailContent({id}: {id: string}) {
             </div>
             <div>
               <p className="text-muted-foreground text-xs">Total Billed</p>
-              <p className="text-foreground text-lg font-semibold">{formatCurrency(totalRevenue)}</p>
+              <p className="text-foreground text-lg font-semibold">
+                {formatCurrency(totalRevenue)}
+              </p>
             </div>
           </CardContent>
         </Card>
@@ -175,20 +175,40 @@ async function VendorDetailContent({id}: {id: string}) {
               <DetailSection title="">
                 <DetailField label="Company Name" value={vendor.companyName} />
                 <DetailField label="Legal Name" value={vendor.legalName} />
-                <DetailField label="Industry" value={vendor.industry ? industryLabels[vendor.industry] || vendor.industry : null} />
+                <DetailField
+                  label="Industry"
+                  value={
+                    vendor.industry ? industryLabels[vendor.industry] || vendor.industry : null
+                  }
+                />
                 <DetailField
                   label="Website"
                   value={
                     vendor.website ? (
-                      <a href={vendor.website} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline flex items-center gap-1">
+                      <a
+                        href={vendor.website}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-primary flex items-center gap-1 hover:underline"
+                      >
                         <Globe className="h-3 w-3" />
                         {vendor.website.replace(/^https?:\/\//i, "")}
                       </a>
                     ) : null
                   }
                 />
-                <DetailField label="Lead Source" value={vendor.leadSource ? leadSourceLabels[vendor.leadSource] || formatStatus(vendor.leadSource) : null} />
-                <DetailField label="Added On" value={vendor.createdAt ? formatDate(vendor.createdAt) : null} />
+                <DetailField
+                  label="Lead Source"
+                  value={
+                    vendor.leadSource
+                      ? leadSourceLabels[vendor.leadSource] || formatStatus(vendor.leadSource)
+                      : null
+                  }
+                />
+                <DetailField
+                  label="Added On"
+                  value={vendor.createdAt ? formatDate(vendor.createdAt) : null}
+                />
               </DetailSection>
             </CardContent>
           </Card>
@@ -200,11 +220,30 @@ async function VendorDetailContent({id}: {id: string}) {
             </CardHeader>
             <CardContent>
               <DetailSection title="">
-                <DetailField label="Fee Model" value={vendor.feeModel ? feeModelLabels[vendor.feeModel] || formatStatus(vendor.feeModel) : null} />
-                <DetailField label="Fee Percentage" value={vendor.agreementFeePercentage ? `${vendor.agreementFeePercentage}%` : null} />
-                <DetailField label="Payment Terms" value={vendor.paymentTerms ? `Net ${vendor.paymentTerms} days` : null} />
-                <DetailField label="MSA Start" value={vendor.msaStartDate ? formatDate(vendor.msaStartDate) : null} />
-                <DetailField label="MSA End" value={vendor.msaEndDate ? formatDate(vendor.msaEndDate) : null} />
+                <DetailField
+                  label="Fee Model"
+                  value={
+                    vendor.feeModel
+                      ? feeModelLabels[vendor.feeModel] || formatStatus(vendor.feeModel)
+                      : null
+                  }
+                />
+                <DetailField
+                  label="Fee Percentage"
+                  value={vendor.agreementFeePercentage ? `${vendor.agreementFeePercentage}%` : null}
+                />
+                <DetailField
+                  label="Payment Terms"
+                  value={vendor.paymentTerms ? `Net ${vendor.paymentTerms} days` : null}
+                />
+                <DetailField
+                  label="MSA Start"
+                  value={vendor.msaStartDate ? formatDate(vendor.msaStartDate) : null}
+                />
+                <DetailField
+                  label="MSA End"
+                  value={vendor.msaEndDate ? formatDate(vendor.msaEndDate) : null}
+                />
               </DetailSection>
             </CardContent>
           </Card>
@@ -249,18 +288,26 @@ async function VendorDetailContent({id}: {id: string}) {
                         </div>
                         <div className="flex gap-2">
                           {contact.isPrimary && <Badge variant="default">Primary</Badge>}
-                          {contact.isActive === false && <Badge variant="secondary">Inactive</Badge>}
+                          {contact.isActive === false && (
+                            <Badge variant="secondary">Inactive</Badge>
+                          )}
                         </div>
                       </div>
                       <div className="mt-3 flex flex-wrap gap-4">
                         {contact.email && (
-                          <a href={`mailto:${contact.email}`} className="text-muted-foreground hover:text-foreground flex items-center gap-1.5 text-sm transition-colors">
+                          <a
+                            href={`mailto:${contact.email}`}
+                            className="text-muted-foreground hover:text-foreground flex items-center gap-1.5 text-sm transition-colors"
+                          >
                             <Mail className="h-3.5 w-3.5" />
                             {contact.email}
                           </a>
                         )}
                         {contact.phone && (
-                          <a href={`tel:${contact.phone}`} className="text-muted-foreground hover:text-foreground flex items-center gap-1.5 text-sm transition-colors">
+                          <a
+                            href={`tel:${contact.phone}`}
+                            className="text-muted-foreground hover:text-foreground flex items-center gap-1.5 text-sm transition-colors"
+                          >
                             <Phone className="h-3.5 w-3.5" />
                             {contact.phone}
                           </a>
@@ -325,7 +372,7 @@ async function VendorDetailContent({id}: {id: string}) {
             <h2 className="text-foreground text-base font-semibold">Internal Notes</h2>
           </CardHeader>
           <CardContent>
-            <p className="text-muted-foreground whitespace-pre-wrap text-sm">{vendor.notes}</p>
+            <p className="text-muted-foreground text-sm whitespace-pre-wrap">{vendor.notes}</p>
           </CardContent>
         </Card>
       )}
@@ -354,12 +401,17 @@ async function VendorDetailContent({id}: {id: string}) {
                 {placements.map((p) => (
                   <TableRow key={p._id}>
                     <TableCell>
-                      <Link href={`/placements/${p._id}`} className="text-primary font-medium hover:underline">
+                      <Link
+                        href={`/placements/${p._id}`}
+                        className="text-primary font-medium hover:underline"
+                      >
                         {p.candidate?.fullName || "--"}
                       </Link>
                     </TableCell>
                     <TableCell>{p.jobTitle}</TableCell>
-                    <TableCell className="text-muted-foreground">{p.recruiter?.name || "--"}</TableCell>
+                    <TableCell className="text-muted-foreground">
+                      {p.recruiter?.name || "--"}
+                    </TableCell>
                     <TableCell className="text-muted-foreground">
                       {p.placementDate ? formatDate(p.placementDate) : "--"}
                     </TableCell>

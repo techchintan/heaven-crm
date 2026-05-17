@@ -22,10 +22,15 @@ async function CandidatesContent() {
   const candidates = await getCandidates();
 
   const availableCount = candidates.filter(
-    (c) => c.status === "immediately_available" || c.status === "available_next_30_days" || c.status === "available",
+    (c) =>
+      c.status === "immediately_available" ||
+      c.status === "available_next_30_days" ||
+      c.status === "available",
   ).length;
   const placedCount = candidates.filter((c) => c.status === "placed").length;
-  const onNoticeCount = candidates.filter((c) => c.status === "on_notice_period" || c.status === "in_process").length;
+  const onNoticeCount = candidates.filter(
+    (c) => c.status === "on_notice_period" || c.status === "in_process",
+  ).length;
 
   return (
     <div className="space-y-6 p-6">

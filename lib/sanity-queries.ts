@@ -22,7 +22,15 @@ export interface Candidate {
   currentSalary?: number;
   expectedSalary?: number;
   noticePeriod?: number;
-  status: "immediately_available" | "available_next_30_days" | "on_notice_period" | "not_available" | "on_hold" | "placed" | "available" | "in_process";
+  status:
+    | "immediately_available"
+    | "available_next_30_days"
+    | "on_notice_period"
+    | "not_available"
+    | "on_hold"
+    | "placed"
+    | "available"
+    | "in_process";
   linkedInUrl?: string;
   location?: string;
   source?: string;
@@ -224,7 +232,7 @@ export interface CandidateDetail extends Candidate {
   languages?: string[];
   lastContactedAt?: string;
   nextFollowUpAt?: string;
-  assignedRecruiter?: { _id: string; name: string };
+  assignedRecruiter?: {_id: string; name: string};
 }
 
 export interface VendorContact {
@@ -245,7 +253,7 @@ export interface VendorDetail extends Vendor {
   leadSource?: string;
 }
 
-export interface PlacementDetail extends Omit<Placement, 'vendor' | 'recruiter'> {
+export interface PlacementDetail extends Omit<Placement, "vendor" | "recruiter"> {
   vendor: {
     _id: string;
     companyName: string;
@@ -291,7 +299,8 @@ export interface TeamMemberDetail extends TeamMember {
 
 // Detail Queries (single records)
 export async function getPlacementById(id: string): Promise<PlacementDetail | null> {
-  return client.fetch(`
+  return client.fetch(
+    `
     *[_type == "placement" && _id == $id][0] {
       _id,
       "candidate": candidate->{
@@ -341,11 +350,14 @@ export async function getPlacementById(id: string): Promise<PlacementDetail | nu
       notes,
       createdAt
     }
-  `, { id });
+  `,
+    {id},
+  );
 }
 
 export async function getCandidateById(id: string): Promise<CandidateDetail | null> {
-  return client.fetch(`
+  return client.fetch(
+    `
     *[_type == "candidate" && _id == $id][0] {
       _id,
       fullName,
@@ -377,11 +389,14 @@ export async function getCandidateById(id: string): Promise<CandidateDetail | nu
       notes,
       createdAt
     }
-  `, { id });
+  `,
+    {id},
+  );
 }
 
 export async function getVendorById(id: string): Promise<VendorDetail | null> {
-  return client.fetch(`
+  return client.fetch(
+    `
     *[_type == "vendor" && _id == $id][0] {
       _id,
       companyName,
@@ -431,11 +446,14 @@ export async function getVendorById(id: string): Promise<VendorDetail | null> {
       notes,
       createdAt
     }
-  `, { id });
+  `,
+    {id},
+  );
 }
 
 export async function getTeamMemberById(id: string): Promise<TeamMemberDetail | null> {
-  return client.fetch(`
+  return client.fetch(
+    `
     *[_type == "teamMember" && _id == $id][0] {
       _id,
       employeeCode,
@@ -455,11 +473,14 @@ export async function getTeamMemberById(id: string): Promise<TeamMemberDetail | 
       residentialAddress,
       notes
     }
-  `, { id });
+  `,
+    {id},
+  );
 }
 
 export async function getPlacementsByCandidate(candidateId: string): Promise<Placement[]> {
-  return client.fetch(`
+  return client.fetch(
+    `
     *[_type == "placement" && candidate._ref == $candidateId] | order(placementDate desc) {
       _id,
       "candidate": candidate->{ _id, fullName, primarySkill },
@@ -483,11 +504,14 @@ export async function getPlacementsByCandidate(candidateId: string): Promise<Pla
       notes,
       createdAt
     }
-  `, { candidateId });
+  `,
+    {candidateId},
+  );
 }
 
 export async function getPlacementsByVendor(vendorId: string): Promise<Placement[]> {
-  return client.fetch(`
+  return client.fetch(
+    `
     *[_type == "placement" && vendor._ref == $vendorId] | order(placementDate desc) {
       _id,
       "candidate": candidate->{ _id, fullName, primarySkill },
@@ -511,11 +535,14 @@ export async function getPlacementsByVendor(vendorId: string): Promise<Placement
       notes,
       createdAt
     }
-  `, { vendorId });
+  `,
+    {vendorId},
+  );
 }
 
 export async function getPlacementsByRecruiter(recruiterId: string): Promise<Placement[]> {
-  return client.fetch(`
+  return client.fetch(
+    `
     *[_type == "placement" && recruiter._ref == $recruiterId] | order(placementDate desc) {
       _id,
       "candidate": candidate->{ _id, fullName, primarySkill },
@@ -539,7 +566,9 @@ export async function getPlacementsByRecruiter(recruiterId: string): Promise<Pla
       notes,
       createdAt
     }
-  `, { recruiterId });
+  `,
+    {recruiterId},
+  );
 }
 
 // Dashboard Analytics
@@ -636,7 +665,10 @@ export async function getDashboardStats(): Promise<DashboardStats> {
     paidRevenue,
     deductedCount,
     activeCandidates: candidates.filter(
-      (c) => c.status === "immediately_available" || c.status === "available_next_30_days" || c.status === "available",
+      (c) =>
+        c.status === "immediately_available" ||
+        c.status === "available_next_30_days" ||
+        c.status === "available",
     ).length,
     activeVendors: vendors.filter((v) => v.status === "active").length,
     teamMembers: teamMembers.filter((t) => t.isActive).length,
