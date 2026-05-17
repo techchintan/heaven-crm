@@ -3,6 +3,17 @@
 import {useState, useMemo} from "react";
 import {Search, Filter, ExternalLink, Mail, Phone, Globe} from "lucide-react";
 import {StatusBadge} from "@/components/ui/status-badge";
+import {Button} from "@/components/ui/button";
+import {Input} from "@/components/ui/input";
+import {Card} from "@/components/ui/card";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import type {Vendor, VendorStateTaxRegistration} from "@/lib/sanity-queries";
 
 function primaryTaxRegistration(
@@ -37,7 +48,6 @@ export function VendorsTable({vendors}: VendorsTableProps) {
   const filteredVendors = useMemo(() => {
     let result = [...vendors];
 
-    // Search filter
     if (search) {
       const searchLower = search.toLowerCase();
       result = result.filter(
@@ -48,12 +58,10 @@ export function VendorsTable({vendors}: VendorsTableProps) {
       );
     }
 
-    // Status filter
     if (statusFilter !== "all") {
       result = result.filter((c) => c.status === statusFilter);
     }
 
-    // Industry filter
     if (industryFilter !== "all") {
       result = result.filter((c) => c.industry === industryFilter);
     }
@@ -83,22 +91,22 @@ export function VendorsTable({vendors}: VendorsTableProps) {
       {/* Filters */}
       <div className="flex flex-wrap items-center gap-3">
         <div className="relative min-w-64 flex-1">
-          <Search className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
-          <input
+          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+          <Input
             type="text"
             placeholder="Search by company, contact..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="border-border bg-input text-foreground placeholder:text-muted-foreground focus:border-primary focus:ring-primary h-9 w-full rounded-lg border pr-4 pl-9 text-sm focus:ring-1 focus:outline-none"
+            className="pl-9"
           />
         </div>
 
         <div className="relative">
-          <Filter className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
+          <Filter className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="border-border bg-input text-foreground focus:border-primary focus:ring-primary h-9 appearance-none rounded-lg border pr-8 pl-9 text-sm focus:ring-1 focus:outline-none"
+            className="h-9 appearance-none rounded-md border border-border bg-card pl-9 pr-8 text-sm text-foreground shadow-sm focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
           >
             {statusOptions.map((option) => (
               <option key={option.value} value={option.value}>
@@ -111,7 +119,7 @@ export function VendorsTable({vendors}: VendorsTableProps) {
         <select
           value={industryFilter}
           onChange={(e) => setIndustryFilter(e.target.value)}
-          className="border-border bg-input text-foreground focus:border-primary focus:ring-primary h-9 appearance-none rounded-lg border px-3 pr-8 text-sm focus:ring-1 focus:outline-none"
+          className="h-9 appearance-none rounded-md border border-border bg-card px-3 pr-8 text-sm text-foreground shadow-sm focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
         >
           {industryOptions.map((option) => (
             <option key={option.value} value={option.value}>
@@ -123,7 +131,7 @@ export function VendorsTable({vendors}: VendorsTableProps) {
         <a
           href="/studio/structure/vendor"
           target="_blank"
-          className="bg-primary text-primary-foreground hover:bg-primary/90 flex h-9 items-center gap-2 rounded-lg px-4 text-sm font-medium transition-colors"
+          className="inline-flex h-9 items-center justify-center gap-2 rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground shadow-sm transition-all duration-150 hover:bg-primary/90 active:scale-[0.98]"
         >
           Add in Studio
           <ExternalLink className="h-3 w-3" />
@@ -131,79 +139,80 @@ export function VendorsTable({vendors}: VendorsTableProps) {
       </div>
 
       {/* Results count */}
-      <p className="text-muted-foreground text-sm">
+      <p className="text-sm text-muted-foreground">
         Showing {filteredVendors.length} of {vendors.length} vendors
       </p>
 
       {/* Table */}
-      <div className="border-border bg-card overflow-x-auto rounded-xl border">
-        <table className="w-full">
-          <thead>
-            <tr className="border-border text-muted-foreground border-b text-left text-xs font-medium">
-              <th className="px-4 py-3">Company</th>
-              <th className="px-4 py-3">Industry</th>
-              <th className="px-4 py-3">Primary Contact</th>
-              <th className="px-4 py-3">Fee %</th>
-              <th className="px-4 py-3">Payment Terms</th>
-              <th className="px-4 py-3">Status</th>
-              <th className="px-4 py-3">Actions</th>
-            </tr>
-          </thead>
-          <tbody className="divide-border divide-y">
+      <Card className="p-0 overflow-hidden">
+        <Table>
+          <TableHeader>
+            <TableRow className="hover:bg-transparent">
+              <TableHead>Company</TableHead>
+              <TableHead>Industry</TableHead>
+              <TableHead>Primary Contact</TableHead>
+              <TableHead>Fee %</TableHead>
+              <TableHead>Payment Terms</TableHead>
+              <TableHead>Status</TableHead>
+              <TableHead>Actions</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
             {filteredVendors.length === 0 ? (
-              <tr>
-                <td colSpan={7} className="text-muted-foreground py-8 text-center text-sm">
+              <TableRow className="hover:bg-transparent">
+                <TableCell colSpan={7} className="py-10 text-center text-muted-foreground">
                   No vendors found
-                </td>
-              </tr>
+                </TableCell>
+              </TableRow>
             ) : (
               filteredVendors.map((vendor) => {
                 const taxReg = primaryTaxRegistration(vendor.stateTaxRegistrations);
                 const regCount = vendor.stateTaxRegistrations?.length ?? 0;
 
                 return (
-                  <tr key={vendor._id} className="hover:bg-card-hover text-sm transition-colors">
-                    <td className="px-4 py-3">
+                  <TableRow key={vendor._id}>
+                    <TableCell>
                       <div>
-                        <p className="text-foreground font-medium">{vendor.companyName}</p>
+                        <p className="font-medium">{vendor.companyName}</p>
                         {taxReg?.gstin && (
-                          <p className="text-muted-foreground text-xs">GSTIN: {taxReg.gstin}</p>
+                          <p className="text-xs text-muted-foreground">GSTIN: {taxReg.gstin}</p>
                         )}
                         {regCount > 1 && (
-                          <p className="text-muted-foreground text-xs">
+                          <p className="text-xs text-muted-foreground">
                             {regCount} state registrations
                           </p>
                         )}
                       </div>
-                    </td>
-                    <td className="text-muted-foreground px-4 py-3">
+                    </TableCell>
+                    <TableCell className="text-muted-foreground">
                       {vendor.industry ? industryLabels[vendor.industry] || vendor.industry : "-"}
-                    </td>
-                    <td className="px-4 py-3">
+                    </TableCell>
+                    <TableCell>
                       <div>
-                        <p className="text-foreground">{vendor.primaryContact || "—"}</p>
+                        <p>{vendor.primaryContact || "—"}</p>
                         {vendor.contactDesignation && (
-                          <p className="text-muted-foreground text-xs">
+                          <p className="text-xs text-muted-foreground">
                             {vendor.contactDesignation}
                           </p>
                         )}
                       </div>
-                    </td>
-                    <td className="text-foreground px-4 py-3">
+                    </TableCell>
+                    <TableCell>
                       {vendor.agreementFeePercentage ? `${vendor.agreementFeePercentage}%` : "-"}
-                    </td>
-                    <td className="text-muted-foreground px-4 py-3">
+                    </TableCell>
+                    <TableCell className="text-muted-foreground">
                       {vendor.paymentTerms ? `${vendor.paymentTerms} days` : "-"}
-                    </td>
-                    <td className="px-4 py-3">
+                    </TableCell>
+                    <TableCell>
                       <StatusBadge status={vendor.status} variant="vendor" />
-                    </td>
-                    <td className="px-4 py-3">
-                      <div className="flex items-center gap-2">
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex items-center gap-1.5">
                         {vendor.contactEmail && (
                           <a
                             href={`mailto:${vendor.contactEmail}`}
-                            className="bg-muted text-muted-foreground hover:bg-card-hover hover:text-foreground flex h-7 w-7 items-center justify-center rounded-md transition-colors"
+                            title="Send email"
+                            className="flex h-7 w-7 items-center justify-center rounded-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
                           >
                             <Mail className="h-3.5 w-3.5" />
                           </a>
@@ -211,7 +220,8 @@ export function VendorsTable({vendors}: VendorsTableProps) {
                         {vendor.contactPhone && (
                           <a
                             href={`tel:${vendor.contactPhone}`}
-                            className="bg-muted text-muted-foreground hover:bg-card-hover hover:text-foreground flex h-7 w-7 items-center justify-center rounded-md transition-colors"
+                            title="Call"
+                            className="flex h-7 w-7 items-center justify-center rounded-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
                           >
                             <Phone className="h-3.5 w-3.5" />
                           </a>
@@ -221,20 +231,21 @@ export function VendorsTable({vendors}: VendorsTableProps) {
                             href={vendor.website}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="bg-muted text-muted-foreground hover:bg-card-hover hover:text-foreground flex h-7 w-7 items-center justify-center rounded-md transition-colors"
+                            title="Visit website"
+                            className="flex h-7 w-7 items-center justify-center rounded-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
                           >
                             <Globe className="h-3.5 w-3.5" />
                           </a>
                         )}
                       </div>
-                    </td>
-                  </tr>
+                    </TableCell>
+                  </TableRow>
                 );
               })
             )}
-          </tbody>
-        </table>
-      </div>
+          </TableBody>
+        </Table>
+      </Card>
     </div>
   );
 }

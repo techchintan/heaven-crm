@@ -14,25 +14,6 @@ interface DataCardProps {
  * DataCard Component
  *
  * A flexible card wrapper for displaying tabular or list-based data.
- * Combines with Card components for consistent layout.
- *
- * @param title - Card heading
- * @param description - Optional subheading
- * @param children - Content to display
- * @param className - Additional CSS classes
- * @param footer - Optional footer content (pagination, actions)
- * @param isLoading - Shows skeleton state when true
- *
- * @example
- * ```tsx
- * <DataCard
- *   title="Recent Placements"
- *   description="Last 10 placements"
- *   footer={<Pagination />}
- * >
- *   <PlacementsTable data={data} />
- * </DataCard>
- * ```
  */
 export function DataCard({
   title,
@@ -44,12 +25,16 @@ export function DataCard({
 }: DataCardProps) {
   return (
     <Card className={className}>
-      <CardHeader>
-        <CardTitle className="text-lg">{title}</CardTitle>
+      <CardHeader className="border-b border-border pb-4">
+        <CardTitle className="text-base font-semibold">{title}</CardTitle>
         {description && <CardDescription>{description}</CardDescription>}
       </CardHeader>
-      <CardContent className={cn(isLoading && "animate-pulse")}>{children}</CardContent>
-      {footer && <div className="border-border border-t px-6 py-4">{footer}</div>}
+      <CardContent className={cn("pt-4", isLoading && "animate-pulse")}>{children}</CardContent>
+      {footer && (
+        <div className="-mx-4 -mb-4 border-t border-border bg-muted/30 px-4 py-3 rounded-b-lg">
+          {footer}
+        </div>
+      )}
     </Card>
   );
 }

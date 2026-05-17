@@ -1,6 +1,7 @@
 "use client";
 
 import {Trophy} from "lucide-react";
+import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card";
 
 interface RecruiterLeaderboardProps {
   data: {
@@ -24,46 +25,47 @@ export function RecruiterLeaderboard({data}: RecruiterLeaderboardProps) {
   const maxRevenue = Math.max(...data.map((d) => d.revenue), 1);
 
   return (
-    <div className="border-border bg-card rounded-xl border p-5">
-      <div className="mb-4 flex items-center gap-2">
-        <Trophy className="text-warning h-4 w-4" />
-        <h3 className="text-foreground text-sm font-medium">Recruiter Leaderboard</h3>
-      </div>
-
-      {data.length === 0 ? (
-        <p className="text-muted-foreground py-8 text-center text-sm">
-          No placement data available
-        </p>
-      ) : (
-        <div className="space-y-4">
-          {data.map((recruiter, index) => (
-            <div key={recruiter.name} className="space-y-2">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="bg-muted text-muted-foreground flex h-6 w-6 items-center justify-center rounded-full text-xs font-semibold">
-                    {index + 1}
+    <Card>
+      <CardHeader className="flex flex-row items-center gap-2 border-b border-border pb-4">
+        <Trophy className="h-4 w-4 text-warning" />
+        <CardTitle className="text-sm font-semibold">Recruiter Leaderboard</CardTitle>
+      </CardHeader>
+      <CardContent className="pt-4">
+        {data.length === 0 ? (
+          <p className="py-10 text-center text-sm text-muted-foreground">
+            No placement data available
+          </p>
+        ) : (
+          <div className="space-y-4">
+            {data.map((recruiter, index) => (
+              <div key={recruiter.name} className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="flex h-7 w-7 items-center justify-center rounded-full bg-muted text-xs font-semibold text-muted-foreground">
+                      {index + 1}
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-foreground">{recruiter.name}</p>
+                      <p className="text-xs text-muted-foreground">
+                        {recruiter.placements} placement{recruiter.placements !== 1 ? "s" : ""}
+                      </p>
+                    </div>
                   </div>
-                  <div>
-                    <p className="text-foreground text-sm font-medium">{recruiter.name}</p>
-                    <p className="text-muted-foreground text-xs">
-                      {recruiter.placements} placement{recruiter.placements !== 1 ? "s" : ""}
-                    </p>
-                  </div>
+                  <span className="text-sm font-semibold text-foreground">
+                    {formatCurrency(recruiter.revenue)}
+                  </span>
                 </div>
-                <span className="text-foreground text-sm font-semibold">
-                  {formatCurrency(recruiter.revenue)}
-                </span>
+                <div className="h-1.5 overflow-hidden rounded-full bg-muted">
+                  <div
+                    className="h-full rounded-full bg-primary transition-all duration-500"
+                    style={{width: `${(recruiter.revenue / maxRevenue) * 100}%`}}
+                  />
+                </div>
               </div>
-              <div className="bg-muted h-1.5 overflow-hidden rounded-full">
-                <div
-                  className="bg-primary h-full rounded-full transition-all"
-                  style={{width: `${(recruiter.revenue / maxRevenue) * 100}%`}}
-                />
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
+            ))}
+          </div>
+        )}
+      </CardContent>
+    </Card>
   );
 }

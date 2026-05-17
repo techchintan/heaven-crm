@@ -32,12 +32,12 @@ function DashboardSkeleton() {
     <div className="animate-pulse space-y-6 p-6">
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {[...Array(8)].map((_, i) => (
-          <div key={i} className="bg-card h-28 rounded-xl" />
+          <div key={i} className="h-28 rounded-lg bg-muted" />
         ))}
       </div>
       <div className="grid gap-6 lg:grid-cols-3">
-        <div className="bg-card h-80 rounded-xl lg:col-span-2" />
-        <div className="bg-card h-80 rounded-xl" />
+        <div className="h-80 rounded-lg bg-muted lg:col-span-2" />
+        <div className="h-80 rounded-lg bg-muted" />
       </div>
     </div>
   );

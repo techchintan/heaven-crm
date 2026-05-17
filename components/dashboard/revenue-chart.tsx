@@ -1,6 +1,7 @@
 "use client";
 
 import {AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer} from "recharts";
+import {Card, CardContent, CardHeader, CardTitle, CardDescription} from "@/components/ui/card";
 
 interface RevenueChartProps {
   data: {
@@ -25,84 +26,86 @@ function formatCurrency(value: number): string {
 
 export function RevenueChart({data}: RevenueChartProps) {
   return (
-    <div className="border-border bg-card rounded-xl border p-5">
-      <div className="mb-4 flex items-center justify-between">
+    <Card>
+      <CardHeader className="flex flex-row items-center justify-between border-b border-border pb-4">
         <div>
-          <h3 className="text-foreground text-sm font-medium">Revenue Overview</h3>
-          <p className="text-muted-foreground text-xs">Actual vs Projected (Last 6 months)</p>
+          <CardTitle className="text-sm font-semibold">Revenue Overview</CardTitle>
+          <CardDescription className="text-xs">Actual vs Projected (Last 6 months)</CardDescription>
         </div>
         <div className="flex items-center gap-4 text-xs">
           <div className="flex items-center gap-1.5">
-            <div className="bg-primary h-2.5 w-2.5 rounded-full" />
+            <div className="h-2.5 w-2.5 rounded-full bg-chart-1" />
             <span className="text-muted-foreground">Actual</span>
           </div>
           <div className="flex items-center gap-1.5">
-            <div className="bg-info h-2.5 w-2.5 rounded-full" />
+            <div className="h-2.5 w-2.5 rounded-full bg-info" />
             <span className="text-muted-foreground">Projected</span>
           </div>
         </div>
-      </div>
-
-      <div className="h-64 w-full min-w-0">
-        <ResponsiveContainer width="100%" height={256} debounce={50}>
-          <AreaChart data={data} margin={{top: 10, right: 10, left: 0, bottom: 0}}>
-            <defs>
-              <linearGradient id="actualGradient" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#14b8a6" stopOpacity={0.3} />
-                <stop offset="95%" stopColor="#14b8a6" stopOpacity={0} />
-              </linearGradient>
-              <linearGradient id="projectedGradient" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.3} />
-                <stop offset="95%" stopColor="#3b82f6" stopOpacity={0} />
-              </linearGradient>
-            </defs>
-            <CartesianGrid strokeDasharray="3 3" stroke="#262626" vertical={false} />
-            <XAxis
-              dataKey="month"
-              axisLine={false}
-              tickLine={false}
-              tick={{fill: "#a1a1aa", fontSize: 12}}
-              dy={10}
-            />
-            <YAxis
-              axisLine={false}
-              tickLine={false}
-              tick={{fill: "#a1a1aa", fontSize: 12}}
-              tickFormatter={formatCurrency}
-              dx={-10}
-            />
-            <Tooltip
-              contentStyle={{
-                backgroundColor: "#171717",
-                border: "1px solid #262626",
-                borderRadius: "8px",
-                fontSize: "12px",
-              }}
-              labelStyle={{color: "#fafafa", fontWeight: 500, marginBottom: 4}}
-              itemStyle={{color: "#a1a1aa"}}
-              formatter={(value) => [`₹${value?.toLocaleString("en-IN")}`, ""]}
-            />
-            <Area
-              type="monotone"
-              dataKey="projected"
-              stroke="#3b82f6"
-              strokeWidth={2}
-              fillOpacity={1}
-              fill="url(#projectedGradient)"
-              name="Projected"
-            />
-            <Area
-              type="monotone"
-              dataKey="actual"
-              stroke="#14b8a6"
-              strokeWidth={2}
-              fillOpacity={1}
-              fill="url(#actualGradient)"
-              name="Actual"
-            />
-          </AreaChart>
-        </ResponsiveContainer>
-      </div>
-    </div>
+      </CardHeader>
+      <CardContent className="pt-4">
+        <div className="h-64 w-full min-w-0">
+          <ResponsiveContainer width="100%" height={256} debounce={50}>
+            <AreaChart data={data} margin={{top: 10, right: 10, left: 0, bottom: 0}}>
+              <defs>
+                <linearGradient id="actualGradient" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor="oklch(0.35 0.01 260)" stopOpacity={0.3} />
+                  <stop offset="95%" stopColor="oklch(0.35 0.01 260)" stopOpacity={0} />
+                </linearGradient>
+                <linearGradient id="projectedGradient" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor="oklch(0.55 0.15 240)" stopOpacity={0.3} />
+                  <stop offset="95%" stopColor="oklch(0.55 0.15 240)" stopOpacity={0} />
+                </linearGradient>
+              </defs>
+              <CartesianGrid strokeDasharray="3 3" stroke="oklch(0.90 0 0)" vertical={false} />
+              <XAxis
+                dataKey="month"
+                axisLine={false}
+                tickLine={false}
+                tick={{fill: "oklch(0.45 0 0)", fontSize: 12}}
+                dy={10}
+              />
+              <YAxis
+                axisLine={false}
+                tickLine={false}
+                tick={{fill: "oklch(0.45 0 0)", fontSize: 12}}
+                tickFormatter={formatCurrency}
+                dx={-10}
+              />
+              <Tooltip
+                contentStyle={{
+                  backgroundColor: "oklch(1 0 0)",
+                  border: "1px solid oklch(0.90 0 0)",
+                  borderRadius: "8px",
+                  fontSize: "12px",
+                  boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1)",
+                }}
+                labelStyle={{color: "oklch(0.145 0 0)", fontWeight: 600, marginBottom: 4}}
+                itemStyle={{color: "oklch(0.45 0 0)"}}
+                formatter={(value) => [`₹${value?.toLocaleString("en-IN")}`, ""]}
+              />
+              <Area
+                type="monotone"
+                dataKey="projected"
+                stroke="oklch(0.55 0.15 240)"
+                strokeWidth={2}
+                fillOpacity={1}
+                fill="url(#projectedGradient)"
+                name="Projected"
+              />
+              <Area
+                type="monotone"
+                dataKey="actual"
+                stroke="oklch(0.35 0.01 260)"
+                strokeWidth={2}
+                fillOpacity={1}
+                fill="url(#actualGradient)"
+                name="Actual"
+              />
+            </AreaChart>
+          </ResponsiveContainer>
+        </div>
+      </CardContent>
+    </Card>
   );
 }

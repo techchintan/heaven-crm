@@ -3,6 +3,16 @@
 import {useState, useMemo} from "react";
 import {Search, Filter, ExternalLink, Mail, Phone, Link2} from "lucide-react";
 import {StatusBadge} from "@/components/ui/status-badge";
+import {Input} from "@/components/ui/input";
+import {Card} from "@/components/ui/card";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import type {Candidate} from "@/lib/sanity-queries";
 
 interface CandidatesTableProps {
@@ -24,7 +34,6 @@ export function CandidatesTable({candidates}: CandidatesTableProps) {
   const filteredCandidates = useMemo(() => {
     let result = [...candidates];
 
-    // Search filter
     if (search) {
       const searchLower = search.toLowerCase();
       result = result.filter(
@@ -36,7 +45,6 @@ export function CandidatesTable({candidates}: CandidatesTableProps) {
       );
     }
 
-    // Status filter
     if (statusFilter !== "all") {
       result = result.filter((c) => c.status === statusFilter);
     }
@@ -58,22 +66,22 @@ export function CandidatesTable({candidates}: CandidatesTableProps) {
       {/* Filters */}
       <div className="flex flex-wrap items-center gap-3">
         <div className="relative min-w-64 flex-1">
-          <Search className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
-          <input
+          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+          <Input
             type="text"
             placeholder="Search by name, skill, email, location..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="border-border bg-input text-foreground placeholder:text-muted-foreground focus:border-primary focus:ring-primary h-9 w-full rounded-lg border pr-4 pl-9 text-sm focus:ring-1 focus:outline-none"
+            className="pl-9"
           />
         </div>
 
         <div className="relative">
-          <Filter className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
+          <Filter className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="border-border bg-input text-foreground focus:border-primary focus:ring-primary h-9 appearance-none rounded-lg border pr-8 pl-9 text-sm focus:ring-1 focus:outline-none"
+            className="h-9 appearance-none rounded-md border border-border bg-card pl-9 pr-8 text-sm text-foreground shadow-sm focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
           >
             {statusOptions.map((option) => (
               <option key={option.value} value={option.value}>
@@ -86,7 +94,7 @@ export function CandidatesTable({candidates}: CandidatesTableProps) {
         <a
           href="/studio/structure/candidate"
           target="_blank"
-          className="bg-primary text-primary-foreground hover:bg-primary/90 flex h-9 items-center gap-2 rounded-lg px-4 text-sm font-medium transition-colors"
+          className="inline-flex h-9 items-center justify-center gap-2 rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground shadow-sm transition-all duration-150 hover:bg-primary/90 active:scale-[0.98]"
         >
           Add in Studio
           <ExternalLink className="h-3 w-3" />
@@ -94,63 +102,62 @@ export function CandidatesTable({candidates}: CandidatesTableProps) {
       </div>
 
       {/* Results count */}
-      <p className="text-muted-foreground text-sm">
+      <p className="text-sm text-muted-foreground">
         Showing {filteredCandidates.length} of {candidates.length} candidates
       </p>
 
       {/* Table */}
-      <div className="border-border bg-card overflow-x-auto rounded-xl border">
-        <table className="w-full">
-          <thead>
-            <tr className="border-border text-muted-foreground border-b text-left text-xs font-medium">
-              <th className="px-4 py-3">Candidate</th>
-              <th className="px-4 py-3">Primary Skill</th>
-              <th className="px-4 py-3">Experience</th>
-              <th className="px-4 py-3">Expected Salary</th>
-              <th className="px-4 py-3">Notice Period</th>
-              <th className="px-4 py-3">Location</th>
-              <th className="px-4 py-3">Status</th>
-              <th className="px-4 py-3">Contact</th>
-            </tr>
-          </thead>
-          <tbody className="divide-border divide-y">
+      <Card className="p-0 overflow-hidden">
+        <Table>
+          <TableHeader>
+            <TableRow className="hover:bg-transparent">
+              <TableHead>Candidate</TableHead>
+              <TableHead>Primary Skill</TableHead>
+              <TableHead>Experience</TableHead>
+              <TableHead>Expected Salary</TableHead>
+              <TableHead>Notice Period</TableHead>
+              <TableHead>Location</TableHead>
+              <TableHead>Status</TableHead>
+              <TableHead>Contact</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
             {filteredCandidates.length === 0 ? (
-              <tr>
-                <td colSpan={8} className="text-muted-foreground py-8 text-center text-sm">
+              <TableRow className="hover:bg-transparent">
+                <TableCell colSpan={8} className="py-10 text-center text-muted-foreground">
                   No candidates found
-                </td>
-              </tr>
+                </TableCell>
+              </TableRow>
             ) : (
               filteredCandidates.map((candidate) => (
-                <tr key={candidate._id} className="hover:bg-card-hover text-sm transition-colors">
-                  <td className="px-4 py-3">
+                <TableRow key={candidate._id}>
+                  <TableCell>
                     <div>
-                      <p className="text-foreground font-medium">{candidate.fullName}</p>
+                      <p className="font-medium">{candidate.fullName}</p>
                       {candidate.email && (
-                        <p className="text-muted-foreground text-xs">{candidate.email}</p>
+                        <p className="text-xs text-muted-foreground">{candidate.email}</p>
                       )}
                     </div>
-                  </td>
-                  <td className="text-foreground px-4 py-3">{candidate.primarySkill}</td>
-                  <td className="text-muted-foreground px-4 py-3">
+                  </TableCell>
+                  <TableCell>{candidate.primarySkill}</TableCell>
+                  <TableCell className="text-muted-foreground">
                     {candidate.experience ? `${candidate.experience} yrs` : "-"}
-                  </td>
-                  <td className="text-foreground px-4 py-3">
-                    {formatSalary(candidate.expectedSalary)}
-                  </td>
-                  <td className="text-muted-foreground px-4 py-3">
+                  </TableCell>
+                  <TableCell>{formatSalary(candidate.expectedSalary)}</TableCell>
+                  <TableCell className="text-muted-foreground">
                     {candidate.noticePeriod ? `${candidate.noticePeriod} days` : "-"}
-                  </td>
-                  <td className="text-muted-foreground px-4 py-3">{candidate.location || "-"}</td>
-                  <td className="px-4 py-3">
+                  </TableCell>
+                  <TableCell className="text-muted-foreground">{candidate.location || "-"}</TableCell>
+                  <TableCell>
                     <StatusBadge status={candidate.status} variant="candidate" />
-                  </td>
-                  <td className="px-4 py-3">
-                    <div className="flex items-center gap-2">
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex items-center gap-1.5">
                       {candidate.email && (
                         <a
                           href={`mailto:${candidate.email}`}
-                          className="bg-muted text-muted-foreground hover:bg-card-hover hover:text-foreground flex h-7 w-7 items-center justify-center rounded-md transition-colors"
+                          title="Send email"
+                          className="flex h-7 w-7 items-center justify-center rounded-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
                         >
                           <Mail className="h-3.5 w-3.5" />
                         </a>
@@ -158,7 +165,8 @@ export function CandidatesTable({candidates}: CandidatesTableProps) {
                       {candidate.phone && (
                         <a
                           href={`tel:${candidate.phone}`}
-                          className="bg-muted text-muted-foreground hover:bg-card-hover hover:text-foreground flex h-7 w-7 items-center justify-center rounded-md transition-colors"
+                          title="Call"
+                          className="flex h-7 w-7 items-center justify-center rounded-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
                         >
                           <Phone className="h-3.5 w-3.5" />
                         </a>
@@ -168,19 +176,20 @@ export function CandidatesTable({candidates}: CandidatesTableProps) {
                           href={candidate.linkedInUrl}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="bg-muted text-muted-foreground hover:bg-card-hover hover:text-foreground flex h-7 w-7 items-center justify-center rounded-md transition-colors"
+                          title="View LinkedIn"
+                          className="flex h-7 w-7 items-center justify-center rounded-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
                         >
                           <Link2 className="h-3.5 w-3.5" />
                         </a>
                       )}
                     </div>
-                  </td>
-                </tr>
+                  </TableCell>
+                </TableRow>
               ))
             )}
-          </tbody>
-        </table>
-      </div>
+          </TableBody>
+        </Table>
+      </Card>
     </div>
   );
 }
