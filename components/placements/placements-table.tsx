@@ -4,6 +4,9 @@ import {useState, useMemo} from "react";
 import {Search, Filter, ExternalLink, ChevronUp, ChevronDown} from "lucide-react";
 import {format, parseISO} from "date-fns";
 import {StatusBadge} from "@/components/ui/status-badge";
+import {Input} from "@/components/ui/input";
+import {Card} from "@/components/ui/card";
+import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
 import type {Placement} from "@/lib/sanity-queries";
 
 interface PlacementsTableProps {
@@ -17,11 +20,15 @@ function formatCurrency(value: number): string {
   return `₹${value.toLocaleString("en-IN")}`;
 }
 
-function renderSortIcon(
-  field: SortField,
-  activeSortField: SortField,
-  activeSortDirection: SortDirection,
-) {
+function SortIcon({
+  field,
+  activeSortField,
+  activeSortDirection,
+}: {
+  field: SortField;
+  activeSortField: SortField;
+  activeSortDirection: SortDirection;
+}) {
   if (activeSortField !== field) return null;
   return activeSortDirection === "asc" ? (
     <ChevronUp className="h-3 w-3" />
@@ -39,7 +46,6 @@ export function PlacementsTable({placements}: PlacementsTableProps) {
   const filteredPlacements = useMemo(() => {
     let result = [...placements];
 
-    // Search filter
     if (search) {
       const searchLower = search.toLowerCase();
       result = result.filter(
@@ -51,12 +57,10 @@ export function PlacementsTable({placements}: PlacementsTableProps) {
       );
     }
 
-    // Status filter
     if (statusFilter !== "all") {
       result = result.filter((p) => p.revenueStatus === statusFilter);
     }
 
-    // Sort
     result.sort((a, b) => {
       let comparison = 0;
       switch (sortField) {
@@ -104,12 +108,12 @@ export function PlacementsTable({placements}: PlacementsTableProps) {
       <div className="flex flex-wrap items-center gap-3">
         <div className="relative min-w-64 flex-1">
           <Search className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
-          <input
+          <Input
             type="text"
             placeholder="Search by candidate, vendor, job title..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="border-border bg-input text-foreground placeholder:text-muted-foreground focus:border-primary focus:ring-primary h-9 w-full rounded-lg border pr-4 pl-9 text-sm focus:ring-1 focus:outline-none"
+            className="pl-9"
           />
         </div>
 
@@ -118,7 +122,7 @@ export function PlacementsTable({placements}: PlacementsTableProps) {
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="border-border bg-input text-foreground focus:border-primary focus:ring-primary h-9 appearance-none rounded-lg border pr-8 pl-9 text-sm focus:ring-1 focus:outline-none"
+            className="border-border bg-card text-foreground focus:ring-ring h-9 appearance-none rounded-md border pr-8 pl-9 text-sm shadow-sm focus:ring-2 focus:ring-offset-2 focus:outline-none"
           >
             {statusOptions.map((option) => (
               <option key={option.value} value={option.value}>
@@ -131,7 +135,7 @@ export function PlacementsTable({placements}: PlacementsTableProps) {
         <a
           href="/studio/structure/placement"
           target="_blank"
-          className="bg-primary text-primary-foreground hover:bg-primary/90 flex h-9 items-center gap-2 rounded-lg px-4 text-sm font-medium transition-colors"
+          className="bg-primary text-primary-foreground hover:bg-primary/90 inline-flex h-9 items-center justify-center gap-2 rounded-md px-4 text-sm font-medium shadow-sm transition-all duration-150 active:scale-[0.98]"
         >
           Add in Studio
           <ExternalLink className="h-3 w-3" />
@@ -144,97 +148,109 @@ export function PlacementsTable({placements}: PlacementsTableProps) {
       </p>
 
       {/* Table */}
-      <div className="border-border bg-card overflow-x-auto rounded-xl border">
-        <table className="w-full">
-          <thead>
-            <tr className="border-border text-muted-foreground border-b text-left text-xs font-medium">
-              <th
-                className="hover:text-foreground cursor-pointer px-4 py-3"
+      <Card className="overflow-hidden p-0">
+        <Table>
+          <TableHeader>
+            <TableRow className="hover:bg-transparent">
+              <TableHead
+                className="hover:text-foreground cursor-pointer select-none"
                 onClick={() => handleSort("candidateName")}
               >
                 <div className="flex items-center gap-1">
                   Candidate
-                  {renderSortIcon("candidateName", sortField, sortDirection)}
+                  <SortIcon
+                    field="candidateName"
+                    activeSortField={sortField}
+                    activeSortDirection={sortDirection}
+                  />
                 </div>
-              </th>
-              <th
-                className="hover:text-foreground cursor-pointer px-4 py-3"
+              </TableHead>
+              <TableHead
+                className="hover:text-foreground cursor-pointer select-none"
                 onClick={() => handleSort("vendorName")}
               >
                 <div className="flex items-center gap-1">
                   Vendor
-                  {renderSortIcon("vendorName", sortField, sortDirection)}
+                  <SortIcon
+                    field="vendorName"
+                    activeSortField={sortField}
+                    activeSortDirection={sortDirection}
+                  />
                 </div>
-              </th>
-              <th className="px-4 py-3">Recruiter</th>
-              <th
-                className="hover:text-foreground cursor-pointer px-4 py-3"
+              </TableHead>
+              <TableHead>Recruiter</TableHead>
+              <TableHead
+                className="hover:text-foreground cursor-pointer select-none"
                 onClick={() => handleSort("placementDate")}
               >
                 <div className="flex items-center gap-1">
                   Placement Date
-                  {renderSortIcon("placementDate", sortField, sortDirection)}
+                  <SortIcon
+                    field="placementDate"
+                    activeSortField={sortField}
+                    activeSortDirection={sortDirection}
+                  />
                 </div>
-              </th>
-              <th className="px-4 py-3">Probation End</th>
-              <th
-                className="hover:text-foreground cursor-pointer px-4 py-3 text-right"
+              </TableHead>
+              <TableHead>Probation End</TableHead>
+              <TableHead
+                className="hover:text-foreground cursor-pointer text-right select-none"
                 onClick={() => handleSort("totalInvoiceValue")}
               >
                 <div className="flex items-center justify-end gap-1">
                   Invoice Value
-                  {renderSortIcon("totalInvoiceValue", sortField, sortDirection)}
+                  <SortIcon
+                    field="totalInvoiceValue"
+                    activeSortField={sortField}
+                    activeSortDirection={sortDirection}
+                  />
                 </div>
-              </th>
-              <th className="px-4 py-3">Status</th>
-            </tr>
-          </thead>
-          <tbody className="divide-border divide-y">
+              </TableHead>
+              <TableHead>Status</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
             {filteredPlacements.length === 0 ? (
-              <tr>
-                <td colSpan={7} className="text-muted-foreground py-8 text-center text-sm">
+              <TableRow className="hover:bg-transparent">
+                <TableCell colSpan={7} className="text-muted-foreground py-10 text-center">
                   No placements found
-                </td>
-              </tr>
+                </TableCell>
+              </TableRow>
             ) : (
               filteredPlacements.map((placement) => (
-                <tr key={placement._id} className="hover:bg-card-hover text-sm transition-colors">
-                  <td className="px-4 py-3">
+                <TableRow key={placement._id}>
+                  <TableCell>
                     <div>
-                      <p className="text-foreground font-medium">
-                        {placement.candidate?.fullName || "Unknown"}
-                      </p>
+                      <p className="font-medium">{placement.candidate?.fullName || "Unknown"}</p>
                       <p className="text-muted-foreground text-xs">{placement.jobTitle}</p>
                     </div>
-                  </td>
-                  <td className="text-foreground px-4 py-3">
-                    {placement.vendor?.companyName || "Unknown"}
-                  </td>
-                  <td className="text-muted-foreground px-4 py-3">
+                  </TableCell>
+                  <TableCell>{placement.vendor?.companyName || "Unknown"}</TableCell>
+                  <TableCell className="text-muted-foreground">
                     {placement.recruiter?.name || "Unknown"}
-                  </td>
-                  <td className="text-muted-foreground px-4 py-3">
+                  </TableCell>
+                  <TableCell className="text-muted-foreground">
                     {placement.placementDate
                       ? format(parseISO(placement.placementDate), "dd/MM/yyyy")
                       : "-"}
-                  </td>
-                  <td className="text-muted-foreground px-4 py-3">
+                  </TableCell>
+                  <TableCell className="text-muted-foreground">
                     {placement.probationEndDate
                       ? format(parseISO(placement.probationEndDate), "dd/MM/yyyy")
                       : "-"}
-                  </td>
-                  <td className="text-foreground px-4 py-3 text-right font-medium">
+                  </TableCell>
+                  <TableCell className="text-right font-medium">
                     {formatCurrency(placement.totalInvoiceValue || 0)}
-                  </td>
-                  <td className="px-4 py-3">
+                  </TableCell>
+                  <TableCell>
                     <StatusBadge status={placement.revenueStatus} variant="placement" />
-                  </td>
-                </tr>
+                  </TableCell>
+                </TableRow>
               ))
             )}
-          </tbody>
-        </table>
-      </div>
+          </TableBody>
+        </Table>
+      </Card>
     </div>
   );
 }

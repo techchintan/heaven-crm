@@ -3,7 +3,8 @@ import {Header} from "@/components/layout/header";
 import {StatsCard} from "@/components/dashboard/stats-card";
 import {getTeamMembers, getPlacements} from "@/lib/sanity-queries";
 import {UserCog, Users, Trophy, ExternalLink, Mail, Phone} from "lucide-react";
-import {cn} from "@/lib/utils";
+import {Card, CardContent, CardHeader} from "@/components/ui/card";
+import {Badge} from "@/components/ui/badge";
 
 const roleLabels: Record<string, string> = {
   recruiter: "Recruiter",
@@ -25,14 +26,14 @@ function formatCurrency(value: number): string {
 function TeamSkeleton() {
   return (
     <div className="animate-pulse space-y-6 p-6">
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {[...Array(3)].map((_, i) => (
-          <div key={i} className="bg-card h-28 rounded-xl" />
+          <div key={i} className="bg-muted h-28 rounded-lg" />
         ))}
       </div>
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {[...Array(3)].map((_, i) => (
-          <div key={i} className="bg-card h-64 rounded-xl" />
+          <div key={i} className="bg-muted h-64 rounded-lg" />
         ))}
       </div>
     </div>
@@ -44,7 +45,6 @@ async function TeamContent() {
 
   const activeMembers = teamMembers.filter((m) => m.isActive);
 
-  // Calculate stats per team member
   const memberStats = teamMembers.map((member) => {
     const memberPlacements = placements.filter((p) => p.recruiter?._id === member._id);
     const totalRevenue = memberPlacements.reduce((sum, p) => sum + (p.totalInvoiceValue || 0), 0);
@@ -89,11 +89,11 @@ async function TeamContent() {
 
       {/* Header */}
       <div className="flex items-center justify-between">
-        <h2 className="text-foreground text-lg font-semibold">Team Members</h2>
+        <h2 className="text-foreground text-lg font-semibold tracking-tight">Team Members</h2>
         <a
           href="/studio/structure/teamMember"
           target="_blank"
-          className="bg-primary text-primary-foreground hover:bg-primary/90 flex h-9 items-center gap-2 rounded-lg px-4 text-sm font-medium transition-colors"
+          className="bg-primary text-primary-foreground hover:bg-primary/90 inline-flex h-9 items-center justify-center gap-2 rounded-md px-4 text-sm font-medium shadow-sm transition-all duration-150 active:scale-[0.98]"
         >
           Manage in Studio
           <ExternalLink className="h-3 w-3" />
@@ -102,7 +102,7 @@ async function TeamContent() {
 
       {/* Team Cards */}
       {memberStats.length === 0 ? (
-        <div className="border-border bg-card rounded-xl border p-8 text-center">
+        <Card className="p-8 text-center">
           <p className="text-muted-foreground">No team members yet</p>
           <a
             href="/studio/structure/teamMember"
@@ -112,77 +112,70 @@ async function TeamContent() {
             Add team members in Sanity Studio
             <ExternalLink className="h-3 w-3" />
           </a>
-        </div>
+        </Card>
       ) : (
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {memberStats.map((member) => (
-            <div
-              key={member._id}
-              className="border-border bg-card hover:border-border-hover rounded-xl border p-5 transition-colors"
-            >
-              <div className="flex items-start justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="bg-primary-muted text-primary flex h-12 w-12 items-center justify-center rounded-full text-lg font-semibold">
-                    {member.name
-                      .split(" ")
-                      .map((n) => n[0])
-                      .join("")
-                      .toUpperCase()
-                      .slice(0, 2)}
+            <Card key={member._id} className="transition-shadow hover:shadow-md">
+              <CardHeader className="pb-3">
+                <div className="flex items-start justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="bg-primary/10 text-primary flex h-11 w-11 items-center justify-center rounded-full text-base font-semibold">
+                      {member.name
+                        .split(" ")
+                        .map((n) => n[0])
+                        .join("")
+                        .toUpperCase()
+                        .slice(0, 2)}
+                    </div>
+                    <div>
+                      <h3 className="text-foreground font-medium">{member.name}</h3>
+                      <p className="text-muted-foreground text-sm">
+                        {member.role ? roleLabels[member.role] || member.role : "Recruiter"}
+                      </p>
+                    </div>
+                  </div>
+                  <Badge variant={member.isActive ? "success" : "secondary"}>
+                    {member.isActive ? "Active" : "Inactive"}
+                  </Badge>
+                </div>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="border-border grid grid-cols-2 gap-4 border-t pt-4">
+                  <div>
+                    <p className="text-muted-foreground text-xs">Placements</p>
+                    <p className="text-foreground text-xl font-bold">{member.placements}</p>
                   </div>
                   <div>
-                    <h3 className="text-foreground font-medium">{member.name}</h3>
-                    <p className="text-muted-foreground text-sm">
-                      {member.role ? roleLabels[member.role] || member.role : "Recruiter"}
+                    <p className="text-muted-foreground text-xs">Revenue</p>
+                    <p className="text-foreground text-xl font-bold">
+                      {formatCurrency(member.totalRevenue)}
                     </p>
                   </div>
                 </div>
-                <span
-                  className={cn(
-                    "inline-flex rounded-full px-2 py-0.5 text-xs font-medium",
-                    member.isActive
-                      ? "bg-success/20 text-success"
-                      : "bg-muted text-muted-foreground",
+
+                <div className="border-border flex items-center gap-2 border-t pt-4">
+                  {member.email && (
+                    <a
+                      href={`mailto:${member.email}`}
+                      className="bg-secondary text-secondary-foreground hover:bg-secondary/80 flex h-8 flex-1 items-center justify-center gap-2 rounded-md text-sm font-medium shadow-sm transition-colors"
+                    >
+                      <Mail className="h-3.5 w-3.5" />
+                      Email
+                    </a>
                   )}
-                >
-                  {member.isActive ? "Active" : "Inactive"}
-                </span>
-              </div>
-
-              <div className="border-border mt-4 grid grid-cols-2 gap-4 border-t pt-4">
-                <div>
-                  <p className="text-muted-foreground text-xs">Placements</p>
-                  <p className="text-foreground text-lg font-semibold">{member.placements}</p>
+                  {member.phone && (
+                    <a
+                      href={`tel:${member.phone}`}
+                      className="bg-secondary text-secondary-foreground hover:bg-secondary/80 flex h-8 flex-1 items-center justify-center gap-2 rounded-md text-sm font-medium shadow-sm transition-colors"
+                    >
+                      <Phone className="h-3.5 w-3.5" />
+                      Call
+                    </a>
+                  )}
                 </div>
-                <div>
-                  <p className="text-muted-foreground text-xs">Revenue</p>
-                  <p className="text-foreground text-lg font-semibold">
-                    {formatCurrency(member.totalRevenue)}
-                  </p>
-                </div>
-              </div>
-
-              <div className="border-border mt-4 flex items-center gap-2 border-t pt-4">
-                {member.email && (
-                  <a
-                    href={`mailto:${member.email}`}
-                    className="bg-muted text-muted-foreground hover:bg-card-hover hover:text-foreground flex h-8 flex-1 items-center justify-center gap-2 rounded-lg text-sm transition-colors"
-                  >
-                    <Mail className="h-3.5 w-3.5" />
-                    Email
-                  </a>
-                )}
-                {member.phone && (
-                  <a
-                    href={`tel:${member.phone}`}
-                    className="bg-muted text-muted-foreground hover:bg-card-hover hover:text-foreground flex h-8 flex-1 items-center justify-center gap-2 rounded-lg text-sm transition-colors"
-                  >
-                    <Phone className="h-3.5 w-3.5" />
-                    Call
-                  </a>
-                )}
-              </div>
-            </div>
+              </CardContent>
+            </Card>
           ))}
         </div>
       )}

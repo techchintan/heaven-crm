@@ -3,33 +3,23 @@
 import {FileText} from "lucide-react";
 import type {Placement} from "@/lib/sanity-queries";
 import {format, parseISO} from "date-fns";
-import {cn} from "@/lib/utils";
+import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card";
+import {Badge} from "@/components/ui/badge";
+import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
 
 interface RecentPlacementsProps {
   placements: Placement[];
 }
 
-const statusConfig: Record<string, {label: string; className: string}> = {
-  pending: {
-    label: "Pending",
-    className: "bg-muted text-muted-foreground",
-  },
-  invoiced: {
-    label: "Invoiced",
-    className: "bg-info/20 text-info",
-  },
-  paid: {
-    label: "Paid",
-    className: "bg-success/20 text-success",
-  },
-  deducted: {
-    label: "Deducted",
-    className: "bg-danger/20 text-danger",
-  },
-  partially_paid: {
-    label: "Partial",
-    className: "bg-warning/20 text-warning",
-  },
+const statusConfig: Record<
+  string,
+  {label: string; variant: "default" | "secondary" | "destructive" | "success" | "warning" | "info"}
+> = {
+  pending: {label: "Pending", variant: "secondary"},
+  invoiced: {label: "Invoiced", variant: "info"},
+  paid: {label: "Paid", variant: "success"},
+  deducted: {label: "Deducted", variant: "destructive"},
+  partially_paid: {label: "Partial", variant: "warning"},
 };
 
 function formatCurrency(value: number): string {
@@ -41,68 +31,56 @@ function formatCurrency(value: number): string {
 
 export function RecentPlacements({placements}: RecentPlacementsProps) {
   return (
-    <div className="border-border bg-card rounded-xl border p-5">
-      <div className="mb-4 flex items-center gap-2">
+    <Card>
+      <CardHeader className="flex flex-row items-center gap-2">
         <FileText className="text-muted-foreground h-4 w-4" />
-        <h3 className="text-foreground text-sm font-medium">Recent Placements</h3>
-      </div>
-
-      {placements.length === 0 ? (
-        <p className="text-muted-foreground py-8 text-center text-sm">No placements yet</p>
-      ) : (
-        <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead>
-              <tr className="border-border text-muted-foreground border-b text-left text-xs font-medium">
-                <th className="pr-4 pb-3">Candidate</th>
-                <th className="pr-4 pb-3">Vendor</th>
-                <th className="pr-4 pb-3">Date</th>
-                <th className="pr-4 pb-3 text-right">Value</th>
-                <th className="pb-3">Status</th>
-              </tr>
-            </thead>
-            <tbody className="divide-border divide-y">
+        <CardTitle className="text-sm font-semibold">Recent Placements</CardTitle>
+      </CardHeader>
+      <CardContent className="px-0 pb-0">
+        {placements.length === 0 ? (
+          <p className="text-muted-foreground py-10 text-center text-sm">No placements yet</p>
+        ) : (
+          <Table>
+            <TableHeader>
+              <TableRow className="hover:bg-transparent">
+                <TableHead>Candidate</TableHead>
+                <TableHead>Vendor</TableHead>
+                <TableHead>Date</TableHead>
+                <TableHead className="text-right">Value</TableHead>
+                <TableHead>Status</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
               {placements.map((placement) => {
                 const status = statusConfig[placement.revenueStatus] || statusConfig.pending;
 
                 return (
-                  <tr key={placement._id} className="text-sm">
-                    <td className="py-3 pr-4">
+                  <TableRow key={placement._id}>
+                    <TableCell>
                       <div>
-                        <p className="text-foreground font-medium">
-                          {placement.candidate?.fullName || "Unknown"}
-                        </p>
+                        <p className="font-medium">{placement.candidate?.fullName || "Unknown"}</p>
                         <p className="text-muted-foreground text-xs">{placement.jobTitle}</p>
                       </div>
-                    </td>
-                    <td className="text-foreground py-3 pr-4">
-                      {placement.vendor?.companyName || "Unknown"}
-                    </td>
-                    <td className="text-muted-foreground py-3 pr-4">
+                    </TableCell>
+                    <TableCell>{placement.vendor?.companyName || "Unknown"}</TableCell>
+                    <TableCell className="text-muted-foreground">
                       {placement.placementDate
                         ? format(parseISO(placement.placementDate), "dd/MM/yyyy")
                         : "-"}
-                    </td>
-                    <td className="text-foreground py-3 pr-4 text-right font-medium">
+                    </TableCell>
+                    <TableCell className="text-right font-medium">
                       {formatCurrency(placement.totalInvoiceValue || 0)}
-                    </td>
-                    <td className="py-3">
-                      <span
-                        className={cn(
-                          "inline-flex rounded-full px-2 py-0.5 text-xs font-medium",
-                          status.className,
-                        )}
-                      >
-                        {status.label}
-                      </span>
-                    </td>
-                  </tr>
+                    </TableCell>
+                    <TableCell>
+                      <Badge variant={status.variant}>{status.label}</Badge>
+                    </TableCell>
+                  </TableRow>
                 );
               })}
-            </tbody>
-          </table>
-        </div>
-      )}
-    </div>
+            </TableBody>
+          </Table>
+        )}
+      </CardContent>
+    </Card>
   );
 }

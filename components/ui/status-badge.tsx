@@ -8,53 +8,50 @@ interface StatusBadgeProps {
 
 const placementStatusConfig: Record<
   string,
-  {label: string; variant: "default" | "secondary" | "destructive" | "outline"}
+  {
+    label: string;
+    variant: "default" | "secondary" | "destructive" | "outline" | "success" | "warning" | "info";
+  }
 > = {
   pending: {label: "Pending", variant: "secondary"},
-  invoiced: {label: "Invoiced", variant: "outline"},
-  paid: {label: "Paid", variant: "default"},
+  invoiced: {label: "Invoiced", variant: "info"},
+  paid: {label: "Paid", variant: "success"},
   deducted: {label: "Deducted", variant: "destructive"},
-  partially_paid: {label: "Partial", variant: "outline"},
+  partially_paid: {label: "Partial", variant: "warning"},
 };
 
 const candidateStatusConfig: Record<
   string,
-  {label: string; variant: "default" | "secondary" | "destructive" | "outline"}
+  {
+    label: string;
+    variant: "default" | "secondary" | "destructive" | "outline" | "success" | "warning" | "info";
+  }
 > = {
-  available: {label: "Available", variant: "default"},
-  placed: {label: "Placed", variant: "secondary"},
-  in_process: {label: "In Process", variant: "outline"},
-  on_hold: {label: "On Hold", variant: "secondary"},
-  not_available: {label: "Not Available", variant: "destructive"},
+  available: {label: "Available", variant: "success"},
+  placed: {label: "Placed", variant: "default"},
+  in_process: {label: "In Process", variant: "info"},
+  on_hold: {label: "On Hold", variant: "warning"},
+  not_available: {label: "Not Available", variant: "secondary"},
 };
 
 const vendorStatusConfig: Record<
   string,
-  {label: string; variant: "default" | "secondary" | "destructive" | "outline"}
+  {
+    label: string;
+    variant: "default" | "secondary" | "destructive" | "outline" | "success" | "warning" | "info";
+  }
 > = {
-  active: {label: "Active", variant: "default"},
+  active: {label: "Active", variant: "success"},
   inactive: {label: "Inactive", variant: "secondary"},
-  prospect: {label: "Prospect", variant: "outline"},
-  in_progress: {label: "In Progress", variant: "outline"},
-  on_hold: {label: "On Hold", variant: "outline"},
+  prospect: {label: "Prospect", variant: "info"},
+  in_progress: {label: "In Progress", variant: "warning"},
+  on_hold: {label: "On Hold", variant: "secondary"},
 };
 
 /**
  * StatusBadge Component
  *
  * A semantic badge component for displaying status information across the application.
- * Uses shadcn Badge component with pre-configured status mappings.
- *
- * @param status - The status key to display
- * @param variant - The context type: 'placement' | 'candidate' | 'vendor'
- * @param className - Additional CSS classes
- *
- * @example
- * ```tsx
- * <StatusBadge status="paid" variant="placement" />
- * <StatusBadge status="available" variant="candidate" />
- * <StatusBadge status="active" variant="vendor" />
- * ```
  */
 export function StatusBadge({status, variant = "placement", className}: StatusBadgeProps) {
   const configs = {

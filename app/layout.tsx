@@ -1,4 +1,4 @@
-import type {Metadata} from "next";
+import type {Metadata, Viewport} from "next";
 import {Geist, Geist_Mono} from "next/font/google";
 import "./globals.css";
 
@@ -18,17 +18,22 @@ export const metadata: Metadata = {
     "Professional recruitment agency management system for tracking placements, candidates, vendors, and revenue",
 };
 
+export const viewport: Viewport = {
+  themeColor: "#ffffff",
+  width: "device-width",
+  initialScale: 1,
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} bg-background h-full antialiased`}
-    >
-      <body className="flex min-h-full flex-col">{children}</body>
+    <html lang="en" className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}>
+      <body className="bg-background text-foreground flex min-h-full flex-col font-sans">
+        {children}
+      </body>
     </html>
   );
 }

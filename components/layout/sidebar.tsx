@@ -1,5 +1,6 @@
 "use client";
 
+import {useSyncExternalStore} from "react";
 import Link from "next/link";
 import {usePathname} from "next/navigation";
 import {
@@ -9,13 +10,14 @@ import {
   Building2,
   UserCog,
   ExternalLink,
+  ChevronsLeft,
+  ChevronsRight,
   type LucideIcon,
 } from "lucide-react";
 import {cn} from "@/lib/utils";
-import {Button} from "@/components/ui/button";
 import {Avatar, AvatarFallback} from "@/components/ui/avatar";
 
-const navItems: {
+const navGroups: {
   label: string;
   items: {name: string; href: string; icon: LucideIcon; external?: boolean}[];
 }[] = [
@@ -38,44 +40,105 @@ const navItems: {
   },
 ];
 
-/**
- * Sidebar Component
- *
- * Main navigation sidebar with grouped navigation items, logo, and user profile section.
- * Uses shadcn Avatar and Separator for consistent component usage.
- *
- * Organized into sections:
- * - Overview: Quick access to main dashboard
- * - Management: CRUD operations for core entities
- * - Settings: Configuration and external links
- *
- * @example
- * ```tsx
- * <Sidebar />
- * ```
- */
+const COLLAPSED_STORAGE_KEY = "sidebar-collapsed";
+
+function getCollapsedSnapshot(): boolean {
+  try {
+    const saved = localStorage.getItem(COLLAPSED_STORAGE_KEY);
+    if (saved !== null) return JSON.parse(saved) as boolean;
+  } catch {}
+  return false;
+}
+
+function subscribeCollapsed(onStoreChange: () => void) {
+  const onChange = () => onStoreChange();
+  window.addEventListener("storage", onChange);
+  window.addEventListener(COLLAPSED_STORAGE_KEY, onChange);
+  return () => {
+    window.removeEventListener("storage", onChange);
+    window.removeEventListener(COLLAPSED_STORAGE_KEY, onChange);
+  };
+}
+
+function useHydrated() {
+  return useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false,
+  );
+}
+
 export function Sidebar() {
   const pathname = usePathname();
+  const mounted = useHydrated();
+  const collapsed = useSyncExternalStore(subscribeCollapsed, getCollapsedSnapshot, () => false);
+
+  const toggle = () => {
+    const next = !collapsed;
+    try {
+      localStorage.setItem(COLLAPSED_STORAGE_KEY, JSON.stringify(next));
+      window.dispatchEvent(new Event(COLLAPSED_STORAGE_KEY));
+    } catch {}
+  };
+
+  // Prevent layout shift on mount
+  if (!mounted) {
+    return <div className="border-border bg-card w-60 shrink-0 border-r" />;
+  }
 
   return (
-    <aside className="border-border bg-background flex h-screen w-60 flex-col border-r">
-      {/* Logo Section */}
-      <div className="border-border flex h-16 items-center border-b px-4">
-        <Link href="/" className="flex items-center gap-2">
-          <div className="bg-primary text-primary-foreground flex h-8 w-8 items-center justify-center rounded-lg text-sm font-bold">
-            HP
-          </div>
-          <span className="text-foreground truncate font-semibold">HeavenPro ATS</span>
-        </Link>
+    <aside
+      className={cn(
+        "border-border bg-card relative flex h-screen shrink-0 flex-col border-r",
+        "transition-[width] duration-200 ease-out",
+        collapsed ? "w-16" : "w-60",
+      )}
+    >
+      {/* Header */}
+      <div
+        className={cn(
+          "border-border flex h-14 items-center border-b",
+          collapsed ? "justify-center px-2" : "justify-between px-3",
+        )}
+      >
+        {!collapsed && (
+          <Link href="/" className="flex items-center gap-2.5">
+            <div className="bg-primary text-primary-foreground flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-xs font-bold">
+              HP
+            </div>
+            <span className="text-foreground text-sm font-semibold">HeavenPro ATS</span>
+          </Link>
+        )}
+
+        <button
+          onClick={toggle}
+          title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+          className={cn(
+            "flex h-8 w-8 items-center justify-center rounded-md",
+            "text-muted-foreground transition-colors",
+            "hover:bg-muted hover:text-foreground",
+          )}
+        >
+          {collapsed ? <ChevronsRight className="h-4 w-4" /> : <ChevronsLeft className="h-4 w-4" />}
+        </button>
       </div>
 
-      {/* Navigation Sections */}
-      <nav className="flex-1 overflow-y-auto px-3 py-4">
-        {navItems.map((group, index) => (
-          <div key={group.label} className={cn(index !== 0 && "mt-6")}>
-            <h3 className="text-muted-foreground mb-2 px-3 text-xs font-semibold tracking-wider uppercase">
-              {group.label}
-            </h3>
+      {/* Navigation */}
+      <nav className={cn("flex-1 overflow-y-auto py-3", collapsed ? "px-2" : "px-3")}>
+        {navGroups.map((group, groupIndex) => (
+          <div key={group.label} className={cn(groupIndex > 0 && "mt-6")}>
+            {/* Group label */}
+            {!collapsed && (
+              <div className="mb-2 px-2">
+                <span className="text-muted-foreground text-[11px] font-medium tracking-wider uppercase">
+                  {group.label}
+                </span>
+              </div>
+            )}
+
+            {/* Collapsed separator */}
+            {collapsed && groupIndex > 0 && <div className="bg-border mx-auto mb-3 h-px w-6" />}
+
             <ul className="space-y-1">
               {group.items.map((item) => {
                 const isActive = pathname === item.href;
@@ -87,16 +150,31 @@ export function Sidebar() {
                       href={item.href}
                       target={item.external ? "_blank" : undefined}
                       rel={item.external ? "noopener noreferrer" : undefined}
+                      title={collapsed ? item.name : undefined}
+                      className={cn(
+                        "group flex items-center rounded-md text-sm font-medium transition-colors",
+                        collapsed ? "h-10 w-10 justify-center" : "h-9 gap-3 px-2",
+                        isActive
+                          ? "bg-muted text-foreground"
+                          : "text-muted-foreground hover:bg-muted hover:text-foreground",
+                      )}
                     >
-                      <Button
-                        variant={isActive ? "default" : "ghost"}
-                        size="sm"
-                        className="w-full justify-start"
-                      >
-                        <Icon className="mr-2 h-4 w-4" />
-                        <span className="flex-1 text-left">{item.name}</span>
-                        {item.external && <ExternalLink className="h-3 w-3 opacity-50" />}
-                      </Button>
+                      <Icon
+                        className={cn(
+                          "h-4 w-4 shrink-0",
+                          isActive
+                            ? "text-foreground"
+                            : "text-muted-foreground group-hover:text-foreground",
+                        )}
+                      />
+                      {!collapsed && (
+                        <>
+                          <span className="flex-1">{item.name}</span>
+                          {item.external && (
+                            <ExternalLink className="text-muted-foreground h-3 w-3" />
+                          )}
+                        </>
+                      )}
                     </Link>
                   </li>
                 );
@@ -106,16 +184,26 @@ export function Sidebar() {
         ))}
       </nav>
 
-      {/* User Profile Section */}
-      <div className="border-border border-t p-3">
-        <div className="flex items-center gap-3 rounded-lg px-3 py-2">
-          <Avatar className="h-8 w-8">
-            <AvatarFallback>RC</AvatarFallback>
+      {/* Footer / User */}
+      <div className={cn("border-border border-t", collapsed ? "p-2" : "p-3")}>
+        <div
+          className={cn(
+            "hover:bg-muted flex items-center rounded-md transition-colors",
+            collapsed ? "h-10 w-10 justify-center" : "gap-3 px-2 py-2",
+          )}
+          title={collapsed ? "Recruitment Team - HeavenPro" : undefined}
+        >
+          <Avatar className="h-8 w-8 shrink-0">
+            <AvatarFallback className="bg-muted text-foreground text-xs font-medium">
+              RC
+            </AvatarFallback>
           </Avatar>
-          <div className="min-w-0 flex-1">
-            <p className="text-foreground truncate text-sm font-medium">Recruitment Team</p>
-            <p className="text-muted-foreground truncate text-xs">HeavenPro</p>
-          </div>
+          {!collapsed && (
+            <div className="min-w-0 flex-1">
+              <p className="text-foreground truncate text-sm font-medium">Recruitment Team</p>
+              <p className="text-muted-foreground truncate text-xs">HeavenPro</p>
+            </div>
+          )}
         </div>
       </div>
     </aside>
