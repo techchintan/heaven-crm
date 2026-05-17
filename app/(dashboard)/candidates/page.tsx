@@ -2,7 +2,7 @@ import {Suspense} from "react";
 import {Header} from "@/components/layout/header";
 import {CandidatesTable} from "@/components/candidates/candidates-table";
 import {StatsCard} from "@/components/dashboard/stats-card";
-import {getCandidates} from "@/lib/sanity-queries";
+import {getCandidates} from "@/sanity/lib/fetch";
 import {Users, UserCheck, Clock, UserX} from "lucide-react";
 
 function CandidatesSkeleton() {
@@ -22,15 +22,10 @@ async function CandidatesContent() {
   const candidates = await getCandidates();
 
   const availableCount = candidates.filter(
-    (c) =>
-      c.status === "immediately_available" ||
-      c.status === "available_next_30_days" ||
-      c.status === "available",
+    (c) => c.status === "immediately_available" || c.status === "available_next_30_days",
   ).length;
   const placedCount = candidates.filter((c) => c.status === "placed").length;
-  const onNoticeCount = candidates.filter(
-    (c) => c.status === "on_notice_period" || c.status === "in_process",
-  ).length;
+  const onNoticeCount = candidates.filter((c) => c.status === "on_notice_period").length;
 
   return (
     <div className="space-y-6 p-6">

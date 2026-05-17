@@ -5,7 +5,7 @@ import {RevenueChart} from "@/components/dashboard/revenue-chart";
 import {RecruiterLeaderboard} from "@/components/dashboard/recruiter-leaderboard";
 import {AtRiskPlacements} from "@/components/dashboard/at-risk-placements";
 import {RecentPlacements} from "@/components/dashboard/recent-placements";
-import {getDashboardStats} from "@/lib/sanity-queries";
+import {getDashboardStats} from "@/lib/dashboard-stats";
 import {
   FileText,
   IndianRupee,

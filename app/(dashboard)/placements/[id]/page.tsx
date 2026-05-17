@@ -2,7 +2,7 @@ import {Suspense} from "react";
 import {notFound} from "next/navigation";
 import Link from "next/link";
 import {ArrowLeft, ExternalLink, Calendar, IndianRupee, Briefcase} from "lucide-react";
-import {getPlacementById} from "@/lib/sanity-queries";
+import {getPlacementById} from "@/sanity/lib/fetch";
 import {formatCurrency, formatDate, formatStatus} from "@/lib/format";
 import {Card, CardContent, CardHeader} from "@/components/ui/card";
 import {StatusBadge} from "@/components/ui/status-badge";

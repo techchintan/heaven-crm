@@ -1,13 +1,13 @@
 "use client";
 
 import {AlertTriangle, Clock} from "lucide-react";
-import type {Placement} from "@/lib/sanity-queries";
+import type {PlacementsQueryResult} from "@/sanity.types";
 import {differenceInDays, parseISO} from "date-fns";
 import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card";
 import {Badge} from "@/components/ui/badge";
 
 interface AtRiskPlacementsProps {
-  placements: Placement[];
+  placements: PlacementsQueryResult;
 }
 
 function formatCurrency(value: number): string {

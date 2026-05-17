@@ -396,6 +396,498 @@ export type AllSanitySchemaTypes =
   | Geopoint;
 
 // Source: sanity/lib/query.ts
+// Variable: placementsQuery
+// Query: *[_type == "placement"] | order(placementDate desc) {    _id,    "candidate": candidate->{      _id,      fullName,      primarySkill    },    "vendor": vendor->{      _id,      companyName    },    "recruiter": recruiter->{      _id,      name    },    jobTitle,    baseSalary,    feePercentage,    gstPercentage,    feeAmount,    gstAmount,    totalInvoiceValue,    placementDate,    probationEndDate,    invoiceDate,    exitDate,    paymentDueDate,    revenueStatus,    invoiceNumber,    paymentDate,    amountReceived,    notes,    createdAt  }
+export type PlacementsQueryResult = Array<{
+  _id: string;
+  candidate: {
+    _id: string;
+    fullName: string;
+    primarySkill: string;
+  };
+  vendor: {
+    _id: string;
+    companyName: string;
+  };
+  recruiter: {
+    _id: string;
+    name: string;
+  };
+  jobTitle: string;
+  baseSalary: number;
+  feePercentage: number | null;
+  gstPercentage: number | null;
+  feeAmount: number | null;
+  gstAmount: number | null;
+  totalInvoiceValue: number | null;
+  placementDate: string;
+  probationEndDate: string | null;
+  invoiceDate: string | null;
+  exitDate: string | null;
+  paymentDueDate: string | null;
+  revenueStatus: "deducted" | "invoiced" | "paid" | "partially_paid" | "pending" | null;
+  invoiceNumber: string | null;
+  paymentDate: string | null;
+  amountReceived: number | null;
+  notes: string | null;
+  createdAt: string | null;
+}>;
+
+// Source: sanity/lib/query.ts
+// Variable: candidatesQuery
+// Query: *[_type == "candidate"] | order(createdAt desc) {    _id,    fullName,    email,    phone,    primarySkill,    skills,    experience,    currentSalary,    expectedSalary,    noticePeriod,    status,    linkedInUrl,    "location": currentLocation,    source,    notes,    createdAt  }
+export type CandidatesQueryResult = Array<{
+  _id: string;
+  fullName: string;
+  email: string | null;
+  phone: string | null;
+  primarySkill: string;
+  skills: Array<string> | null;
+  experience: number | null;
+  currentSalary: number | null;
+  expectedSalary: number | null;
+  noticePeriod: number | null;
+  status:
+    | "available_next_30_days"
+    | "immediately_available"
+    | "not_available"
+    | "on_hold"
+    | "on_notice_period"
+    | "placed";
+  linkedInUrl: string | null;
+  location: string | null;
+  source: "direct" | "job_portal" | "linkedin" | "naukri" | "other" | "referral" | null;
+  notes: string | null;
+  createdAt: string | null;
+}>;
+
+// Source: sanity/lib/query.ts
+// Variable: vendorsQuery
+// Query: *[_type == "vendor"] | order(companyName asc) {    _id,    companyName,    industry,    stateTaxRegistrations[]{      state,      branchName,      gstin,      pan,      isPrimary    },    "primaryContact": coalesce(      contacts[isPrimary == true][0].name,      contacts[0].name    ),    "contactDesignation": coalesce(      contacts[isPrimary == true][0].designation,      contacts[0].designation    ),    "contactEmail": coalesce(      contacts[isPrimary == true][0].email,      contacts[0].email    ),    "contactPhone": coalesce(      contacts[isPrimary == true][0].phone,      contacts[0].phone    ),    billingEmail,    billingAddress,    website,    agreementFeePercentage,    paymentTerms,    status,    notes,    createdAt  }
+export type VendorsQueryResult = Array<{
+  _id: string;
+  companyName: string;
+  industry:
+    | "banking_finance"
+    | "consulting"
+    | "ecommerce"
+    | "education"
+    | "healthcare"
+    | "it_software"
+    | "manufacturing"
+    | "other"
+    | "retail"
+    | "telecom"
+    | null;
+  stateTaxRegistrations: Array<{
+    state:
+      | "andaman_nicobar"
+      | "andhra_pradesh"
+      | "arunachal_pradesh"
+      | "assam"
+      | "bihar"
+      | "chandigarh"
+      | "chhattisgarh"
+      | "dadra_nagar_haveli_daman_diu"
+      | "delhi"
+      | "goa"
+      | "gujarat"
+      | "haryana"
+      | "himachal_pradesh"
+      | "jammu_kashmir"
+      | "jharkhand"
+      | "karnataka"
+      | "kerala"
+      | "ladakh"
+      | "lakshadweep"
+      | "madhya_pradesh"
+      | "maharashtra"
+      | "manipur"
+      | "meghalaya"
+      | "mizoram"
+      | "nagaland"
+      | "odisha"
+      | "puducherry"
+      | "punjab"
+      | "rajasthan"
+      | "sikkim"
+      | "tamil_nadu"
+      | "telangana"
+      | "tripura"
+      | "uttar_pradesh"
+      | "uttarakhand"
+      | "west_bengal";
+    branchName: string | null;
+    gstin: string | null;
+    pan: string | null;
+    isPrimary: boolean | null;
+  }> | null;
+  primaryContact: string | null;
+  contactDesignation: string | null;
+  contactEmail: string | null;
+  contactPhone: string | null;
+  billingEmail: string | null;
+  billingAddress: string | null;
+  website: string | null;
+  agreementFeePercentage: number | null;
+  paymentTerms: number | null;
+  status: "active" | "in_progress" | "inactive" | "on_hold" | "prospect" | null;
+  notes: string | null;
+  createdAt: string | null;
+}>;
+
+// Source: sanity/lib/query.ts
+// Variable: teamMembersQuery
+// Query: *[_type == "teamMember"] | order(name asc) {    _id,    name,    email,    role,    phone,    isActive,    joinedAt  }
+export type TeamMembersQueryResult = Array<{
+  _id: string;
+  name: string;
+  email: string;
+  role: "founder_ceo" | "manager" | "recruiter" | "senior_recruiter" | "team_lead" | "trainee";
+  phone: string | null;
+  isActive: boolean | null;
+  joinedAt: string;
+}>;
+
+// Source: sanity/lib/query.ts
+// Variable: placementByIdQuery
+// Query: *[_type == "placement" && _id == $id][0] {    _id,    "candidate": candidate->{      _id,      fullName,      primarySkill,      email,      phone    },    "vendor": vendor->{      _id,      companyName,      industry,      agreementFeePercentage,      paymentTerms    },    "recruiter": recruiter->{      _id,      name,      email,      role    },    jobTitle,    engagementType,    workArrangement,    workLocation,    vendorReference,    offerAcceptedDate,    baseSalary,    feeMode,    feePercentage,    flatFeeAmount,    gstPercentage,    feeAmount,    gstAmount,    totalInvoiceValue,    placementDate,    probationPeriodDays,    probationEndDate,    invoiceDate,    exitDate,    paymentDueDate,    revenueStatus,    invoiceNumber,    paymentDate,    amountReceived,    notes,    createdAt  }
+export type PlacementByIdQueryResult = {
+  _id: string;
+  candidate: {
+    _id: string;
+    fullName: string;
+    primarySkill: string;
+    email: string | null;
+    phone: string | null;
+  };
+  vendor: {
+    _id: string;
+    companyName: string;
+    industry:
+      | "banking_finance"
+      | "consulting"
+      | "ecommerce"
+      | "education"
+      | "healthcare"
+      | "it_software"
+      | "manufacturing"
+      | "other"
+      | "retail"
+      | "telecom"
+      | null;
+    agreementFeePercentage: number | null;
+    paymentTerms: number | null;
+  };
+  recruiter: {
+    _id: string;
+    name: string;
+    email: string;
+    role: "founder_ceo" | "manager" | "recruiter" | "senior_recruiter" | "team_lead" | "trainee";
+  };
+  jobTitle: string;
+  engagementType: "contract_to_hire" | "contract" | "permanent" | "temporary" | null;
+  workArrangement: "flexible" | "hybrid" | "onsite" | "remote" | null;
+  workLocation: string | null;
+  vendorReference: string | null;
+  offerAcceptedDate: string | null;
+  baseSalary: number;
+  feeMode: "flat" | "percentage";
+  feePercentage: number | null;
+  flatFeeAmount: number | null;
+  gstPercentage: number | null;
+  feeAmount: number | null;
+  gstAmount: number | null;
+  totalInvoiceValue: number | null;
+  placementDate: string;
+  probationPeriodDays: number | null;
+  probationEndDate: string | null;
+  invoiceDate: string | null;
+  exitDate: string | null;
+  paymentDueDate: string | null;
+  revenueStatus: "deducted" | "invoiced" | "paid" | "partially_paid" | "pending" | null;
+  invoiceNumber: string | null;
+  paymentDate: string | null;
+  amountReceived: number | null;
+  notes: string | null;
+  createdAt: string | null;
+} | null;
+
+// Source: sanity/lib/query.ts
+// Variable: candidateByIdQuery
+// Query: *[_type == "candidate" && _id == $id][0] {    _id,    fullName,    email,    phone,    alternateEmail,    alternatePhone,    primarySkill,    skills,    experience,    currentSalary,    expectedSalary,    noticePeriod,    status,    currentCompany,    currentDesignation,    currentLocation,    highestEducation,    remotePreference,    willingToRelocate,    preferredLocations,    languages,    linkedInUrl,    "location": currentLocation,    source,    lastContactedAt,    nextFollowUpAt,    "assignedRecruiter": assignedRecruiter->{ _id, name },    notes,    createdAt  }
+export type CandidateByIdQueryResult = {
+  _id: string;
+  fullName: string;
+  email: string | null;
+  phone: string | null;
+  alternateEmail: string | null;
+  alternatePhone: string | null;
+  primarySkill: string;
+  skills: Array<string> | null;
+  experience: number | null;
+  currentSalary: number | null;
+  expectedSalary: number | null;
+  noticePeriod: number | null;
+  status:
+    | "available_next_30_days"
+    | "immediately_available"
+    | "not_available"
+    | "on_hold"
+    | "on_notice_period"
+    | "placed";
+  currentCompany: string | null;
+  currentDesignation: string | null;
+  currentLocation: string | null;
+  highestEducation: string | null;
+  remotePreference: "flexible" | "hybrid" | "onsite" | "remote" | null;
+  willingToRelocate: boolean | null;
+  preferredLocations: Array<string> | null;
+  languages: Array<string> | null;
+  linkedInUrl: string | null;
+  location: string | null;
+  source: "direct" | "job_portal" | "linkedin" | "naukri" | "other" | "referral" | null;
+  lastContactedAt: string | null;
+  nextFollowUpAt: string | null;
+  assignedRecruiter: {
+    _id: string;
+    name: string;
+  } | null;
+  notes: string | null;
+  createdAt: string | null;
+} | null;
+
+// Source: sanity/lib/query.ts
+// Variable: vendorByIdQuery
+// Query: *[_type == "vendor" && _id == $id][0] {    _id,    companyName,    legalName,    industry,    website,    status,    stateTaxRegistrations[]{      state,      branchName,      gstin,      pan,      isPrimary    },    contacts[]{      name,      designation,      email,      phone,      isPrimary,      isActive    },    "primaryContact": coalesce(      contacts[isPrimary == true][0].name,      contacts[0].name    ),    "contactDesignation": coalesce(      contacts[isPrimary == true][0].designation,      contacts[0].designation    ),    "contactEmail": coalesce(      contacts[isPrimary == true][0].email,      contacts[0].email    ),    "contactPhone": coalesce(      contacts[isPrimary == true][0].phone,      contacts[0].phone    ),    billingEmail,    billingAddress,    feeModel,    agreementFeePercentage,    paymentTerms,    msaStartDate,    msaEndDate,    leadSource,    notes,    createdAt  }
+export type VendorByIdQueryResult = {
+  _id: string;
+  companyName: string;
+  legalName: string | null;
+  industry:
+    | "banking_finance"
+    | "consulting"
+    | "ecommerce"
+    | "education"
+    | "healthcare"
+    | "it_software"
+    | "manufacturing"
+    | "other"
+    | "retail"
+    | "telecom"
+    | null;
+  website: string | null;
+  status: "active" | "in_progress" | "inactive" | "on_hold" | "prospect" | null;
+  stateTaxRegistrations: Array<{
+    state:
+      | "andaman_nicobar"
+      | "andhra_pradesh"
+      | "arunachal_pradesh"
+      | "assam"
+      | "bihar"
+      | "chandigarh"
+      | "chhattisgarh"
+      | "dadra_nagar_haveli_daman_diu"
+      | "delhi"
+      | "goa"
+      | "gujarat"
+      | "haryana"
+      | "himachal_pradesh"
+      | "jammu_kashmir"
+      | "jharkhand"
+      | "karnataka"
+      | "kerala"
+      | "ladakh"
+      | "lakshadweep"
+      | "madhya_pradesh"
+      | "maharashtra"
+      | "manipur"
+      | "meghalaya"
+      | "mizoram"
+      | "nagaland"
+      | "odisha"
+      | "puducherry"
+      | "punjab"
+      | "rajasthan"
+      | "sikkim"
+      | "tamil_nadu"
+      | "telangana"
+      | "tripura"
+      | "uttar_pradesh"
+      | "uttarakhand"
+      | "west_bengal";
+    branchName: string | null;
+    gstin: string | null;
+    pan: string | null;
+    isPrimary: boolean | null;
+  }> | null;
+  contacts: Array<{
+    name: string;
+    designation: string | null;
+    email: string;
+    phone: string | null;
+    isPrimary: boolean | null;
+    isActive: boolean | null;
+  }>;
+  primaryContact: string | null;
+  contactDesignation: string | null;
+  contactEmail: string | null;
+  contactPhone: string | null;
+  billingEmail: string | null;
+  billingAddress: string | null;
+  feeModel: "flat_per_hire" | "percent_ctc" | null;
+  agreementFeePercentage: number | null;
+  paymentTerms: number | null;
+  msaStartDate: string | null;
+  msaEndDate: string | null;
+  leadSource:
+    | "event"
+    | "expansion"
+    | "inbound"
+    | "job_board"
+    | "other"
+    | "outbound"
+    | "referral"
+    | null;
+  notes: string | null;
+  createdAt: string | null;
+} | null;
+
+// Source: sanity/lib/query.ts
+// Variable: teamMemberByIdQuery
+// Query: *[_type == "teamMember" && _id == $id][0] {    _id,    employeeCode,    name,    legalName,    email,    phone,    alternatePhone,    role,    specializations,    isActive,    workStatus,    joinedAt,    leftAt,    salary,    incentivePercentage,    residentialAddress,    notes  }
+export type TeamMemberByIdQueryResult = {
+  _id: string;
+  employeeCode: string | null;
+  name: string;
+  legalName: string | null;
+  email: string;
+  phone: string | null;
+  alternatePhone: string | null;
+  role: "founder_ceo" | "manager" | "recruiter" | "senior_recruiter" | "team_lead" | "trainee";
+  specializations: Array<string> | null;
+  isActive: boolean | null;
+  workStatus: "contract" | "full_time" | "intern" | "part_time";
+  joinedAt: string;
+  leftAt: string | null;
+  salary: number | null;
+  incentivePercentage: number | null;
+  residentialAddress: string | null;
+  notes: string | null;
+} | null;
+
+// Source: sanity/lib/query.ts
+// Variable: placementsByCandidateQuery
+// Query: *[_type == "placement" && candidate._ref == $candidateId] | order(placementDate desc) {    _id,    "candidate": candidate->{ _id, fullName, primarySkill },    "vendor": vendor->{ _id, companyName },    "recruiter": recruiter->{ _id, name },    jobTitle,    baseSalary,    feePercentage,    gstPercentage,    feeAmount,    gstAmount,    totalInvoiceValue,    placementDate,    probationEndDate,    exitDate,    paymentDueDate,    revenueStatus,    invoiceNumber,    paymentDate,    amountReceived,    notes,    createdAt  }
+export type PlacementsByCandidateQueryResult = Array<{
+  _id: string;
+  candidate: {
+    _id: string;
+    fullName: string;
+    primarySkill: string;
+  };
+  vendor: {
+    _id: string;
+    companyName: string;
+  };
+  recruiter: {
+    _id: string;
+    name: string;
+  };
+  jobTitle: string;
+  baseSalary: number;
+  feePercentage: number | null;
+  gstPercentage: number | null;
+  feeAmount: number | null;
+  gstAmount: number | null;
+  totalInvoiceValue: number | null;
+  placementDate: string;
+  probationEndDate: string | null;
+  exitDate: string | null;
+  paymentDueDate: string | null;
+  revenueStatus: "deducted" | "invoiced" | "paid" | "partially_paid" | "pending" | null;
+  invoiceNumber: string | null;
+  paymentDate: string | null;
+  amountReceived: number | null;
+  notes: string | null;
+  createdAt: string | null;
+}>;
+
+// Source: sanity/lib/query.ts
+// Variable: placementsByVendorQuery
+// Query: *[_type == "placement" && vendor._ref == $vendorId] | order(placementDate desc) {    _id,    "candidate": candidate->{ _id, fullName, primarySkill },    "vendor": vendor->{ _id, companyName },    "recruiter": recruiter->{ _id, name },    jobTitle,    baseSalary,    feePercentage,    gstPercentage,    feeAmount,    gstAmount,    totalInvoiceValue,    placementDate,    probationEndDate,    exitDate,    paymentDueDate,    revenueStatus,    invoiceNumber,    paymentDate,    amountReceived,    notes,    createdAt  }
+export type PlacementsByVendorQueryResult = Array<{
+  _id: string;
+  candidate: {
+    _id: string;
+    fullName: string;
+    primarySkill: string;
+  };
+  vendor: {
+    _id: string;
+    companyName: string;
+  };
+  recruiter: {
+    _id: string;
+    name: string;
+  };
+  jobTitle: string;
+  baseSalary: number;
+  feePercentage: number | null;
+  gstPercentage: number | null;
+  feeAmount: number | null;
+  gstAmount: number | null;
+  totalInvoiceValue: number | null;
+  placementDate: string;
+  probationEndDate: string | null;
+  exitDate: string | null;
+  paymentDueDate: string | null;
+  revenueStatus: "deducted" | "invoiced" | "paid" | "partially_paid" | "pending" | null;
+  invoiceNumber: string | null;
+  paymentDate: string | null;
+  amountReceived: number | null;
+  notes: string | null;
+  createdAt: string | null;
+}>;
+
+// Source: sanity/lib/query.ts
+// Variable: placementsByRecruiterQuery
+// Query: *[_type == "placement" && recruiter._ref == $recruiterId] | order(placementDate desc) {    _id,    "candidate": candidate->{ _id, fullName, primarySkill },    "vendor": vendor->{ _id, companyName },    "recruiter": recruiter->{ _id, name },    jobTitle,    baseSalary,    feePercentage,    gstPercentage,    feeAmount,    gstAmount,    totalInvoiceValue,    placementDate,    probationEndDate,    exitDate,    paymentDueDate,    revenueStatus,    invoiceNumber,    paymentDate,    amountReceived,    notes,    createdAt  }
+export type PlacementsByRecruiterQueryResult = Array<{
+  _id: string;
+  candidate: {
+    _id: string;
+    fullName: string;
+    primarySkill: string;
+  };
+  vendor: {
+    _id: string;
+    companyName: string;
+  };
+  recruiter: {
+    _id: string;
+    name: string;
+  };
+  jobTitle: string;
+  baseSalary: number;
+  feePercentage: number | null;
+  gstPercentage: number | null;
+  feeAmount: number | null;
+  gstAmount: number | null;
+  totalInvoiceValue: number | null;
+  placementDate: string;
+  probationEndDate: string | null;
+  exitDate: string | null;
+  paymentDueDate: string | null;
+  revenueStatus: "deducted" | "invoiced" | "paid" | "partially_paid" | "pending" | null;
+  invoiceNumber: string | null;
+  paymentDate: string | null;
+  amountReceived: number | null;
+  notes: string | null;
+  createdAt: string | null;
+}>;
+
+// Source: sanity/lib/query.ts
 // Variable: settingsQuery
 // Query: *[_type == "settings" && language == $language][0] {  ...,}
 export type SettingsQueryResult = null;
@@ -404,6 +896,17 @@ export type SettingsQueryResult = null;
 import "@sanity/client";
 declare module "@sanity/client" {
   interface SanityQueries {
+    '\n  *[_type == "placement"] | order(placementDate desc) {\n    _id,\n    "candidate": candidate->{\n      _id,\n      fullName,\n      primarySkill\n    },\n    "vendor": vendor->{\n      _id,\n      companyName\n    },\n    "recruiter": recruiter->{\n      _id,\n      name\n    },\n    jobTitle,\n    baseSalary,\n    feePercentage,\n    gstPercentage,\n    feeAmount,\n    gstAmount,\n    totalInvoiceValue,\n    placementDate,\n    probationEndDate,\n    invoiceDate,\n    exitDate,\n    paymentDueDate,\n    revenueStatus,\n    invoiceNumber,\n    paymentDate,\n    amountReceived,\n    notes,\n    createdAt\n  }\n': PlacementsQueryResult;
+    '\n  *[_type == "candidate"] | order(createdAt desc) {\n    _id,\n    fullName,\n    email,\n    phone,\n    primarySkill,\n    skills,\n    experience,\n    currentSalary,\n    expectedSalary,\n    noticePeriod,\n    status,\n    linkedInUrl,\n    "location": currentLocation,\n    source,\n    notes,\n    createdAt\n  }\n': CandidatesQueryResult;
+    '\n  *[_type == "vendor"] | order(companyName asc) {\n    _id,\n    companyName,\n    industry,\n    stateTaxRegistrations[]{\n      state,\n      branchName,\n      gstin,\n      pan,\n      isPrimary\n    },\n    "primaryContact": coalesce(\n      contacts[isPrimary == true][0].name,\n      contacts[0].name\n    ),\n    "contactDesignation": coalesce(\n      contacts[isPrimary == true][0].designation,\n      contacts[0].designation\n    ),\n    "contactEmail": coalesce(\n      contacts[isPrimary == true][0].email,\n      contacts[0].email\n    ),\n    "contactPhone": coalesce(\n      contacts[isPrimary == true][0].phone,\n      contacts[0].phone\n    ),\n    billingEmail,\n    billingAddress,\n    website,\n    agreementFeePercentage,\n    paymentTerms,\n    status,\n    notes,\n    createdAt\n  }\n': VendorsQueryResult;
+    '\n  *[_type == "teamMember"] | order(name asc) {\n    _id,\n    name,\n    email,\n    role,\n    phone,\n    isActive,\n    joinedAt\n  }\n': TeamMembersQueryResult;
+    '\n  *[_type == "placement" && _id == $id][0] {\n    _id,\n    "candidate": candidate->{\n      _id,\n      fullName,\n      primarySkill,\n      email,\n      phone\n    },\n    "vendor": vendor->{\n      _id,\n      companyName,\n      industry,\n      agreementFeePercentage,\n      paymentTerms\n    },\n    "recruiter": recruiter->{\n      _id,\n      name,\n      email,\n      role\n    },\n    jobTitle,\n    engagementType,\n    workArrangement,\n    workLocation,\n    vendorReference,\n    offerAcceptedDate,\n    baseSalary,\n    feeMode,\n    feePercentage,\n    flatFeeAmount,\n    gstPercentage,\n    feeAmount,\n    gstAmount,\n    totalInvoiceValue,\n    placementDate,\n    probationPeriodDays,\n    probationEndDate,\n    invoiceDate,\n    exitDate,\n    paymentDueDate,\n    revenueStatus,\n    invoiceNumber,\n    paymentDate,\n    amountReceived,\n    notes,\n    createdAt\n  }\n': PlacementByIdQueryResult;
+    '\n  *[_type == "candidate" && _id == $id][0] {\n    _id,\n    fullName,\n    email,\n    phone,\n    alternateEmail,\n    alternatePhone,\n    primarySkill,\n    skills,\n    experience,\n    currentSalary,\n    expectedSalary,\n    noticePeriod,\n    status,\n    currentCompany,\n    currentDesignation,\n    currentLocation,\n    highestEducation,\n    remotePreference,\n    willingToRelocate,\n    preferredLocations,\n    languages,\n    linkedInUrl,\n    "location": currentLocation,\n    source,\n    lastContactedAt,\n    nextFollowUpAt,\n    "assignedRecruiter": assignedRecruiter->{ _id, name },\n    notes,\n    createdAt\n  }\n': CandidateByIdQueryResult;
+    '\n  *[_type == "vendor" && _id == $id][0] {\n    _id,\n    companyName,\n    legalName,\n    industry,\n    website,\n    status,\n    stateTaxRegistrations[]{\n      state,\n      branchName,\n      gstin,\n      pan,\n      isPrimary\n    },\n    contacts[]{\n      name,\n      designation,\n      email,\n      phone,\n      isPrimary,\n      isActive\n    },\n    "primaryContact": coalesce(\n      contacts[isPrimary == true][0].name,\n      contacts[0].name\n    ),\n    "contactDesignation": coalesce(\n      contacts[isPrimary == true][0].designation,\n      contacts[0].designation\n    ),\n    "contactEmail": coalesce(\n      contacts[isPrimary == true][0].email,\n      contacts[0].email\n    ),\n    "contactPhone": coalesce(\n      contacts[isPrimary == true][0].phone,\n      contacts[0].phone\n    ),\n    billingEmail,\n    billingAddress,\n    feeModel,\n    agreementFeePercentage,\n    paymentTerms,\n    msaStartDate,\n    msaEndDate,\n    leadSource,\n    notes,\n    createdAt\n  }\n': VendorByIdQueryResult;
+    '\n  *[_type == "teamMember" && _id == $id][0] {\n    _id,\n    employeeCode,\n    name,\n    legalName,\n    email,\n    phone,\n    alternatePhone,\n    role,\n    specializations,\n    isActive,\n    workStatus,\n    joinedAt,\n    leftAt,\n    salary,\n    incentivePercentage,\n    residentialAddress,\n    notes\n  }\n': TeamMemberByIdQueryResult;
+    '\n  *[_type == "placement" && candidate._ref == $candidateId] | order(placementDate desc) {\n    _id,\n    "candidate": candidate->{ _id, fullName, primarySkill },\n    "vendor": vendor->{ _id, companyName },\n    "recruiter": recruiter->{ _id, name },\n    jobTitle,\n    baseSalary,\n    feePercentage,\n    gstPercentage,\n    feeAmount,\n    gstAmount,\n    totalInvoiceValue,\n    placementDate,\n    probationEndDate,\n    exitDate,\n    paymentDueDate,\n    revenueStatus,\n    invoiceNumber,\n    paymentDate,\n    amountReceived,\n    notes,\n    createdAt\n  }\n': PlacementsByCandidateQueryResult;
+    '\n  *[_type == "placement" && vendor._ref == $vendorId] | order(placementDate desc) {\n    _id,\n    "candidate": candidate->{ _id, fullName, primarySkill },\n    "vendor": vendor->{ _id, companyName },\n    "recruiter": recruiter->{ _id, name },\n    jobTitle,\n    baseSalary,\n    feePercentage,\n    gstPercentage,\n    feeAmount,\n    gstAmount,\n    totalInvoiceValue,\n    placementDate,\n    probationEndDate,\n    exitDate,\n    paymentDueDate,\n    revenueStatus,\n    invoiceNumber,\n    paymentDate,\n    amountReceived,\n    notes,\n    createdAt\n  }\n': PlacementsByVendorQueryResult;
+    '\n  *[_type == "placement" && recruiter._ref == $recruiterId] | order(placementDate desc) {\n    _id,\n    "candidate": candidate->{ _id, fullName, primarySkill },\n    "vendor": vendor->{ _id, companyName },\n    "recruiter": recruiter->{ _id, name },\n    jobTitle,\n    baseSalary,\n    feePercentage,\n    gstPercentage,\n    feeAmount,\n    gstAmount,\n    totalInvoiceValue,\n    placementDate,\n    probationEndDate,\n    exitDate,\n    paymentDueDate,\n    revenueStatus,\n    invoiceNumber,\n    paymentDate,\n    amountReceived,\n    notes,\n    createdAt\n  }\n': PlacementsByRecruiterQueryResult;
     '*[_type == "settings" && language == $language][0] {\n  ...,\n}': SettingsQueryResult;
   }
 }

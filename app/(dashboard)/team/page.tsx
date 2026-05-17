@@ -2,7 +2,7 @@ import {Suspense} from "react";
 import Link from "next/link";
 import {Header} from "@/components/layout/header";
 import {StatsCard} from "@/components/dashboard/stats-card";
-import {getTeamMembers, getPlacements} from "@/lib/sanity-queries";
+import {getPlacements, getTeamMembers} from "@/sanity/lib/fetch";
 import {UserCog, Users, Trophy, ExternalLink, Mail, Phone} from "lucide-react";
 import {Card, CardContent, CardHeader} from "@/components/ui/card";
 import {Badge} from "@/components/ui/badge";

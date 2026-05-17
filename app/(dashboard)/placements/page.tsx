@@ -2,7 +2,7 @@ import {Suspense} from "react";
 import {Header} from "@/components/layout/header";
 import {PlacementsTable} from "@/components/placements/placements-table";
 import {StatsCard} from "@/components/dashboard/stats-card";
-import {getPlacements} from "@/lib/sanity-queries";
+import {getPlacements} from "@/sanity/lib/fetch";
 import {FileText, IndianRupee, Clock, CheckCircle2} from "lucide-react";
 
 function formatCurrency(value: number): string {

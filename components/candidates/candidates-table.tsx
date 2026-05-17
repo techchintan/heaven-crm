@@ -7,13 +7,13 @@ import {StatusBadge} from "@/components/ui/status-badge";
 import {Input} from "@/components/ui/input";
 import {Card} from "@/components/ui/card";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
-import type {Candidate} from "@/lib/sanity-queries";
+import type {CandidatesQueryResult} from "@/sanity.types";
 
 interface CandidatesTableProps {
-  candidates: Candidate[];
+  candidates: CandidatesQueryResult;
 }
 
-function formatSalary(value?: number): string {
+function formatSalary(value?: number | null): string {
   if (!value) return "-";
   if (value >= 100000) {
     return `₹${(value / 100000).toFixed(1)}L`;
