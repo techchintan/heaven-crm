@@ -21,9 +21,11 @@ function CandidatesSkeleton() {
 async function CandidatesContent() {
   const candidates = await getCandidates();
 
-  const availableCount = candidates.filter((c) => c.status === "available").length;
+  const availableCount = candidates.filter(
+    (c) => c.status === "immediately_available" || c.status === "available_next_30_days" || c.status === "available",
+  ).length;
   const placedCount = candidates.filter((c) => c.status === "placed").length;
-  const inProcessCount = candidates.filter((c) => c.status === "in_process").length;
+  const onNoticeCount = candidates.filter((c) => c.status === "on_notice_period" || c.status === "in_process").length;
 
   return (
     <div className="space-y-6 p-6">
@@ -31,7 +33,7 @@ async function CandidatesContent() {
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <StatsCard title="Total Candidates" value={candidates.length} icon={Users} />
         <StatsCard title="Available" value={availableCount} icon={UserCheck} variant="success" />
-        <StatsCard title="In Process" value={inProcessCount} icon={Clock} variant="warning" />
+        <StatsCard title="On Notice" value={onNoticeCount} icon={Clock} variant="warning" />
         <StatsCard title="Placed" value={placedCount} icon={UserX} variant="info" />
       </div>
 

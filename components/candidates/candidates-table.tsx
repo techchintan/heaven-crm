@@ -1,6 +1,7 @@
 "use client";
 
 import {useState, useMemo} from "react";
+import {useRouter} from "next/navigation";
 import {Search, Filter, ExternalLink, Mail, Phone, Link2} from "lucide-react";
 import {StatusBadge} from "@/components/ui/status-badge";
 import {Input} from "@/components/ui/input";
@@ -21,6 +22,7 @@ function formatSalary(value?: number): string {
 }
 
 export function CandidatesTable({candidates}: CandidatesTableProps) {
+  const router = useRouter();
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
 
@@ -47,9 +49,10 @@ export function CandidatesTable({candidates}: CandidatesTableProps) {
 
   const statusOptions = [
     {value: "all", label: "All Status"},
-    {value: "available", label: "Available"},
+    {value: "immediately_available", label: "Immediately Available"},
+    {value: "available_next_30_days", label: "Available (30 Days)"},
+    {value: "on_notice_period", label: "On Notice"},
     {value: "placed", label: "Placed"},
-    {value: "in_process", label: "In Process"},
     {value: "on_hold", label: "On Hold"},
     {value: "not_available", label: "Not Available"},
   ];
@@ -123,10 +126,10 @@ export function CandidatesTable({candidates}: CandidatesTableProps) {
               </TableRow>
             ) : (
               filteredCandidates.map((candidate) => (
-                <TableRow key={candidate._id}>
+                <TableRow key={candidate._id} className="cursor-pointer" onClick={() => router.push(`/candidates/${candidate._id}`)}>
                   <TableCell>
                     <div>
-                      <p className="font-medium">{candidate.fullName}</p>
+                      <p className="text-primary font-medium">{candidate.fullName}</p>
                       {candidate.email && (
                         <p className="text-muted-foreground text-xs">{candidate.email}</p>
                       )}

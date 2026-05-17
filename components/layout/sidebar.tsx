@@ -1,6 +1,6 @@
 "use client";
 
-import {useSyncExternalStore} from "react";
+import {useState, useEffect, useSyncExternalStore} from "react";
 import Link from "next/link";
 import {usePathname} from "next/navigation";
 import {
@@ -12,6 +12,8 @@ import {
   ExternalLink,
   ChevronsLeft,
   ChevronsRight,
+  Menu,
+  X,
   type LucideIcon,
 } from "lucide-react";
 import {cn} from "@/lib/utils";
@@ -72,6 +74,12 @@ export function Sidebar() {
   const pathname = usePathname();
   const mounted = useHydrated();
   const collapsed = useSyncExternalStore(subscribeCollapsed, getCollapsedSnapshot, () => false);
+  const [mobileOpen, setMobileOpen] = useState(false);
+
+  // Close mobile sidebar on route change
+  useEffect(() => {
+    setMobileOpen(false);
+  }, [pathname]);
 
   const toggle = () => {
     const next = !collapsed;
@@ -83,17 +91,42 @@ export function Sidebar() {
 
   // Prevent layout shift on mount
   if (!mounted) {
-    return <div className="border-border bg-card w-60 shrink-0 border-r" />;
+    return <div className="border-border bg-card hidden w-60 shrink-0 border-r md:block" />;
   }
 
   return (
-    <aside
-      className={cn(
-        "border-border bg-card relative flex h-screen shrink-0 flex-col border-r",
-        "transition-[width] duration-200 ease-out",
-        collapsed ? "w-16" : "w-60",
+    <>
+      {/* Mobile menu button */}
+      <button
+        onClick={() => setMobileOpen(true)}
+        className={cn(
+          "bg-card border-border fixed top-3 left-3 z-40 flex h-10 w-10 items-center justify-center rounded-lg border shadow-sm md:hidden",
+          "text-muted-foreground hover:text-foreground hover:bg-muted transition-colors",
+        )}
+        title="Open menu"
+      >
+        <Menu className="h-5 w-5" />
+      </button>
+
+      {/* Mobile overlay */}
+      {mobileOpen && (
+        <div
+          className="bg-foreground/20 fixed inset-0 z-40 backdrop-blur-sm md:hidden"
+          onClick={() => setMobileOpen(false)}
+        />
       )}
-    >
+
+      <aside
+        className={cn(
+          "border-border bg-card flex h-screen shrink-0 flex-col border-r",
+          "transition-all duration-200 ease-out",
+          // Desktop: fixed sidebar
+          "hidden md:relative md:flex",
+          collapsed ? "md:w-16" : "md:w-60",
+          // Mobile: overlay sidebar
+          mobileOpen && "fixed inset-y-0 left-0 z-50 flex w-60",
+        )}
+      >
       {/* Header */}
       <div
         className={cn(
@@ -110,11 +143,21 @@ export function Sidebar() {
           </Link>
         )}
 
+        {/* Mobile close button */}
+        <button
+          onClick={() => setMobileOpen(false)}
+          className="text-muted-foreground hover:text-foreground hover:bg-muted flex h-8 w-8 items-center justify-center rounded-md transition-colors md:hidden"
+          title="Close menu"
+        >
+          <X className="h-4 w-4" />
+        </button>
+
+        {/* Desktop collapse toggle */}
         <button
           onClick={toggle}
           title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
           className={cn(
-            "flex h-8 w-8 items-center justify-center rounded-md",
+            "hidden h-8 w-8 items-center justify-center rounded-md md:flex",
             "text-muted-foreground transition-colors",
             "hover:bg-muted hover:text-foreground",
           )}
@@ -207,5 +250,6 @@ export function Sidebar() {
         </div>
       </div>
     </aside>
+    </>
   );
 }
